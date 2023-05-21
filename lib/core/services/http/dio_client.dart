@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-import '../../protocols/http/client.dart';
 import '../../protocols/protocols.dart';
 
 class DioClient implements HttpClient {

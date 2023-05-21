@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   surpraise_core:
     git: git@github.com:viniciusamelio/surpraise_core.git
+  surpraise_infra:
+    git: git@github.com:viniciusamelio/surpraise_infra.git
   appwrite: ^9.0.0
   ez_either: ^1.0.0
   dio: ^5.1.2

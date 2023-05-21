@@ -1,0 +1,4 @@
+enum SignupStatus {
+  verification,
+  success;
+}

@@ -559,6 +559,15 @@ packages:
       url: "git@github.com:viniciusamelio/surpraise_core.git"
     source: git
     version: "1.0.0"
+  surpraise_infra:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "524435278c5c2b29e801383a5e5cc178acdc925d"
+      url: "git@github.com:viniciusamelio/surpraise_infra.git"
+    source: git
+    version: "1.0.0"
   term_glyph:
     dependency: transitive
     description:
