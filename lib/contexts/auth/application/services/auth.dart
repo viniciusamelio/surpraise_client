@@ -1,5 +1,4 @@
 import '../../../../core/core.dart';
-import '../../../../core/dependencies.dart';
 import '../dtos/credentials.dart';
 
 abstract interface class AuthService {
