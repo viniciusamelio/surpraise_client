@@ -39,6 +39,7 @@ dependencies:
     git: git@github.com:viniciusamelio/surpraise_core.git
   appwrite: ^9.0.0
   ez_either: ^1.0.0
+  dio: ^5.1.2
 
 dev_dependencies:
   flutter_test:
