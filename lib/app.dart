@@ -1,8 +1,9 @@
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/core/extensions/theme.dart';
+import 'package:surpraise_client/contexts/auth/presentation/screens/signup.dart';
 
 import 'contexts/auth/auth.dart';
+import 'core/extensions/theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -15,7 +16,8 @@ class App extends StatelessWidget {
         return MaterialApp(
           title: '#surpraise',
           theme: ThemeData(
-            useMaterial3: true,
+            useMaterial3: false,
+            scaffoldBackgroundColor: theme.colorScheme.backgroundColor,
             colorScheme: ColorScheme.dark(
               background: theme.colorScheme.backgroundColor,
               primary: theme.colorScheme.accentColor,
@@ -23,6 +25,7 @@ class App extends StatelessWidget {
           ),
           routes: {
             LoginScreen.routeName: (context) => const LoginScreen(),
+            SignupScreen.routeName: (context) => const SignupScreen(),
           },
           initialRoute: LoginScreen.routeName,
         );

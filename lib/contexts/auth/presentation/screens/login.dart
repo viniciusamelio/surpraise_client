@@ -4,6 +4,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import '../../../../core/extensions/theme.dart';
 
 import '../widgets/widgets.dart';
+import 'signup.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -62,7 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               context.theme.spacingScheme.verticalSpacing * 2,
                         ),
                         BaseButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(SignupScreen.routeName);
+                          },
                           padding:
                               context.theme.spacingScheme.buttonPadding / 1.5,
                           backgroundColor:
