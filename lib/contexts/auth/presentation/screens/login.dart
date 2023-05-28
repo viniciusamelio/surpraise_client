@@ -30,30 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const LoginDisplayerOrganism(),
-                  Form(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const BaseInput(
-                          label: "E-mail",
-                          preffixIcon: Icon(
-                            HeroiconsSolid.envelope,
-                          ),
-                        ),
-                        SizedBox(
-                          height: context.theme.spacingScheme.verticalSpacing,
-                        ),
-                        const BaseInput(
-                          label: "Password",
-                          preffixIcon: Icon(
-                            HeroiconsSolid.lockClosed,
-                          ),
-                          inputFormatters: [],
-                          obscureText: true,
-                        ),
-                      ],
-                    ),
-                  ),
+                  const LoginFormOrganism(),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: BorderedIconButton(
