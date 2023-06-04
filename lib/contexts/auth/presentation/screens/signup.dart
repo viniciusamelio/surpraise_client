@@ -1,5 +1,7 @@
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:surpraise_client/core/core.dart';
+import '../../application/services/services.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../shared/presentation/templates/content_scaffold.dart';
 
@@ -16,10 +18,12 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   late final GlobalKey<FormState> formKey;
+  late final AuthService authService;
 
   @override
   void initState() {
     formKey = GlobalKey<FormState>();
+    authService = injected();
     super.initState();
   }
 
