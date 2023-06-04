@@ -7,3 +7,5 @@ export "./exceptions/exceptions.dart";
 export "./protocols/protocols.dart";
 
 export "./services/http/dio_client.dart";
+
+export "./di/di.dart";
