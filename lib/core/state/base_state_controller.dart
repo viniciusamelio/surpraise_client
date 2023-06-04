@@ -1,3 +1,6 @@
-import 'base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:surpraise_client/core/state/default_state.dart';
 
-abstract class BaseStateController<R> with BaseState<Exception, R> {}
+abstract class BaseStateController<R> {
+  ValueNotifier<DefaultState<Exception, R>> get state;
+}
