@@ -13,21 +13,24 @@ class App extends StatelessWidget {
     return BlurpleThemeData.defaultTheme(
       child: Builder(builder: (context) {
         final theme = context.theme;
-        return MaterialApp(
-          title: '#surpraise',
-          theme: ThemeData(
-            useMaterial3: false,
-            scaffoldBackgroundColor: theme.colorScheme.backgroundColor,
-            colorScheme: ColorScheme.dark(
-              background: theme.colorScheme.backgroundColor,
-              primary: theme.colorScheme.accentColor,
+        return GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: MaterialApp(
+            title: '#surpraise',
+            theme: ThemeData(
+              useMaterial3: false,
+              scaffoldBackgroundColor: theme.colorScheme.backgroundColor,
+              colorScheme: ColorScheme.dark(
+                background: theme.colorScheme.backgroundColor,
+                primary: theme.colorScheme.accentColor,
+              ),
             ),
+            routes: {
+              LoginScreen.routeName: (context) => const LoginScreen(),
+              SignupScreen.routeName: (context) => const SignupScreen(),
+            },
+            initialRoute: LoginScreen.routeName,
           ),
-          routes: {
-            LoginScreen.routeName: (context) => const LoginScreen(),
-            SignupScreen.routeName: (context) => const SignupScreen(),
-          },
-          initialRoute: LoginScreen.routeName,
         );
       }),
     );

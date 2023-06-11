@@ -6,6 +6,7 @@ export "./exceptions/exceptions.dart";
 
 export "./protocols/protocols.dart";
 
-export "./services/http/dio_client.dart";
+export "./services/services.dart";
 
 export "./di/di.dart";
+export "./state/state.dart";

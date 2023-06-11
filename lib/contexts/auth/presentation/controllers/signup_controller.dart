@@ -1,6 +1,4 @@
 import '../../../../core/core.dart';
-
-import '../../../../core/state/state.dart';
 import '../../auth.dart';
 
 abstract class SignupController extends BaseStateController<SignupStatus> {
@@ -18,13 +16,13 @@ class DefaultSignupController
   final AuthService authService;
 
   @override
-  SignupFormDataDto get formData => SignupFormDataDto();
+  final SignupFormDataDto formData = SignupFormDataDto();
 
   @override
   Future<void> signup() async {
     state.value = LoadingState();
     final input = CreateUserInput(
-      tag: formData.tag,
+      tag: "@${formData.tag}",
       name: formData.name,
       email: formData.email,
     );

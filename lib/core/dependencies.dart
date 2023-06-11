@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../contexts/auth/auth.dart';
+import '../env.dart';
 import 'core.dart';
 
 export "package:surpraise_core/surpraise_core.dart";
@@ -9,7 +10,11 @@ Future<void> _coreDependencies() async {
   inject<AppWriteService>(AppWriteService());
   inject<HttpClient>(
     DioClient.defaultClient(
-      Dio(),
+      Dio(
+        BaseOptions(
+          baseUrl: Env.baseUrl,
+        ),
+      ),
     ),
   );
 }

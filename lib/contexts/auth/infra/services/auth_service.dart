@@ -20,7 +20,8 @@ class DefaultAuthService implements AuthService {
   AsyncAction<CreateUserOutput> signupStepOne(CreateUserInput input) async {
     try {
       final result = await _client.post<Json>(
-        "/signup",
+        "/user/signup",
+        data: UserMapper.createUserInputToMap(input),
       );
       return Right(
         UserMapper.createUserOutputFromMap(
