@@ -30,4 +30,16 @@ class AppWriteService {
     );
     return result;
   }
+
+  Future<String> signIn({
+    required email,
+    required password,
+  }) async {
+    final account = Account(_client);
+    final result = await account.createEmailSession(
+      email: email,
+      password: password,
+    );
+    return result.userId;
+  }
 }

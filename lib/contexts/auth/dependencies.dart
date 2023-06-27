@@ -15,4 +15,9 @@ Future<void> authDependencies() async {
       authService: injected(),
     ),
   );
+  inject<SignInController>(
+    DefaultSignInController(
+      authService: injected(),
+    ),
+  );
 }

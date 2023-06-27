@@ -22,6 +22,7 @@ class DefaultSignupController
         );
       },
     );
+    setDefaultErrorHandling();
   }
 
   final AuthService authService;

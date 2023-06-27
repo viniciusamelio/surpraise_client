@@ -1,7 +1,8 @@
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import '../../../../core/extensions/theme.dart';
+import '../../../../core/core.dart';
+import '../controllers/signin_controller.dart';
 
 import '../widgets/widgets.dart';
 import 'signup.dart';
@@ -16,6 +17,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late final GlobalKey<FormState> formKey;
+  late final SignInController controller;
+
+  @override
+  void initState() {
+    controller = injected();
+    formKey = GlobalKey<FormState>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,19 +41,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const LoginDisplayerOrganism(),
-                  const LoginFormOrganism(),
+                  LoginFormOrganism(
+                    formKey: formKey,
+                    onSaveEmail: (value) {
+                      controller.formData.username = value!;
+                    },
+                    onSavePassword: (value) {
+                      controller.formData.password = value!;
+                    },
+                  ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: BorderedIconButton(
-                      onPressed: () {},
-                      borderSide: BorderSide(
-                        color: context.theme.colorScheme.accentColor,
-                      ),
-                      backgroundColor: context.theme.colorScheme.shadowColor,
-                      foregroundColor: context.theme.colorScheme.accentColor,
-                      preffixIcon:
-                          const Icon(HeroiconsSolid.arrowRightOnRectangle),
-                      text: "Entrar",
+                    child: ValueListenableBuilder(
+                      valueListenable: controller.state,
+                      builder: (context, state, _) {
+                        return BorderedIconButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate() &&
+                                state is! LoadingState) {
+                              formKey.currentState!.save();
+                              controller.signIn();
+                            }
+                          },
+                          borderSide: BorderSide(
+                            color: context.theme.colorScheme.accentColor,
+                          ),
+                          backgroundColor:
+                              context.theme.colorScheme.shadowColor,
+                          foregroundColor:
+                              context.theme.colorScheme.accentColor,
+                          preffixIcon: state is! LoadingState
+                              ? const Icon(
+                                  HeroiconsSolid.arrowRightOnRectangle,
+                                )
+                              : const Icon(
+                                  HeroiconsSolid.arrowPathRoundedSquare),
+                          text: state is! LoadingState
+                              ? "Entrar"
+                              : "Carregando...",
+                        );
+                      },
                     ),
                   ),
                   SizedBox(

@@ -34,6 +34,12 @@ class _LoginDisplayerOrganismState extends State<LoginDisplayerOrganism>
   }
 
   @override
+  void dispose() {
+    animatedTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

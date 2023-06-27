@@ -1,6 +1,8 @@
 import 'package:ez_either/ez_either.dart';
 import 'package:flutter/material.dart';
-import 'default_state.dart';
+
+import '../../shared/shared.dart';
+import '../core.dart';
 
 mixin BaseState<L extends Exception, R> {
   final ValueNotifier<DefaultState<L, R>> state =
@@ -10,6 +12,20 @@ mixin BaseState<L extends Exception, R> {
         (left) => state.value = ErrorState(left, type: left.runtimeType),
         (right) => state.value = SuccessState(right),
       );
+
+  void setDefaultErrorHandling() async {
+    state.listenState(
+      onError: (left) {
+        final context = navigatorKey.currentContext!;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          ErrorSnack(message: left.toString()).build(
+            context,
+          ),
+        );
+      },
+    );
+  }
 }
 
 extension ListenState<L extends Exception, R>

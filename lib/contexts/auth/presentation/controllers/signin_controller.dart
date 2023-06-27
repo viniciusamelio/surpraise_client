@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:surpraise_client/contexts/feed/presentation/presentation.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
@@ -16,7 +18,17 @@ class DefaultSignInController
     implements SignInController {
   DefaultSignInController({
     required AuthService authService,
-  }) : _authService = authService;
+  }) : _authService = authService {
+    setDefaultErrorHandling();
+    state.listenState(
+      onSuccess: (right) {
+        Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
+          FeedScreen.routeName,
+          arguments: right,
+        );
+      },
+    );
+  }
 
   final AuthService _authService;
 

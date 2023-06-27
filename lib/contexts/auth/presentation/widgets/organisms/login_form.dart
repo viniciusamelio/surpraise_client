@@ -5,26 +5,38 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import '../../../../../core/extensions/theme.dart';
 
 class LoginFormOrganism extends StatelessWidget {
-  const LoginFormOrganism({super.key});
+  const LoginFormOrganism({
+    super.key,
+    required this.onSaveEmail,
+    required this.onSavePassword,
+    required this.formKey,
+  });
+
+  final void Function(String? value) onSaveEmail;
+  final void Function(String? value) onSavePassword;
+  final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const BaseInput(
+          BaseInput(
+            onSaved: onSaveEmail,
             label: "E-mail",
-            preffixIcon: Icon(
+            preffixIcon: const Icon(
               HeroiconsSolid.envelope,
             ),
           ),
           SizedBox(
             height: context.theme.spacingScheme.verticalSpacing,
           ),
-          const BaseInput(
+          BaseInput(
+            onSaved: onSavePassword,
             label: "Password",
-            preffixIcon: Icon(
+            preffixIcon: const Icon(
               HeroiconsSolid.lockClosed,
             ),
             obscureText: true,

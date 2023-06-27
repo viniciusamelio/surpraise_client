@@ -1,11 +1,10 @@
+import 'package:appwrite/appwrite.dart';
+import 'package:dio/dio.dart';
 import 'package:ez_either/ez_either.dart';
-import 'package:surpraise_client/contexts/auth/dtos/signin_form_data.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
-import '../../application/dtos/signup_credentials.dart';
-import '../../application/enums/signup_status.dart';
-import '../../application/services/auth.dart';
+import '../../auth.dart';
 
 class DefaultAuthService implements AuthService {
   const DefaultAuthService({
@@ -36,6 +35,13 @@ class DefaultAuthService implements AuthService {
             message: "Unexpected response from /user/signup",
           ),
         );
+      } else if (e is DioError && e.response?.statusCode == 400) {
+        return Left(
+          APIException(
+            message:
+                e.response?.data["error"]?["message"] ?? "Unknown API error",
+          ),
+        );
       }
 
       return Left(e);
@@ -62,13 +68,36 @@ class DefaultAuthService implements AuthService {
 
   @override
   AsyncAction<String> signinStepOne(SignInFormDataDto input) async {
-    // TODO: implement signinStepOne
-    throw UnimplementedError();
+    try {
+      final result = await _appWriteService.signIn(
+        email: input.username,
+        password: input.password,
+      );
+      return Right(result);
+    } on Exception catch (e) {
+      if (e is AppwriteException && [400, 401].contains(e.code)) {
+        return Left(
+          InvalidCredentialsException(),
+        );
+      }
+      return Left(e);
+    }
   }
 
   @override
   AsyncAction<GetUserOutput> signinStepTwo(String input) async {
-    // TODO: implement signinStepTwo
-    throw UnimplementedError();
+    try {
+      final result = await _client.get("/user/$input");
+      return Right(
+        GetUserOutput(
+          tag: result.data["tag"],
+          name: result.data["name"],
+          email: result.data["email"],
+          id: result.data["id"],
+        ),
+      );
+    } on Exception catch (e) {
+      return Left(e);
+    }
   }
 }
