@@ -4,7 +4,6 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import '../../controllers/signup_controller.dart';
 
 import '../../../../../core/core.dart';
-import '../../../../../core/extensions/theme.dart';
 
 class SignupFormOrganism extends StatefulWidget {
   const SignupFormOrganism({

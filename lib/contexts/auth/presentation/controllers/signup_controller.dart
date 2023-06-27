@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../../../../core/core.dart';
+import '../../../feed/presentation/presentation.dart';
 import '../../auth.dart';
 
 abstract class SignupController extends BaseStateController<SignupStatus> {
@@ -11,7 +14,15 @@ class DefaultSignupController
     implements SignupController {
   DefaultSignupController({
     required this.authService,
-  });
+  }) {
+    state.listenState(
+      onSuccess: (right) {
+        Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
+          FeedScreen.routeName,
+        );
+      },
+    );
+  }
 
   final AuthService authService;
 

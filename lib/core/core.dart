@@ -10,3 +10,6 @@ export "./services/services.dart";
 
 export "./di/di.dart";
 export "./state/state.dart";
+
+export "./navigator.dart";
+export "./extensions/theme.dart";

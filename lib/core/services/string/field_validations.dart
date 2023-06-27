@@ -28,7 +28,7 @@ String? name(String value) {
 }
 
 String? password(String value) {
-  return requiredField(value) ?? minLength(value, 6);
+  return requiredField(value) ?? minLength(value, 8);
 }
 
 String? tag(String value) {

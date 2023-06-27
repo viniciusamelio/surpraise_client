@@ -1,9 +1,10 @@
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/contexts/auth/presentation/screens/signup.dart';
 
 import 'contexts/auth/auth.dart';
-import 'core/extensions/theme.dart';
+import 'contexts/auth/presentation/screens/signup.dart';
+import 'contexts/feed/presentation/presentation.dart';
+import 'core/core.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -25,9 +26,11 @@ class App extends StatelessWidget {
                 primary: theme.colorScheme.accentColor,
               ),
             ),
+            navigatorKey: navigatorKey,
             routes: {
               LoginScreen.routeName: (context) => const LoginScreen(),
               SignupScreen.routeName: (context) => const SignupScreen(),
+              FeedScreen.routeName: (context) => const FeedScreen(),
             },
             initialRoute: LoginScreen.routeName,
           ),

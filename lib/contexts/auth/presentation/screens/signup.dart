@@ -2,7 +2,6 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/extensions/theme.dart';
 import '../../../../shared/presentation/templates/content_scaffold.dart';
 import '../../application/services/services.dart';
 import '../controllers/signup_controller.dart';

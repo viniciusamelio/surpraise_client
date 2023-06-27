@@ -1,4 +1,5 @@
 import 'package:ez_either/ez_either.dart';
+import 'package:surpraise_client/contexts/auth/dtos/signin_form_data.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
@@ -32,7 +33,7 @@ class DefaultAuthService implements AuthService {
       if (e is TypeError) {
         return Left(
           const InvalidResponseException(
-            message: "Unexpected response from /signup",
+            message: "Unexpected response from /user/signup",
           ),
         );
       }
@@ -57,5 +58,17 @@ class DefaultAuthService implements AuthService {
     } on Exception catch (e) {
       return Left(e);
     }
+  }
+
+  @override
+  AsyncAction<String> signinStepOne(SignInFormDataDto input) async {
+    // TODO: implement signinStepOne
+    throw UnimplementedError();
+  }
+
+  @override
+  AsyncAction<GetUserOutput> signinStepTwo(String input) async {
+    // TODO: implement signinStepTwo
+    throw UnimplementedError();
   }
 }
