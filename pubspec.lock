@@ -561,6 +561,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  scientisst_db:
+    dependency: "direct main"
+    description:
+      name: scientisst_db
+      sha256: df6acec7af4cb466e6a223d3cc1b3e9aff2e5da25ecbe58fbded633169bce142
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -793,6 +801,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.5"
+  watcher:
+    dependency: transitive
+    description:
+      name: watcher
+      sha256: "3d2ad6751b3c16cf07c7fca317a1413b3f26530319181b37e3b9039b84fc01d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   web_socket_channel:
     dependency: transitive
     description:

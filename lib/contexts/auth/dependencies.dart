@@ -1,7 +1,7 @@
-import 'presentation/controllers/controllers.dart';
-
 import '../../core/core.dart';
+import '../../shared/shared.dart';
 import 'auth.dart';
+import 'presentation/controllers/controllers.dart';
 
 Future<void> authDependencies() async {
   inject<AuthService>(
@@ -10,14 +10,21 @@ Future<void> authDependencies() async {
       httpClient: injected(),
     ),
   );
+  inject<AuthPersistanceService>(
+    ScientistAuthPersistanceService(
+      database: injected(),
+    ),
+  );
   inject<SignupController>(
     DefaultSignupController(
       authService: injected(),
+      authPersistanceService: injected(),
     ),
   );
   inject<SignInController>(
     DefaultSignInController(
       authService: injected(),
+      authPersistanceService: injected(),
     ),
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../../feed/presentation/presentation.dart';
 import '../../auth.dart';
 
@@ -14,6 +15,7 @@ class DefaultSignupController
     implements SignupController {
   DefaultSignupController({
     required this.authService,
+    required this.authPersistanceService,
   }) {
     state.listenState(
       onSuccess: (right) {
@@ -26,6 +28,7 @@ class DefaultSignupController
   }
 
   final AuthService authService;
+  final AuthPersistanceService authPersistanceService;
 
   @override
   final SignupFormDataDto formData = SignupFormDataDto();
@@ -49,6 +52,19 @@ class DefaultSignupController
             email: right.email,
             password: formData.password,
           ),
+        );
+        result.fold(
+          (__) => null,
+          (_) async {
+            await authPersistanceService.saveAuthenticatedUserData(
+              UserDto(
+                tag: right.tag,
+                name: right.name,
+                email: right.email,
+                id: right.id,
+              ),
+            );
+          },
         );
         stateFromEither(result);
       },

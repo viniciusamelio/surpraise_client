@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
 import 'contexts/feed/presentation/presentation.dart';
+import 'contexts/intro/intro.dart';
 import 'core/core.dart';
 
 class App extends StatelessWidget {
@@ -31,8 +32,8 @@ class App extends StatelessWidget {
               LoginScreen.routeName: (context) => const LoginScreen(),
               SignupScreen.routeName: (context) => const SignupScreen(),
               FeedScreen.routeName: (context) => const FeedScreen(),
+              IntroScreen.routeName: (context) => const IntroScreen(),
             },
-            initialRoute: LoginScreen.routeName,
           ),
         );
       }),

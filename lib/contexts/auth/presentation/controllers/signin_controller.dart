@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surpraise_client/contexts/feed/presentation/presentation.dart';
+import 'package:surpraise_client/shared/shared.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
@@ -18,10 +19,20 @@ class DefaultSignInController
     implements SignInController {
   DefaultSignInController({
     required AuthService authService,
-  }) : _authService = authService {
+    required AuthPersistanceService authPersistanceService,
+  })  : _authService = authService,
+        _authPersistanceService = authPersistanceService {
     setDefaultErrorHandling();
     state.listenState(
-      onSuccess: (right) {
+      onSuccess: (right) async {
+        await _authPersistanceService.saveAuthenticatedUserData(
+          UserDto(
+            tag: right.tag,
+            name: right.email,
+            email: right.email,
+            id: right.id,
+          ),
+        );
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
           FeedScreen.routeName,
           arguments: right,
@@ -31,6 +42,7 @@ class DefaultSignInController
   }
 
   final AuthService _authService;
+  final AuthPersistanceService _authPersistanceService;
 
   @override
   final SignInFormDataDto formData = SignInFormDataDto();
