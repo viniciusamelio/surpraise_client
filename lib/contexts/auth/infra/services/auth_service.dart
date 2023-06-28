@@ -35,7 +35,7 @@ class DefaultAuthService implements AuthService {
             message: "Unexpected response from /user/signup",
           ),
         );
-      } else if (e is DioError && e.response?.statusCode == 400) {
+      } else if (e is DioException && e.response?.statusCode == 400) {
         return Left(
           APIException(
             message:
