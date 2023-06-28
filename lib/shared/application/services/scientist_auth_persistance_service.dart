@@ -39,4 +39,13 @@ class ScientistAuthPersistanceService implements AuthPersistanceService {
       userData.first,
     );
   }
+
+  @override
+  Future<void> deleteAuthenticatedUserData() async {
+    await _database.delete(
+      collection: _collection,
+      equalsTo: "userData",
+      field: "_id",
+    );
+  }
 }

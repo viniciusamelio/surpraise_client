@@ -30,4 +30,12 @@ class ScientistDBService {
         .getDocuments();
     return results.map((e) => e.data).toList();
   }
+
+  Future<void> delete<T>({
+    required String collection,
+    required T equalsTo,
+    required String field,
+  }) async {
+    await database.collection(collection).delete();
+  }
 }

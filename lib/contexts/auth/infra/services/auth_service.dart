@@ -100,4 +100,10 @@ class DefaultAuthService implements AuthService {
       return Left(e);
     }
   }
+
+  @override
+  AsyncAction<void> logout() async {
+    await _appWriteService.logout();
+    return Right(null);
+  }
 }

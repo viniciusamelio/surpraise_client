@@ -28,6 +28,7 @@ class AppWriteService {
       email: email,
       password: password,
     );
+    await signIn(email: email, password: password);
     return result;
   }
 
@@ -41,5 +42,14 @@ class AppWriteService {
       password: password,
     );
     return result.userId;
+  }
+
+  Future<void> logout() async {
+    final account = Account(_client);
+    final sessions = await account.listSessions();
+    if (sessions.sessions.isEmpty) {
+      return;
+    }
+    await account.deleteSessions();
   }
 }

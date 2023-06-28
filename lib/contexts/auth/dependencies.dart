@@ -27,4 +27,10 @@ Future<void> authDependencies() async {
       authPersistanceService: injected(),
     ),
   );
+  inject<SessionController>(
+    DefaultSessionController(
+      authService: injected(),
+      authPersistanceService: injected(),
+    ),
+  );
 }

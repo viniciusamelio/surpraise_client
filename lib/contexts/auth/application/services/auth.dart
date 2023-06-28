@@ -11,4 +11,6 @@ abstract interface class AuthService {
 
   AsyncAction<String> signinStepOne(SignInFormDataDto input);
   AsyncAction<GetUserOutput> signinStepTwo(String input);
+
+  AsyncAction<void> logout();
 }
