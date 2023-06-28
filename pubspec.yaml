@@ -35,6 +35,21 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  surpraise_core:
+    git: https://github.com/viniciusamelio/surpraise_core
+  surpraise_infra:
+    git: https://github.com/viniciusamelio/surpraise_infra
+  blurple:
+    git: https://github.com/viniciusamelio/blurple.git
+  appwrite: ^9.0.0
+  ez_either: ^1.0.0
+  dio: ^5.1.2
+  heroicons_flutter: ^0.2.3
+  string_validator: ^0.3.0
+  flutter_svg: ^2.0.6
+  flutter_animate: ^4.1.1+1
+  kiwi: ^4.1.0
+  scientisst_db: ^0.1.2
 
 dev_dependencies:
   flutter_test:
@@ -59,8 +74,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -74,10 +89,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
