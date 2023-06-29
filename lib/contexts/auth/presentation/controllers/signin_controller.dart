@@ -25,17 +25,16 @@ class DefaultSignInController
     setDefaultErrorHandling();
     state.listenState(
       onSuccess: (right) async {
-        await _authPersistanceService.saveAuthenticatedUserData(
-          UserDto(
-            tag: right.tag,
-            name: right.email,
-            email: right.email,
-            id: right.id,
-          ),
+        final dto = UserDto(
+          tag: right.tag,
+          name: right.name,
+          email: right.email,
+          id: right.id,
         );
+        await _authPersistanceService.saveAuthenticatedUserData(dto);
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
           FeedScreen.routeName,
-          arguments: right,
+          arguments: dto,
         );
       },
     );

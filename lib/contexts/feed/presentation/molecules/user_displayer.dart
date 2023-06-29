@@ -16,21 +16,25 @@ class UserDisplayer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text.rich(
-          TextSpan(
-            text: "Bem vindo,\n",
-            style: context.theme.fontScheme.h2.copyWith(
-              color: context.theme.colorScheme.foregroundColor,
-              fontWeight: FontWeight.w300,
-            ),
-            children: [
-              TextSpan(
-                text: "${user.name} !",
-                style: context.theme.fontScheme.h1.copyWith(
-                  color: context.theme.colorScheme.foregroundColor,
-                ),
+        Container(
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 100),
+          child: Text.rich(
+            TextSpan(
+              text: "Bem vindo,\n",
+              style: context.theme.fontScheme.h2.copyWith(
+                color: context.theme.colorScheme.foregroundColor,
+                fontWeight: FontWeight.w300,
               ),
-            ],
+              children: [
+                TextSpan(
+                  text: "${user.name.split(' ').first} !",
+                  style: context.theme.fontScheme.h1.copyWith(
+                    color: context.theme.colorScheme.foregroundColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox.square(
