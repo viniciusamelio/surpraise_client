@@ -4,8 +4,8 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../core/extensions/theme.dart';
 
-class DefaultAppbarMolecule extends StatelessWidget {
-  const DefaultAppbarMolecule({
+class DefaultAppbar extends StatelessWidget {
+  const DefaultAppbar({
     super.key,
     this.action,
     required this.title,

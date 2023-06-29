@@ -28,7 +28,7 @@ class ContentScaffoldTemplate extends StatelessWidget {
               EdgeInsets.all(context.theme.spacingScheme.verticalSpacing * 4),
           child: Column(
             children: [
-              DefaultAppbarMolecule(title: title),
+              DefaultAppbar(title: title),
               SizedBox(
                 height: context.theme.spacingScheme.verticalSpacing * 6,
               ),

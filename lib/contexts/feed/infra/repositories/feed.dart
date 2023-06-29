@@ -16,10 +16,13 @@ class DefaultFeedRepository implements FeedRepository {
   AsyncAction<List<PraiseDto>> getByUser(String userId) async {
     try {
       final praises = await _httpClient.get(
-        "/user/$userId",
+        "/praise/user/$userId",
       );
+      if (praises.data["praises"].isEmpty) {
+        return Right([]);
+      }
       return Right(
-        (praises.data["praises"] as List<Json>)
+        (praises.data["praises"] as List? ?? [])
             .map<PraiseDto>(
               (e) => FeedPraiseMapper.fromMap(e),
             )

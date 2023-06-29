@@ -50,6 +50,7 @@ dependencies:
   flutter_animate: ^4.1.1+1
   kiwi: ^4.1.0
   scientisst_db: ^0.1.2
+  animated_bottom_navigation_bar: ^1.2.0
 
 dev_dependencies:
   flutter_test:

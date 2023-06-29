@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import '../../../../core/core.dart';
+import '../../../../shared/dtos/user.dart';
+
+class UserDisplayer extends StatelessWidget {
+  const UserDisplayer({
+    super.key,
+    required this.user,
+  });
+
+  final UserDto user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text.rich(
+          TextSpan(
+            text: "Bem vindo,\n",
+            style: context.theme.fontScheme.h2.copyWith(
+              color: context.theme.colorScheme.foregroundColor,
+              fontWeight: FontWeight.w300,
+            ),
+            children: [
+              TextSpan(
+                text: "${user.name} !",
+                style: context.theme.fontScheme.h1.copyWith(
+                  color: context.theme.colorScheme.foregroundColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox.square(
+          dimension: 66,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              "https://i.pinimg.com/originals/19/cf/78/19cf789a8e216dc898043489c16cec00.jpg",
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
