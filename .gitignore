@@ -47,3 +47,5 @@ app.*.map.json
 
 dev.env
 prod.env
+
+**.mongodb.js
