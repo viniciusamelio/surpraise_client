@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:scientisst_db/scientisst_db.dart';
 
+import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
+import '../contexts/community/community.dart';
 import '../contexts/feed/feed.dart';
 import '../contexts/intro/intro.dart';
 import '../env.dart';
@@ -32,4 +34,6 @@ Future<void> setupDependencies() async {
   await authDependencies();
   await introDependencies();
   await feedDependencies();
+  await communityDependencies();
+  await praiseDependencies();
 }

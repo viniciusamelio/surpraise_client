@@ -1,0 +1,15 @@
+import '../../core/core.dart';
+import 'community.dart';
+
+Future<void> communityDependencies() async {
+  inject<CommunityRepository>(
+    DefaultCommunityRepository(
+      httpClient: injected(),
+    ),
+  );
+  inject<GetCommunitiesController>(
+    DefaultGetCommunitiesController(
+      communityRepository: injected(),
+    ),
+  );
+}

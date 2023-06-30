@@ -52,6 +52,8 @@ dependencies:
   scientisst_db: ^0.1.2
   animated_bottom_navigation_bar: ^1.2.0
   lottie: ^2.4.0
+  flutter_typeahead: ^4.6.2
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
