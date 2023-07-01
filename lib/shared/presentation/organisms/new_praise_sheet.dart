@@ -34,6 +34,12 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
   }
 
   @override
+  void dispose() {
+    controller.activeStep.value = 0;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -51,7 +57,7 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
+          Flexible(
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,

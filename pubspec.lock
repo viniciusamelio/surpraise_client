@@ -54,7 +54,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5b9aff341c59d6ccaeb3bf092743c03793283596"
+      resolved-ref: "0069090cfe30bef0e1e94b7bb9b98bf39c3038a6"
       url: "https://github.com/viniciusamelio/blurple.git"
     source: git
     version: "0.0.1"
@@ -733,7 +733,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e30618ae8cc63466a7d9c8e1ab7cf365a1895a0a
+      resolved-ref: "1cbb7aac4f1a4f93e3a7f9217d1231e77d4e5fcb"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
