@@ -30,6 +30,9 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
         pageController.jumpToPage(controller.activeStep.value);
       },
     );
+    controller.state.listenState(
+      onSuccess: (right) => Navigator.of(context).pop(),
+    );
     super.initState();
   }
 
@@ -41,60 +44,72 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(16),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(16),
+          ),
+          color: context.theme.colorScheme.elevatedWidgetsColor,
         ),
-        color: context.theme.colorScheme.elevatedWidgetsColor,
-      ),
-      padding: const EdgeInsets.only(
-        bottom: 12,
-        top: 24,
-        right: 24,
-        left: 24,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: [
-                NewPraiseCommunitySelectionStep(
-                  notifier: communitiesController.state,
-                  onCommunitySelected: (community) {
-                    controller.formData.communityId = community.id;
-                    controller.activeStep.value = 1;
-                  },
+        padding: const EdgeInsets.only(
+          bottom: 12,
+          top: 24,
+          right: 24,
+          left: 24,
+        ),
+        child: DefaultStateBuilder(
+            state: controller.state,
+            onLoading: (_) => Center(
+                  child: CircularProgressIndicator(
+                    color: context.theme.colorScheme.accentColor,
+                  ),
                 ),
-                NewPraiseUserSelectionStep(
-                  controller: controller,
-                ),
-                NewPraiseUserSelectionStep(
-                  controller: controller,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          ValueListenableBuilder(
-            valueListenable: controller.activeStep,
-            builder: (context, index, _) => SmoothPageIndicator(
-              controller: pageController,
-              count: 3,
-              effect: WormEffect(
-                activeDotColor: context.theme.colorScheme.accentColor,
-                dotColor: context.theme.colorScheme.inputForegroundColor
-                    .withOpacity(.5),
-                radius: 6,
-              ),
-            ),
-          ),
-        ],
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: PageView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: pageController,
+                      children: [
+                        NewPraiseCommunitySelectionStep(
+                          notifier: communitiesController.state,
+                          onCommunitySelected: (community) {
+                            controller.formData.communityId = community.id;
+                            controller.activeStep.value = 1;
+                          },
+                        ),
+                        NewPraiseUserSelectionStep(
+                          controller: controller,
+                        ),
+                        NewPraiseUserSelectionStep(
+                          controller: controller,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: controller.activeStep,
+                    builder: (context, index, _) => SmoothPageIndicator(
+                      controller: pageController,
+                      count: 3,
+                      effect: WormEffect(
+                        activeDotColor: context.theme.colorScheme.accentColor,
+                        dotColor: context.theme.colorScheme.inputForegroundColor
+                            .withOpacity(.5),
+                        radius: 6,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }

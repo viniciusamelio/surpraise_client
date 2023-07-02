@@ -1,5 +1,5 @@
+import 'package:blurple/widgets/input/base_dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../../../../core/core.dart';
 
@@ -32,7 +32,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
         DefaultStateBuilder(
           state: notifier,
           builder: (context, state) {
-            return TypeAheadField<FindCommunityOutput>(
+            return BaseSearchableDropdown<FindCommunityOutput>(
               suggestionsCallback: (pattern) async {
                 final data =
                     state as SuccessState<Exception, List<FindCommunityOutput>>;
@@ -42,20 +42,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
                       .contains(pattern.toLowerCase()),
                 );
               },
-              textFieldConfiguration: TextFieldConfiguration(
-                decoration: InputDecoration(
-                  hintText: "Comunidade de quem vai receber o praise",
-                  filled: true,
-                  contentPadding: context.theme.spacingScheme.inputPadding,
-                  fillColor: context.theme.colorScheme.inputBackgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      4,
-                    ),
-                  ),
-                ),
-              ),
-              hideSuggestionsOnKeyboardHide: true,
+              hint: "Comunidade de quem vai receber o praise",
               itemBuilder: (context, item) {
                 return ListTile(
                   tileColor: context.theme.colorScheme.inputBackgroundColor,

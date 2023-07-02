@@ -54,7 +54,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0069090cfe30bef0e1e94b7bb9b98bf39c3038a6"
+      resolved-ref: "863135aed274969755411eb9b5ec2f4996093e8c"
       url: "https://github.com/viniciusamelio/blurple.git"
     source: git
     version: "0.0.1"

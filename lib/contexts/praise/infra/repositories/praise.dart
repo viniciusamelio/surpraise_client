@@ -1,5 +1,4 @@
 import 'package:ez_either/ez_either.dart';
-import 'package:surpraise_infra/surpraise_infra.dart' hide PraiseRepository;
 
 import '../../../../core/core.dart';
 import '../../praise.dart';
@@ -15,9 +14,13 @@ class DefaultPraiseRepository implements PraiseRepository {
     try {
       await _client.post(
         "/praise",
-        data: PraiseMapper.inputToMap(
-          input,
-        ),
+        data: {
+          "communityId": input.commmunityId,
+          "message": input.message,
+          "praisedId": input.praisedId,
+          "praiserId": input.praiserId,
+          "topic": input.topic
+        },
       );
 
       return Right(null);

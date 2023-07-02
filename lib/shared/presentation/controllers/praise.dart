@@ -43,8 +43,8 @@ class DefaultPraiseController
         message: formData.message,
         praisedId: formData.praisedId,
         praiserId: praiserId,
-        topic: formData.topic,
-      ),
+        topic: formData.topic!,
+      )..id = DateTime.now().toString(),
     );
     stateFromEither(result);
   }
