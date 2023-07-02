@@ -30,7 +30,7 @@ class _FeedScreenState extends State<FeedScreen> {
   void didChangeDependencies() {
     final user = ModalRoute.of(context)!.settings.arguments;
     sessionController.currentUser = user! as UserDto;
-    if (controller.state is! SuccessState) {
+    if (controller.state.value is InitialState) {
       controller.getPraises(sessionController.currentUser!.id);
     }
     super.didChangeDependencies();
@@ -91,7 +91,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ValueListenableBuilder<DefaultState>(
                     valueListenable: controller.state,
                     builder: (context, state, __) {
-                      if (state is LoadingState) {
+                      if (state is LoadingState || state is InitialState) {
                         return const CircularProgressIndicator();
                       } else if (state is ErrorState) {
                         return const Text("error");
@@ -118,10 +118,13 @@ class _FeedScreenState extends State<FeedScreen> {
                           ],
                         );
                       }
-                      return ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) =>
-                            Text(data[index].message),
+                      return SizedBox(
+                        height: (300 * data.length).toDouble(),
+                        child: ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) =>
+                              Text(data[index].message),
+                        ),
                       );
                     },
                   ),

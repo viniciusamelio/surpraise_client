@@ -8,7 +8,7 @@ abstract class FeedPraiseMapper {
         id: map["id"],
         message: map["message"],
         topic: map["topic"],
-        communityName: map["community_name"],
+        communityName: map["community"]["title"],
         communityId: map["community_id"],
         praiser: SavedUserMapper.fromMap(map["praiser"]),
         praised: SavedUserMapper.fromMap(map["praised"]),

@@ -44,7 +44,18 @@ class _NewPraiseUserSelectionStepState
 
     return DefaultStateBuilder(
         state: widget.controller.userState,
-        onLoading: (state) => const CircularProgressIndicator(),
+        onLoading: (state) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: CircularProgressIndicator(
+                    color: context.theme.colorScheme.accentColor,
+                  ),
+                ),
+              ],
+            ),
         builder: (context, userState) {
           return ValueListenableBuilder(
               valueListenable: widget.controller.activeStep,

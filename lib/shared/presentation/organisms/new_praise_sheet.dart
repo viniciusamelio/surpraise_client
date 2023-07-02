@@ -61,9 +61,19 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
         ),
         child: DefaultStateBuilder(
             state: controller.state,
-            onLoading: (_) => Center(
-                  child: CircularProgressIndicator(
-                    color: context.theme.colorScheme.accentColor,
+            onLoading: (_) => SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CircularProgressIndicator(
+                          color: context.theme.colorScheme.accentColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
             builder: (context, state) {

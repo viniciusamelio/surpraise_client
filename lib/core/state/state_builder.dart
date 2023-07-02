@@ -25,13 +25,13 @@ class DefaultStateBuilder<L extends Exception, R> extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: state,
       builder: (context, value, child) {
-        if (state is LoadingState && onLoading != null) {
+        if (value is LoadingState && onLoading != null) {
           return onLoading!(value as LoadingState<L, R>);
-        } else if (state is ErrorState && onError != null) {
+        } else if (value is ErrorState && onError != null) {
           return onError!(value as ErrorState<L, R>);
-        } else if (state is SuccessState && onSuccess != null) {
+        } else if (value is SuccessState && onSuccess != null) {
           return onSuccess!(value as SuccessState<L, R>);
-        } else if (state is InitialState && onInitial != null) {
+        } else if (value is InitialState && onInitial != null) {
           return onInitial!(value as InitialState<L, R>);
         }
 
