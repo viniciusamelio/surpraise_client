@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:blurple/widgets/input/base_input.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import '../../controllers/signup_controller.dart';
@@ -69,6 +72,77 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
               HeroiconsSolid.lockClosed,
             ),
             obscureText: true,
+            maxLines: 1,
+          ),
+          SizedBox(
+            height: context.theme.spacingScheme.verticalSpacing * 2,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: ValueListenableBuilder(
+              valueListenable: controller.profilePicture,
+              builder: (context, picture, _) {
+                final bool selectedFile = picture != null;
+                return InkWell(
+                  onTap: () async {
+                    // Todo: Create file service
+                    final file = await openFile(acceptedTypeGroups: [
+                      const XTypeGroup(
+                        uniformTypeIdentifiers: [
+                          "image/png",
+                          "image/jpeg",
+                          "image/jpg"
+                        ],
+                        extensions: ["png", "jpg", "jpeg"],
+                      ),
+                    ]);
+                    if (file != null) {
+                      controller.profilePicture.value = File.fromRawPath(
+                        await file.readAsBytes(),
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: context.theme.spacingScheme.elevatedPadding,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        context.theme.radiusScheme.inputRadius,
+                      ),
+                      border: Border.all(
+                        color: context.theme.colorScheme.borderColor,
+                        width: .3,
+                      ),
+                      color: context.theme.colorScheme.inputBackgroundColor,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Selecione sua foto de perfil",
+                          style: context.theme.fontScheme.p2.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(
+                          height:
+                              context.theme.spacingScheme.verticalSpacing * 1.5,
+                        ),
+                        !selectedFile
+                            ? Icon(
+                                Icons.image_not_supported,
+                                color: context
+                                    .theme.colorScheme.inputForegroundColor
+                                    .withOpacity(.75),
+                                size: 42,
+                              )
+                            : Image.memory(
+                                picture.readAsBytesSync(),
+                              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

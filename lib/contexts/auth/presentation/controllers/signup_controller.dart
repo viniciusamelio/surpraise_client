@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
@@ -8,6 +10,8 @@ import '../../auth.dart';
 abstract class SignupController extends BaseStateController<SignupStatus> {
   SignupFormDataDto get formData;
   Future<void> signup();
+
+  ValueNotifier<File?> get profilePicture;
 }
 
 class DefaultSignupController
@@ -70,4 +74,7 @@ class DefaultSignupController
       },
     );
   }
+
+  @override
+  final ValueNotifier<File?> profilePicture = ValueNotifier(null);
 }

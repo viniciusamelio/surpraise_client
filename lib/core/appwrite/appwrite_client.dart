@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart';
+import 'package:appwrite/models.dart' hide File;
 
 import '../../env.dart';
 
@@ -51,5 +53,22 @@ class AppWriteService {
       return;
     }
     await account.deleteSessions();
+  }
+
+  Future<String> uploadImage({
+    required String bucketId,
+    required String fileId,
+    required File fileToSave,
+  }) async {
+    final storage = Storage(_client);
+    await storage.createFile(
+      bucketId: bucketId,
+      fileId: fileId,
+      file: InputFile.fromBytes(
+        bytes: fileToSave.readAsBytesSync(),
+        filename: fileToSave.path,
+      ),
+    );
+    return fileId;
   }
 }

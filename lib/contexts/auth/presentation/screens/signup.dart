@@ -1,8 +1,8 @@
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:surpraise_client/shared/shared.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/presentation/templates/content_scaffold.dart';
 import '../../application/services/services.dart';
 import '../controllers/signup_controller.dart';
 import '../widgets/widgets.dart';
@@ -53,6 +53,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   : BaseButton.text(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
+                          if (controller.profilePicture.value == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const ErrorSnack(
+                                      message: "Selecione uma imagem de perfil")
+                                  .build(context),
+                            );
+                            return;
+                          }
                           formKey.currentState!.save();
                           controller.signup();
                         }
