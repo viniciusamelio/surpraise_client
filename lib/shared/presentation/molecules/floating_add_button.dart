@@ -12,12 +12,18 @@ class FloatingAddButton extends StatelessWidget {
       onPressed: () {
         showModalBottomSheet(
           context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
           enableDrag: true,
-          backgroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          builder: (context) => const NewPraiseSheet(),
+          builder: (context) => ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * .7,
+            ),
+            child: const NewPraiseSheet(),
+          ),
         );
       },
       elevation: 0,

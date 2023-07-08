@@ -36,6 +36,7 @@ class LoginFormOrganism extends StatelessWidget {
           BaseInput(
             onSaved: onSavePassword,
             label: "Password",
+            maxLines: 1,
             preffixIcon: const Icon(
               HeroiconsSolid.lockClosed,
             ),
