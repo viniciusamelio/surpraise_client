@@ -60,15 +60,34 @@ class AppWriteService {
     required String fileId,
     required File fileToSave,
   }) async {
-    final storage = Storage(_client);
-    await storage.createFile(
-      bucketId: bucketId,
-      fileId: fileId,
-      file: InputFile.fromBytes(
-        bytes: fileToSave.readAsBytesSync(),
-        filename: fileToSave.path,
-      ),
-    );
-    return fileId;
+    try {
+      final storage = Storage(_client);
+      await storage.createFile(
+        bucketId: bucketId,
+        fileId: fileId,
+        file: InputFile.fromBytes(
+          bytes: fileToSave.readAsBytesSync(),
+          filename: fileToSave.path,
+        ),
+      );
+      return fileId;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<File?> getImage({
+    required String bucketId,
+    required String fileId,
+  }) async {
+    try {
+      // TODO:
+      final storage = Storage(_client);
+      final file =
+          await storage.getFileView(bucketId: bucketId, fileId: fileId);
+      return File.fromRawPath(file);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

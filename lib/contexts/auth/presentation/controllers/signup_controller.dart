@@ -20,19 +20,14 @@ class DefaultSignupController
   DefaultSignupController({
     required this.authService,
     required this.authPersistanceService,
+    required this.storageService,
   }) {
-    state.listenState(
-      onSuccess: (right) {
-        Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-          FeedScreen.routeName,
-        );
-      },
-    );
     setDefaultErrorHandling();
   }
 
   final AuthService authService;
   final AuthPersistanceService authPersistanceService;
+  final StorageService storageService;
 
   @override
   final SignupFormDataDto formData = SignupFormDataDto();
@@ -58,15 +53,29 @@ class DefaultSignupController
           ),
         );
         result.fold(
-          (__) => null,
+          (left) => state.value = ErrorState(left),
           (_) async {
-            await authPersistanceService.saveAuthenticatedUserData(
-              UserDto(
-                tag: right.tag,
-                name: right.name,
-                email: right.email,
+            await storageService.uploadImage(
+              StorageImageDto(
+                bucketId: "64aa003bb7d50755c815",
+                file: profilePicture.value!,
                 id: right.id,
               ),
+            );
+            final user = UserDto(
+              tag: right.tag,
+              name: right.name,
+              password: formData.password,
+              email: right.email,
+              id: right.id,
+              avatar: profilePicture.value,
+            );
+            await authPersistanceService.saveAuthenticatedUserData(
+              user,
+            );
+            Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
+              FeedScreen.routeName,
+              arguments: user,
             );
           },
         );

@@ -69,6 +69,7 @@ class DefaultPraiseController
             name: right.name,
             email: right.email,
             id: right.id,
+            password: null,
           ),
         );
       },

@@ -19,12 +19,14 @@ Future<void> authDependencies() async {
     DefaultSignupController(
       authService: injected(),
       authPersistanceService: injected(),
+      storageService: injected(),
     ),
   );
   inject<SignInController>(
     DefaultSignInController(
       authService: injected(),
       authPersistanceService: injected(),
+      storageService: injected(),
     ),
   );
   inject<SessionController>(
@@ -32,5 +34,6 @@ Future<void> authDependencies() async {
       authService: injected(),
       authPersistanceService: injected(),
     ),
+    singleton: true,
   );
 }

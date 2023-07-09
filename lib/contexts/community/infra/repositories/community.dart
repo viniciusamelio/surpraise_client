@@ -48,6 +48,7 @@ class DefaultCommunityRepository implements CommunityRepository {
           name: user.data["name"],
           email: user.data["email"],
           id: user.data["id"],
+          password: null,
         ),
       );
     } on Exception catch (e) {

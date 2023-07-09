@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:blurple/widgets/input/base_input.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import '../../controllers/signup_controller.dart';
 
 import '../../../../../core/core.dart';
+import '../../controllers/signup_controller.dart';
 
 class SignupFormOrganism extends StatefulWidget {
   const SignupFormOrganism({
@@ -85,22 +82,9 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
                 final bool selectedFile = picture != null;
                 return InkWell(
                   onTap: () async {
-                    // Todo: Create file service
-                    final file = await openFile(acceptedTypeGroups: [
-                      const XTypeGroup(
-                        uniformTypeIdentifiers: [
-                          "image/png",
-                          "image/jpeg",
-                          "image/jpg"
-                        ],
-                        extensions: ["png", "jpg", "jpeg"],
-                      ),
-                    ]);
-                    if (file != null) {
-                      controller.profilePicture.value = File.fromRawPath(
-                        await file.readAsBytes(),
-                      );
-                    }
+                    final image = await injected<ImageManager>().select();
+                    controller.profilePicture.value =
+                        image ?? controller.profilePicture.value;
                   },
                   child: Container(
                     padding: context.theme.spacingScheme.elevatedPadding,
@@ -136,6 +120,8 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
                               )
                             : Image.memory(
                                 picture.readAsBytesSync(),
+                                width: 80,
+                                fit: BoxFit.fitWidth,
                               ),
                       ],
                     ),

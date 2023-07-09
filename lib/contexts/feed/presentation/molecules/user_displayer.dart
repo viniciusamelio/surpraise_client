@@ -37,11 +37,11 @@ class UserDisplayer extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox.square(
+        SizedBox.square(
           dimension: 66,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              "https://i.pinimg.com/originals/19/cf/78/19cf789a8e216dc898043489c16cec00.jpg",
+            backgroundImage: MemoryImage(
+              user.avatar!.readAsBytesSync(),
             ),
           ),
         )

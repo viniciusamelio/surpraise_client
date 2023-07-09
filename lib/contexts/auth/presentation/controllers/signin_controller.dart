@@ -20,16 +20,24 @@ class DefaultSignInController
   DefaultSignInController({
     required AuthService authService,
     required AuthPersistanceService authPersistanceService,
+    required StorageService storageService,
   })  : _authService = authService,
+        _storageService = storageService,
         _authPersistanceService = authPersistanceService {
     setDefaultErrorHandling();
     state.listenState(
       onSuccess: (right) async {
+        final avatar = await _storageService.getImage(
+          bucketId: "64aa003bb7d50755c815",
+          fileId: right.id,
+        );
         final dto = UserDto(
           tag: right.tag,
           name: right.name,
           email: right.email,
+          password: formData.password,
           id: right.id,
+          avatar: avatar.fold((left) => null, (right) => right),
         );
         await _authPersistanceService.saveAuthenticatedUserData(dto);
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
@@ -42,6 +50,7 @@ class DefaultSignInController
 
   final AuthService _authService;
   final AuthPersistanceService _authPersistanceService;
+  final StorageService _storageService;
 
   @override
   final SignInFormDataDto formData = SignInFormDataDto();

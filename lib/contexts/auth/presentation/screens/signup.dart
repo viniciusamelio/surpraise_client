@@ -61,6 +61,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             );
                             return;
                           }
+                          controller.formData.profilePicture =
+                              controller.profilePicture.value!;
                           formKey.currentState!.save();
                           controller.signup();
                         }
