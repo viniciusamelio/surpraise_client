@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../env.dart';
 import '../../../../shared/shared.dart';
 import '../../../feed/presentation/presentation.dart';
 import '../../auth.dart';
@@ -55,9 +56,9 @@ class DefaultSignupController
         result.fold(
           (left) => state.value = ErrorState(left),
           (_) async {
-            await storageService.uploadImage(
+            final uploadedImage = await storageService.uploadImage(
               StorageImageDto(
-                bucketId: "64aa003bb7d50755c815",
+                bucketId: Env.avatarBucket,
                 file: profilePicture.value!,
                 id: right.id,
               ),
@@ -68,7 +69,10 @@ class DefaultSignupController
               password: formData.password,
               email: right.email,
               id: right.id,
-              avatar: profilePicture.value,
+              avatarUrl: uploadedImage.fold(
+                (left) => null,
+                (right) => right,
+              ),
             );
             await authPersistanceService.saveAuthenticatedUserData(
               user,

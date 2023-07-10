@@ -1,52 +1,43 @@
-import 'dart:io';
-
 import 'package:ez_either/ez_either.dart';
 
 import '../core.dart';
 import 'exception.dart';
 
-class AppwriteStorageService implements StorageService {
-  const AppwriteStorageService({
-    required AppWriteService appWriteService,
-    required IdService uuidService,
-  })  : _appWriteService = appWriteService,
-        _uuidService = uuidService;
-  final AppWriteService _appWriteService;
-  final IdService _uuidService;
+class SupabaseStorageService implements StorageService {
+  const SupabaseStorageService({
+    required SupabaseCloudClient supabaseClient,
+  }) : _supabase = supabaseClient;
 
+  final SupabaseCloudClient _supabase;
   @override
-  AsyncAction<String> uploadImage(StorageImageDto imageDto) async {
-    try {
-      final id = await _uuidService.generate();
-      final result = await _appWriteService.uploadImage(
-        bucketId: imageDto.bucketId,
-        fileId: id,
-        fileToSave: imageDto.file,
-      );
-      return Right(result);
-    } catch (e) {
-      return Left(const UploadFailedException());
-    }
-  }
-
-  @override
-  AsyncAction<File> getImage({
+  AsyncAction<String> getImage({
     required String bucketId,
     required String fileId,
   }) async {
     try {
-      final result = await _appWriteService.getImage(
-        bucketId: bucketId,
+      final result = await _supabase.getImage(
         fileId: fileId,
+        bucketId: bucketId,
       );
-      if (result == null) {
-        return Left(const FileNotFoundException());
-      }
-      return Right(result);
+      return Right(
+        result,
+      );
     } catch (e) {
-      return Left(
-        const GetFileException(),
+      return Left(const GetFileException());
+    }
+  }
+
+  @override
+  AsyncAction<String> uploadImage(StorageImageDto imageDto) async {
+    try {
+      final url = await _supabase.uploadImage(
+        bucketId: imageDto.bucketId,
+        fileId: imageDto.id,
+        fileToSave: imageDto.file,
       );
+      return Right(url);
+    } catch (e) {
+      return Left(const UploadFailedException());
     }
   }
 }

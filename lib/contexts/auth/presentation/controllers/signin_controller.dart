@@ -4,6 +4,7 @@ import 'package:surpraise_client/shared/shared.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
+import '../../../../env.dart';
 import '../../application/application.dart';
 import '../../dtos/dtos.dart';
 
@@ -28,7 +29,7 @@ class DefaultSignInController
     state.listenState(
       onSuccess: (right) async {
         final avatar = await _storageService.getImage(
-          bucketId: "64aa003bb7d50755c815",
+          bucketId: Env.avatarBucket,
           fileId: right.id,
         );
         final dto = UserDto(
@@ -37,7 +38,10 @@ class DefaultSignInController
           email: right.email,
           password: formData.password,
           id: right.id,
-          avatar: avatar.fold((left) => null, (right) => right),
+          avatarUrl: avatar.fold(
+            (left) => null,
+            (right) => right,
+          ),
         );
         await _authPersistanceService.saveAuthenticatedUserData(dto);
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(

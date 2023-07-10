@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 class UserDto extends GetUserOutput {
@@ -9,14 +7,14 @@ class UserDto extends GetUserOutput {
     required super.email,
     required super.id,
     this.password,
-    this.avatar,
+    this.avatarUrl,
   });
 
-  final File? avatar;
+  final String? avatarUrl;
   final String? password;
 
   UserDto copyWith({
-    File? avatar,
+    String? avatarUrl,
   }) {
     return UserDto(
       tag: tag,
@@ -24,7 +22,7 @@ class UserDto extends GetUserOutput {
       password: password,
       email: email,
       id: id,
-      avatar: avatar ?? this.avatar,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:scientisst_db/scientisst_db.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../contexts/praise/praise.dart';
@@ -13,7 +14,6 @@ import 'core.dart';
 export "package:surpraise_core/surpraise_core.dart";
 
 Future<void> _coreDependencies() async {
-  inject<AppWriteService>(AppWriteService());
   inject<HttpClient>(
     DioClient.defaultClient(
       Dio(
@@ -29,11 +29,15 @@ Future<void> _coreDependencies() async {
     ),
   );
   inject<ImageManager>(ImagePickerService());
+  inject<SupabaseCloudClient>(
+    SupabaseCloudClient(
+      supabase: Supabase.instance.client,
+    ),
+  );
   inject<IdService>(UuidService());
   inject<StorageService>(
-    AppwriteStorageService(
-      appWriteService: injected(),
-      uuidService: injected(),
+    SupabaseStorageService(
+      supabaseClient: injected(),
     ),
   );
 }

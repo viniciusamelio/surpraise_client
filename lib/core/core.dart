@@ -1,5 +1,4 @@
 export "./types.dart";
-export "./appwrite/appwrite_client.dart";
 export "./dependencies.dart";
 
 export "./exceptions/exceptions.dart";
@@ -17,3 +16,6 @@ export "./extensions/theme.dart";
 export "./database/scientist_db_service.dart";
 
 export "./storage/storage.dart";
+
+export "./supabase/exception.dart";
+export "./supabase/supabase_client.dart";

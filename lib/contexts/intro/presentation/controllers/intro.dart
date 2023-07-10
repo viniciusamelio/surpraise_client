@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../env.dart';
 import '../../../auth/auth.dart';
 
 import '../../../../core/core.dart';
@@ -37,13 +38,13 @@ class DefaultIntroController
     formData.username = persistedUser.email;
     await authService.signinStepOne(formData);
     final avatar = await storageService.getImage(
-      bucketId: "64aa003bb7d50755c815",
+      bucketId: Env.avatarBucket,
       fileId: persistedUser.id,
     );
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
       FeedScreen.routeName,
       arguments: persistedUser.copyWith(
-        avatar: avatar.fold(
+        avatarUrl: avatar.fold(
           (left) => null,
           (right) => right,
         ),

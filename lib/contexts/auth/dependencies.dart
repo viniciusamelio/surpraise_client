@@ -6,7 +6,7 @@ import 'presentation/controllers/controllers.dart';
 Future<void> authDependencies() async {
   inject<AuthService>(
     DefaultAuthService(
-      appWriteAuthService: injected(),
+      supabaseClient: injected(),
       httpClient: injected(),
     ),
   );

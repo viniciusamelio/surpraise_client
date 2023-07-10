@@ -40,8 +40,8 @@ class UserDisplayer extends StatelessWidget {
         SizedBox.square(
           dimension: 66,
           child: CircleAvatar(
-            backgroundImage: MemoryImage(
-              user.avatar!.readAsBytesSync(),
+            backgroundImage: NetworkImage(
+              user.avatarUrl!,
             ),
           ),
         )

@@ -1,4 +1,3 @@
-import 'package:appwrite/appwrite.dart';
 import 'package:dio/dio.dart';
 import 'package:ez_either/ez_either.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
@@ -8,12 +7,12 @@ import '../../auth.dart';
 
 class DefaultAuthService implements AuthService {
   const DefaultAuthService({
-    required AppWriteService appWriteAuthService,
+    required SupabaseCloudClient supabaseClient,
     required HttpClient httpClient,
-  })  : _appWriteService = appWriteAuthService,
+  })  : _supabase = supabaseClient,
         _client = httpClient;
 
-  final AppWriteService _appWriteService;
+  final SupabaseCloudClient _supabase;
   final HttpClient _client;
 
   @override
@@ -51,14 +50,11 @@ class DefaultAuthService implements AuthService {
   @override
   AsyncAction<SignupStatus> signupStepTwo(SignupCredentialsDto input) async {
     try {
-      final result = await _appWriteService.signUp(
+      await _supabase.signUp(
         email: input.email,
         password: input.password,
         userId: input.id,
       );
-      if (result.emailVerification) {
-        return Right(SignupStatus.verification);
-      }
 
       return Right(SignupStatus.success);
     } on Exception catch (e) {
@@ -69,18 +65,15 @@ class DefaultAuthService implements AuthService {
   @override
   AsyncAction<String> signinStepOne(SignInFormDataDto input) async {
     try {
-      final result = await _appWriteService.signIn(
+      final result = await _supabase.signIn(
         email: input.username,
         password: input.password,
       );
       return Right(result);
-    } on Exception catch (e) {
-      if (e is AppwriteException && [400, 401].contains(e.code)) {
-        return Left(
-          InvalidCredentialsException(),
-        );
-      }
-      return Left(e);
+    } on Exception catch (_) {
+      return Left(
+        InvalidCredentialsException(),
+      );
     }
   }
 
@@ -103,7 +96,7 @@ class DefaultAuthService implements AuthService {
 
   @override
   AsyncAction<void> logout() async {
-    await _appWriteService.logout();
+    await _supabase.logout();
     return Right(null);
   }
 }

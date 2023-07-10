@@ -17,7 +17,7 @@ class StorageImageDto {
 
 abstract class StorageService {
   AsyncAction<String> uploadImage(StorageImageDto imageDto);
-  AsyncAction<File> getImage({
+  AsyncAction<String> getImage({
     required String bucketId,
     required String fileId,
   });
