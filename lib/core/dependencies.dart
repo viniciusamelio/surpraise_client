@@ -8,6 +8,7 @@ import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
 import '../contexts/feed/feed.dart';
 import '../contexts/intro/intro.dart';
+import '../contexts/profile/dependencies.dart';
 import '../env.dart';
 import 'core.dart';
 
@@ -49,4 +50,5 @@ Future<void> setupDependencies() async {
   await feedDependencies();
   await communityDependencies();
   await praiseDependencies();
+  await profileDependencies();
 }
