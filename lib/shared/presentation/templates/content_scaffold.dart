@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/core/extensions/theme.dart';
 
+import '../../../core/extensions/theme.dart';
 import '../molecules/molecules.dart';
 
 class ContentScaffoldTemplate extends StatelessWidget {

@@ -1,7 +1,5 @@
-import 'package:surpraise_client/shared/mappers/saved_user.dart';
-
 import '../../../core/core.dart';
-
+import '../../mappers/saved_user.dart';
 import '../../shared.dart';
 
 class ScientistAuthPersistanceService implements AuthPersistanceService {

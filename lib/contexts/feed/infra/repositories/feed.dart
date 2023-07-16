@@ -1,8 +1,8 @@
 import 'package:ez_either/ez_either.dart';
-import 'package:surpraise_client/shared/mappers/mappers.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
+import '../../../../shared/mappers/mappers.dart';
 import '../../application/application.dart';
 
 class DefaultFeedRepository implements FeedRepository {
@@ -13,10 +13,16 @@ class DefaultFeedRepository implements FeedRepository {
   final HttpClient _httpClient;
 
   @override
-  AsyncAction<List<PraiseDto>> getByUser(String userId) async {
+  AsyncAction<List<PraiseDto>> getByUser({
+    required String userId,
+    bool? asPraiser,
+  }) async {
     try {
       final praises = await _httpClient.get(
         "/praise/user/$userId",
+        queryParameters: {
+          "asPraiser": asPraiser,
+        },
       );
       if (praises.data["praises"].isEmpty) {
         return Right([]);

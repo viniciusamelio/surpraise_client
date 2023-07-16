@@ -2,7 +2,8 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:blurple/tokens/color_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:surpraise_client/core/core.dart';
+
+import '../../../core/core.dart';
 
 class Navbar extends StatelessWidget {
   const Navbar({

@@ -1,8 +1,8 @@
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/shared/shared.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/shared.dart';
 import '../../application/services/services.dart';
 import '../controllers/signup_controller.dart';
 import '../widgets/widgets.dart';

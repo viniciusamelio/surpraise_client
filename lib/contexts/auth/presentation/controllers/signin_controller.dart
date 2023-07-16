@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/contexts/feed/presentation/presentation.dart';
-import 'package:surpraise_client/shared/shared.dart';
+import '../../../feed/presentation/presentation.dart';
+import '../../../../shared/shared.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';

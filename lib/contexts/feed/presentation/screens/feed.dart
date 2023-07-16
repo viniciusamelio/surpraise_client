@@ -1,6 +1,7 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import '../../../profile/presentation/presentation.dart';
 import '../../feed.dart';
 import '../molecules/molecules.dart';
 import '../../../../core/core.dart';
@@ -44,7 +45,9 @@ class _FeedScreenState extends State<FeedScreen> {
           FloatingActionButtonLocation.miniCenterDocked,
       bottomNavigationBar: Navbar(
         activeIndex: 0,
-        onTap: (index) {},
+        onTap: (index) {
+          Navigator.of(context).pushNamed(ProfileScreen.routeName);
+        },
       ),
       body: SafeArea(
         child: Stack(
@@ -63,7 +66,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                   Text.rich(
                     TextSpan(
-                      text: "Aqui você consegue ver ",
+                      text: "Aqui você consegue ver os ",
                       style: context.theme.fontScheme.p2.copyWith(fontSize: 16),
                       children: [
                         TextSpan(
@@ -78,7 +81,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               style: context.theme.fontScheme.p2
                                   .copyWith(fontSize: 16),
                               text:
-                                  "os recentes.\nQue tal mandar um pra aquele parça que sempre te ajuda no trampo? ",
+                                  "recentes.\nQue tal mandar um pra aquele parça que sempre te ajuda no trampo? ",
                             )
                           ],
                         )
