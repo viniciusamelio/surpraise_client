@@ -51,6 +51,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   image_picker: ^1.0.0
   supabase_flutter: ^1.10.7
+  popover: ^0.2.8+2
 
 dev_dependencies:
   flutter_test:
