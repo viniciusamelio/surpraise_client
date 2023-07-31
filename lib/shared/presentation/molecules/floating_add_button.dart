@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:popover/popover.dart';
+import '../../../contexts/community/community.dart';
 import '../../../core/core.dart';
 import '../presentation.dart';
 
@@ -32,7 +33,24 @@ class FloatingAddButton extends StatelessWidget {
                   _MenuItemRowMolecule(
                     label: "Nova comunidade",
                     icon: HeroiconsSolid.userGroup,
-                    action: () {},
+                    action: () {
+                      Navigator.of(context).pop();
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        enableDrag: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        builder: (context) => ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height * .6,
+                          ),
+                          child: const NewCommunitySheet(),
+                        ),
+                      );
+                    },
                   ),
                   _MenuItemRowMolecule(
                     label: "Novo praise",
@@ -71,7 +89,11 @@ class FloatingAddButton extends StatelessWidget {
           16,
         ),
       ),
-      child: const Icon(HeroiconsOutline.plus),
+      mini: true,
+      child: const Icon(
+        HeroiconsOutline.plus,
+        size: 18,
+      ),
     );
   }
 }
