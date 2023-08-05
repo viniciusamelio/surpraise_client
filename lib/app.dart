@@ -5,6 +5,7 @@ import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
 import 'contexts/feed/presentation/presentation.dart';
 import 'contexts/intro/intro.dart';
+import 'contexts/main/main_screen.dart';
 import 'contexts/profile/presentation/presentation.dart';
 import 'core/core.dart';
 
@@ -35,6 +36,7 @@ class App extends StatelessWidget {
               FeedScreen.routeName: (context) => const FeedScreen(),
               IntroScreen.routeName: (context) => const IntroScreen(),
               ProfileScreen.routeName: (context) => const ProfileScreen(),
+              MainScreen.routeName: (context) => const MainScreen(),
             },
           ),
         );

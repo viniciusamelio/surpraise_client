@@ -4,7 +4,7 @@ import '../../../auth/auth.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../feed/presentation/presentation.dart';
+import '../../../main/main_screen.dart';
 
 abstract class IntroController extends BaseStateController<bool> {
   Future<void> handleFirstPage();
@@ -42,7 +42,7 @@ class DefaultIntroController
       fileId: persistedUser.id,
     );
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-      FeedScreen.routeName,
+      MainScreen.routeName,
       arguments: persistedUser.copyWith(
         avatarUrl: avatar.fold(
           (left) => null,

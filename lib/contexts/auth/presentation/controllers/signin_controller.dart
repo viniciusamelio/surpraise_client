@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../feed/presentation/presentation.dart';
 import '../../../../shared/shared.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
 import '../../../../env.dart';
+import '../../../main/main_screen.dart';
 import '../../application/application.dart';
 import '../../dtos/dtos.dart';
 
@@ -45,7 +45,7 @@ class DefaultSignInController
         );
         await _authPersistanceService.saveAuthenticatedUserData(dto);
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-          FeedScreen.routeName,
+          MainScreen.routeName,
           arguments: dto,
         );
       },

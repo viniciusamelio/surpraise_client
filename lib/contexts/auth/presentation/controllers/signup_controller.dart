@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../env.dart';
 import '../../../../shared/shared.dart';
-import '../../../feed/presentation/presentation.dart';
+import '../../../main/main_screen.dart';
 import '../../auth.dart';
 
 abstract class SignupController extends BaseStateController<SignupStatus> {
@@ -78,7 +78,7 @@ class DefaultSignupController
               user,
             );
             Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-              FeedScreen.routeName,
+              MainScreen.routeName,
               arguments: user,
             );
           },
