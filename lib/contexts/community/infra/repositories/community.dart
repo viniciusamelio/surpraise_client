@@ -55,4 +55,26 @@ class DefaultCommunityRepository implements CommunityRepository {
       return Left(e);
     }
   }
+
+  @override
+  AsyncAction<CreateCommunityOutput> createCommunity(
+    CreateCommunityInput input,
+  ) async {
+    try {
+      final community = await _httpClient.post(
+        "/community",
+        data: CommunityMapper.createMapFromInput(
+          input,
+        ),
+      );
+
+      return Right(
+        CommunityMapper.createOutputFromMap(
+          community.data,
+        ),
+      );
+    } on Exception catch (e) {
+      return Left(e);
+    }
+  }
 }

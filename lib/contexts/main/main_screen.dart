@@ -24,28 +24,27 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: pageController,
-        builder: (context, _) {
-          final page = pageController.page;
-          return Scaffold(
-            floatingActionButton: const FloatingAddButton(),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            bottomNavigationBar: Navbar(
-              activeIndex: page!.toInt(),
+    return Scaffold(
+      floatingActionButton: const FloatingAddButton(),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      bottomNavigationBar: AnimatedBuilder(
+          animation: pageController,
+          builder: (context, _) {
+            return Navbar(
+              activeIndex: pageController.page?.toInt() ?? 0,
               onTap: (index) {
                 pageController.jumpToPage(index.toInt());
               },
-            ),
-            body: PageView(
-              controller: pageController,
-              children: const [
-                FeedScreen(),
-                ProfileScreen(),
-              ],
-            ),
-          );
-        });
+            );
+          }),
+      body: PageView(
+        controller: pageController,
+        children: const [
+          FeedScreen(),
+          ProfileScreen(),
+        ],
+      ),
+    );
   }
 }

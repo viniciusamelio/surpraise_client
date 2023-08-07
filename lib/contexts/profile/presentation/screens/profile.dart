@@ -32,10 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Navbar(activeIndex: 1, onTap: (index) {}),
-      floatingActionButton: const FloatingAddButton(),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
       body: Column(
         children: [
           ProfileHeaderOrganism(

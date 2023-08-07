@@ -43,12 +43,7 @@ class FloatingAddButton extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        builder: (context) => ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height * .6,
-                          ),
-                          child: const NewCommunitySheet(),
-                        ),
+                        builder: (context) => const NewCommunitySheet(),
                       );
                     },
                   ),
@@ -65,12 +60,7 @@ class FloatingAddButton extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        builder: (context) => ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height * .7,
-                          ),
-                          child: const NewPraiseSheet(),
-                        ),
+                        builder: (context) => const NewPraiseSheet(),
                       );
                     },
                   ),
