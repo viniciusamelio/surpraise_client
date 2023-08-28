@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../env.dart';
 import '../../../../shared/presentation/controllers/session.dart';
 import '../../application/application.dart';
 
@@ -12,6 +15,8 @@ abstract class NewCommunityController
 
   Future<void> save();
   Future<void> pickImage();
+
+  void dispose();
 }
 
 class DefaultNewCommunityController
@@ -20,10 +25,16 @@ class DefaultNewCommunityController
   DefaultNewCommunityController({
     required CommunityRepository communityRepository,
     required SessionController sessionController,
+    required ImageManager imageManager,
+    required SupabaseCloudClient supabase,
   })  : _communityRepository = communityRepository,
+        _imageManager = imageManager,
+        _supabase = supabase,
         _sessionController = sessionController;
   final CommunityRepository _communityRepository;
   final SessionController _sessionController;
+  final ImageManager _imageManager;
+  final SupabaseCloudClient _supabase;
   @override
   final ValueNotifier<String> description = ValueNotifier("");
 
@@ -36,13 +47,26 @@ class DefaultNewCommunityController
   @override
   Future<void> save() async {
     state.value = LoadingState();
-    //TODO: fazer upload da imagem antes de criar a comunidade
+    String? imageUrl;
+    if (imagePath.value.isNotEmpty) {
+      final id = DateTime.now().microsecond;
+      // TODO: extract upload file service
+      final fileId = await _supabase.uploadImage(
+        bucketId: Env.communitiesBucket,
+        fileId: id.toString(),
+        fileToSave: File(imagePath.value),
+      );
+      imageUrl = await _supabase.getImage(
+        fileId: fileId,
+        bucketId: Env.communitiesBucket,
+      );
+    }
     final outputOrError = await _communityRepository.createCommunity(
       CreateCommunityInput(
         description: description.value,
         ownerId: _sessionController.currentUser!.id,
         title: name.value,
-        imageUrl: imagePath.value,
+        imageUrl: imageUrl!,
       ),
     );
     state.value = outputOrError.fold(
@@ -53,7 +77,17 @@ class DefaultNewCommunityController
 
   @override
   Future<void> pickImage() async {
-    // TODO: implement pickImage
-    throw UnimplementedError();
+    final image = await _imageManager.select();
+    if (image != null) {
+      imagePath.value = image.path;
+    }
+  }
+
+  @override
+  void dispose() {
+    state.value = InitialState();
+    description.value = "";
+    imagePath.value = "";
+    name.value = "";
   }
 }

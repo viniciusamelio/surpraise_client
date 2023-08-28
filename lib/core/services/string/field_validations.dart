@@ -58,3 +58,13 @@ String? message(String value, {String? message}) {
 
   return null;
 }
+
+String? communityDescription(String value, {String? message}) {
+  if (requiredField(value) != null) {
+    return message ?? "Campo obrigatório";
+  } else if (minLength(value, 10) != null) {
+    return message ?? "Mínimo de 10 caracteres";
+  }
+
+  return null;
+}
