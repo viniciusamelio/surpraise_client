@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:ez_either/ez_either.dart';
-import 'package:surpraise_infra/surpraise_infra.dart';
+import 'package:surpraise_infra/surpraise_infra.dart'
+    hide DatabaseDatasource, SaveQuery, GetQuery;
 
 import '../../../../core/core.dart';
 import '../../auth.dart';
@@ -9,58 +9,14 @@ class DefaultAuthService implements AuthService {
   const DefaultAuthService({
     required SupabaseCloudClient supabaseClient,
     required HttpClient httpClient,
+    required DatabaseDatasource databaseDatasource,
   })  : _supabase = supabaseClient,
+        _datasource = databaseDatasource,
         _client = httpClient;
 
   final SupabaseCloudClient _supabase;
   final HttpClient _client;
-
-  @override
-  AsyncAction<CreateUserOutput> signupStepOne(CreateUserInput input) async {
-    try {
-      final result = await _client.post<Json>(
-        "/user/signup",
-        data: UserMapper.createUserInputToMap(input),
-      );
-      return Right(
-        UserMapper.createUserOutputFromMap(
-          result.data!,
-        ),
-      );
-    } on Exception catch (e) {
-      if (e is TypeError) {
-        return Left(
-          const InvalidResponseException(
-            message: "Unexpected response from /user/signup",
-          ),
-        );
-      } else if (e is DioException && e.response?.statusCode == 400) {
-        return Left(
-          APIException(
-            message:
-                e.response?.data["error"]?["message"] ?? "Unknown API error",
-          ),
-        );
-      }
-
-      return Left(e);
-    }
-  }
-
-  @override
-  AsyncAction<SignupStatus> signupStepTwo(SignupCredentialsDto input) async {
-    try {
-      await _supabase.signUp(
-        email: input.email,
-        password: input.password,
-        userId: input.id,
-      );
-
-      return Right(SignupStatus.success);
-    } on Exception catch (e) {
-      return Left(e);
-    }
-  }
+  final DatabaseDatasource _datasource;
 
   @override
   AsyncAction<String> signinStepOne(SignInFormDataDto input) async {
@@ -98,5 +54,38 @@ class DefaultAuthService implements AuthService {
   AsyncAction<void> logout() async {
     await _supabase.logout();
     return Right(null);
+  }
+
+  @override
+  AsyncAction<CreateUserOutput> signup(SignupCredentialsDto input) async {
+    try {
+      final user = await _supabase.signUp(
+        email: input.email,
+        password: input.password,
+      );
+
+      final result = await _datasource.save(
+        SaveQuery(
+          sourceName: "profile",
+          value: {
+            "name": input.name,
+            "email": input.email,
+            "tag": input.tag,
+            "user_id": user.id,
+          },
+        ),
+      );
+      if (result.failure) {
+        return Left(Exception("Something went wrong signing you up"));
+      }
+
+      return Right(
+        UserMapper.createUserOutputFromMap(
+          result.multiData!.first,
+        ),
+      );
+    } on Exception catch (e) {
+      return Left(e);
+    }
   }
 }

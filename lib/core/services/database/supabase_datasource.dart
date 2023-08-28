@@ -101,16 +101,19 @@ class SupabaseDatasource implements DatabaseDatasource {
   @override
   Future<QueryResult> save(SaveQuery query) async {
     try {
-      final result = await supabase.from(query.sourceName).upsert(
+      final result = await supabase
+          .from(query.sourceName)
+          .upsert(
             query.value,
             options: const FetchOptions(
               count: CountOption.exact,
             ),
-          );
+          )
+          .select();
       return QueryResult(
         success: true,
         failure: false,
-        multiData: result.data,
+        multiData: (result.data as List).cast<Json>(),
         registersAffected: result.count,
       );
     } catch (e) {

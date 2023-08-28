@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:scientisst_db/scientisst_db.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:surpraise_infra/surpraise_infra.dart';
+import 'package:surpraise_infra/surpraise_infra.dart' hide DatabaseDatasource;
 
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
@@ -27,6 +27,11 @@ Future<void> _coreDependencies() async {
   inject<ScientistDBService>(
     ScientistDBService(
       database: ScientISSTdb.instance,
+    ),
+  );
+  inject<DatabaseDatasource>(
+    SupabaseDatasource(
+      supabase: Supabase.instance.client,
     ),
   );
   inject<ImageManager>(ImagePickerService());

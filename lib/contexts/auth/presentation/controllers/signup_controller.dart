@@ -8,7 +8,7 @@ import '../../../../shared/shared.dart';
 import '../../../main/main_screen.dart';
 import '../../auth.dart';
 
-abstract class SignupController extends BaseStateController<SignupStatus> {
+abstract class SignupController extends BaseStateController<CreateUserOutput> {
   SignupFormDataDto get formData;
   Future<void> signup();
 
@@ -16,7 +16,7 @@ abstract class SignupController extends BaseStateController<SignupStatus> {
 }
 
 class DefaultSignupController
-    with BaseState<Exception, SignupStatus>
+    with BaseState<Exception, CreateUserOutput>
     implements SignupController {
   DefaultSignupController({
     required this.authService,
@@ -36,56 +36,46 @@ class DefaultSignupController
   @override
   Future<void> signup() async {
     state.value = LoadingState();
-    final input = CreateUserInput(
-      tag: "@${formData.tag}",
-      name: formData.name,
-      email: formData.email,
+
+    final result = await authService.signup(
+      SignupCredentialsDto(
+        tag: "@${formData.tag}",
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+      ),
     );
-    final stepOneResult = await authService.signupStepOne(input);
-    stepOneResult.fold(
+    result.fold(
       (left) => state.value = ErrorState(left),
       (right) async {
-        final result = await authService.signupStepTwo(
-          SignupCredentialsDto(
+        final uploadedImage = await storageService.uploadImage(
+          StorageImageDto(
+            bucketId: Env.avatarBucket,
+            file: profilePicture.value!,
             id: right.id,
-            tag: right.tag,
-            email: right.email,
-            password: formData.password,
           ),
         );
-        result.fold(
-          (left) => state.value = ErrorState(left),
-          (_) async {
-            final uploadedImage = await storageService.uploadImage(
-              StorageImageDto(
-                bucketId: Env.avatarBucket,
-                file: profilePicture.value!,
-                id: right.id,
-              ),
-            );
-            final user = UserDto(
-              tag: right.tag,
-              name: right.name,
-              password: formData.password,
-              email: right.email,
-              id: right.id,
-              avatarUrl: uploadedImage.fold(
-                (left) => null,
-                (right) => right,
-              ),
-            );
-            await authPersistanceService.saveAuthenticatedUserData(
-              user,
-            );
-            Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-              MainScreen.routeName,
-              arguments: user,
-            );
-          },
+        final user = UserDto(
+          tag: right.tag,
+          name: right.name,
+          password: formData.password,
+          email: right.email,
+          id: right.id,
+          avatarUrl: uploadedImage.fold(
+            (left) => null,
+            (right) => right,
+          ),
         );
-        stateFromEither(result);
+        await authPersistanceService.saveAuthenticatedUserData(
+          user,
+        );
+        Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
+          MainScreen.routeName,
+          arguments: user,
+        );
       },
     );
+    stateFromEither(result);
   }
 
   @override

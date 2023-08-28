@@ -20,15 +20,11 @@ class SupabaseCloudClient {
   Future<User> signUp({
     required String email,
     required String password,
-    required String userId,
   }) async {
     try {
       final AuthResponse result = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: {
-          "userId": userId,
-        },
       );
       await signIn(password: password, email: email);
       if (result.user == null) {
@@ -51,7 +47,7 @@ class SupabaseCloudClient {
     if (result.user == null) {
       throw const SupabaseUserSigninException();
     }
-    return result.user!.userMetadata!["userId"]!;
+    return result.user!.id;
   }
 
   Future<void> logout() async {
