@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  atom_notifier:
+    dependency: "direct main"
+    description:
+      name: atom_notifier
+      sha256: b7cae7459de944f789374cf62c3d48c5d16e1bb8baa86cad1f4e2b5476fa5493
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   basic_utils:
     dependency: transitive
     description:
@@ -1298,5 +1306,5 @@ packages:
     source: hosted
     version: "1.1.1"
 sdks:
-  dart: ">=3.0.0 <4.0.0"
+  dart: ">=3.0.6 <4.0.0"
   flutter: ">=3.10.0"
