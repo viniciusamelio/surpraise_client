@@ -26,15 +26,16 @@ class DefaultNewCommunityController
     required CommunityRepository communityRepository,
     required SessionController sessionController,
     required ImageManager imageManager,
-    required SupabaseCloudClient supabase,
+    required ImageController imageController,
   })  : _communityRepository = communityRepository,
         _imageManager = imageManager,
-        _supabase = supabase,
+        _imageController = imageController,
         _sessionController = sessionController;
   final CommunityRepository _communityRepository;
   final SessionController _sessionController;
   final ImageManager _imageManager;
-  final SupabaseCloudClient _supabase;
+  final ImageController _imageController;
+
   @override
   final ValueNotifier<String> description = ValueNotifier("");
 
@@ -50,16 +51,22 @@ class DefaultNewCommunityController
     String? imageUrl;
     if (imagePath.value.isNotEmpty) {
       final id = DateTime.now().microsecond;
-      // TODO: extract upload file service
-      final fileId = await _supabase.uploadImage(
-        bucketId: Env.communitiesBucket,
-        fileId: id.toString(),
-        fileToSave: File(imagePath.value),
+      final uploadedFileOrError = await _imageController.upload(
+        UploadImageDto(
+          filename: id.toString(),
+          bucket: Env.communitiesBucket,
+          file: File(imagePath.value),
+        ),
       );
-      imageUrl = await _supabase.getImage(
-        fileId: fileId,
-        bucketId: Env.communitiesBucket,
-      );
+
+      if (uploadedFileOrError.isLeft()) {
+        ErrorState(
+          uploadedFileOrError.fold((left) => left, (right) => null)!,
+        );
+        return;
+      }
+
+      imageUrl = uploadedFileOrError.fold((left) => null, (right) => right);
     }
     final outputOrError = await _communityRepository.createCommunity(
       CreateCommunityInput(

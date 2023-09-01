@@ -17,13 +17,18 @@ class DefaultImageUploader implements ImageUploader {
     required String fileName,
   }) async {
     try {
-      final result = await _supabaseCloudClient.uploadImage(
+      final uploadResult = await _supabaseCloudClient.uploadImage(
         bucketId: bucket,
         fileId: "${DateTime.now().microsecondsSinceEpoch}-$fileName",
         fileToSave: file,
       );
 
-      return Right(result);
+      final imageUrl = await _supabaseCloudClient.getImage(
+        fileId: uploadResult,
+        bucketId: bucket,
+      );
+
+      return Right(imageUrl);
     } catch (e) {
       return Left(
         Exception(

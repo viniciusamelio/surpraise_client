@@ -118,6 +118,9 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
               ),
               BaseInput(
                 label: "Nome da comunidade",
+                onSaved: (value) {
+                  controller.name.value = value ?? "";
+                },
                 validator: (value) => requiredField(
                   value ?? "",
                 ),
@@ -128,6 +131,7 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
               BaseInput.large(
                 label: "Descrição da comunidade",
                 maxLines: 3,
+                onSaved: (value) => controller.description.value = value ?? "",
                 validator: (value) => communityDescription(
                   value ?? "",
                 ),
@@ -144,6 +148,7 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                   ),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
                       controller.save();
                     }
                   },

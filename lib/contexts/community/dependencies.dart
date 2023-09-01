@@ -17,7 +17,7 @@ Future<void> communityDependencies() async {
       communityRepository: injected(),
       sessionController: injected(),
       imageManager: injected(),
-      supabase: injected(),
+      imageController: injected(),
     ),
     singleton: false,
   );
