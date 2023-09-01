@@ -19,3 +19,5 @@ export "./storage/storage.dart";
 
 export "./supabase/exception.dart";
 export "./supabase/supabase_client.dart";
+
+export "./controllers/controllers.dart";
