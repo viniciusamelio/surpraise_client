@@ -52,12 +52,11 @@ class SupabaseDatasource implements DatabaseDatasource {
         }
       }
 
-      final result = await sbquery.select<PostgrestListResponse>();
+      final List result = await sbquery.select();
       return QueryResult(
         success: true,
         failure: false,
-        multiData: result.data,
-        registersAffected: result.count,
+        multiData: result.cast<Json>(),
       );
     } catch (e) {
       return QueryResult(

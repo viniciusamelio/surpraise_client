@@ -36,7 +36,7 @@ class SupabaseCloudClient {
     }
   }
 
-  Future<String> signIn({
+  Future<User> signIn({
     required String email,
     required String password,
   }) async {
@@ -47,7 +47,7 @@ class SupabaseCloudClient {
     if (result.user == null) {
       throw const SupabaseUserSigninException();
     }
-    return result.user!.id;
+    return result.user!;
   }
 
   Future<void> logout() async {

@@ -1,6 +1,6 @@
 import 'package:ez_either/ez_either.dart';
 import 'package:surpraise_infra/surpraise_infra.dart'
-    hide DatabaseDatasource, SaveQuery, GetQuery;
+    hide DatabaseDatasource, SaveQuery, GetQuery, FilterOperator;
 
 import '../../../../core/core.dart';
 import '../../auth.dart';
@@ -8,45 +8,44 @@ import '../../auth.dart';
 class DefaultAuthService implements AuthService {
   const DefaultAuthService({
     required SupabaseCloudClient supabaseClient,
-    required HttpClient httpClient,
     required DatabaseDatasource databaseDatasource,
   })  : _supabase = supabaseClient,
-        _datasource = databaseDatasource,
-        _client = httpClient;
+        _datasource = databaseDatasource;
 
   final SupabaseCloudClient _supabase;
-  final HttpClient _client;
   final DatabaseDatasource _datasource;
 
   @override
-  AsyncAction<String> signinStepOne(SignInFormDataDto input) async {
+  AsyncAction<GetUserOutput> signin(SignInFormDataDto input) async {
     try {
-      final result = await _supabase.signIn(
+      final user = await _supabase.signIn(
         email: input.username,
         password: input.password,
       );
-      return Right(result);
+      final result = await _datasource.get(
+        GetQuery(
+          sourceName: "profile",
+          operator: FilterOperator.equalsTo,
+          value: user.id,
+          fieldName: "user_id",
+        ),
+      );
+      if (result.failure) {
+        return Left(InvalidCredentialsException());
+      }
+      final data = result.multiData![0];
+      return Right(
+        GetUserOutput(
+          tag: data["tag"],
+          name: data["name"],
+          email: data["email"],
+          id: data["id"],
+        ),
+      );
     } on Exception catch (_) {
       return Left(
         InvalidCredentialsException(),
       );
-    }
-  }
-
-  @override
-  AsyncAction<GetUserOutput> signinStepTwo(String input) async {
-    try {
-      final result = await _client.get("/user/$input");
-      return Right(
-        GetUserOutput(
-          tag: result.data["tag"],
-          name: result.data["name"],
-          email: result.data["email"],
-          id: result.data["id"],
-        ),
-      );
-    } on Exception catch (e) {
-      return Left(e);
     }
   }
 
