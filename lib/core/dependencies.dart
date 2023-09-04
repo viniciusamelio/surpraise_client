@@ -46,6 +46,16 @@ Future<void> _coreDependencies() async {
       supabaseClient: injected(),
     ),
   );
+  inject<ImageUploader>(
+    DefaultImageUploader(
+      supabaseCloudClient: injected(),
+    ),
+  );
+  inject<ImageController>(
+    DefaultImageController(
+      imageUploader: injected(),
+    ),
+  );
 }
 
 Future<void> setupDependencies() async {

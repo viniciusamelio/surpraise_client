@@ -53,6 +53,8 @@ dependencies:
   supabase_flutter: ^1.10.7
   popover: ^0.2.8+2
   permission_handler: ^10.4.3
+  cached_network_image: ^3.2.3
+  atom_notifier: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
+import '../controllers/controllers.dart';
 
 class NewCommunitySheet extends StatefulWidget {
   const NewCommunitySheet({Key? key}) : super(key: key);
@@ -14,10 +17,26 @@ class NewCommunitySheet extends StatefulWidget {
 }
 
 class _NewCommunitySheetState extends State<NewCommunitySheet> {
+  late final NewCommunityController controller;
+  late final GlobalKey<FormState> formKey;
+  @override
+  void initState() {
+    controller = injected<NewCommunityController>();
+    formKey = GlobalKey<FormState>();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomSheetMolecule(
       child: Form(
+        key: formKey,
         child: SingleChildScrollView(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -39,12 +58,34 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                           width: 2,
                         ),
                       ),
-                      child: CircleAvatar(
-                        backgroundColor: context
-                            .theme.colorScheme.overlayElevatedWidgetsColor,
-                        child: const Icon(
-                          HeroiconsSolid.photo,
-                          size: 60,
+                      child: ValueListenableBuilder(
+                        valueListenable: controller.imagePath,
+                        builder: (context, value, child) {
+                          if (value.isEmpty) {
+                            return child!;
+                          }
+
+                          return CircleAvatar(
+                            backgroundImage: FileImage(File(value)),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: context
+                              .theme.colorScheme.overlayElevatedWidgetsColor,
+                          child: ValueListenableBuilder(
+                            valueListenable: controller.imagePath,
+                            builder: (context, state, child) {
+                              if (state.isEmpty) {
+                                return child!;
+                              }
+
+                              return const SizedBox.shrink();
+                            },
+                            child: const Icon(
+                              HeroiconsSolid.photo,
+                              size: 60,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -64,7 +105,9 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                           color: context.theme.colorScheme.accentColor,
                         ),
                         padding: const EdgeInsets.all(4),
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.pickImage();
+                        },
                       ),
                     ),
                   ),
@@ -73,8 +116,14 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
               SizedBox.square(
                 dimension: context.theme.spacingScheme.verticalSpacing * 2,
               ),
-              const BaseInput(
+              BaseInput(
                 label: "Nome da comunidade",
+                onSaved: (value) {
+                  controller.name.value = value ?? "";
+                },
+                validator: (value) => requiredField(
+                  value ?? "",
+                ),
               ),
               SizedBox.square(
                 dimension: context.theme.spacingScheme.verticalSpacing * 2,
@@ -82,6 +131,10 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
               BaseInput.large(
                 label: "Descrição da comunidade",
                 maxLines: 3,
+                onSaved: (value) => controller.description.value = value ?? "",
+                validator: (value) => communityDescription(
+                  value ?? "",
+                ),
               ),
               SizedBox.square(
                 dimension: context.theme.spacingScheme.verticalSpacing * 3,
@@ -93,7 +146,12 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                   borderSide: BorderSide(
                     color: context.theme.colorScheme.accentColor,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      controller.save();
+                    }
+                  },
                   foregroundColor: context.theme.colorScheme.accentColor,
                 ),
               ),

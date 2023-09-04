@@ -60,17 +60,20 @@ class SupabaseCloudClient {
     required File fileToSave,
   }) async {
     try {
+      final newId = "$fileId${DateTime.now().microsecondsSinceEpoch}.png";
       final result = await supabase.storage.from(bucketId).upload(
-            "$fileId.png",
-            fileToSave,
-          );
-      await supabase.auth.updateUser(UserAttributes(
-        data: {
-          "avatar": result,
-          ...supabase.auth.currentUser!.userMetadata!,
-        },
-      ));
-      return result;
+          newId, fileToSave,
+          fileOptions: const FileOptions(upsert: true));
+      if (bucketId == Env.avatarBucket) {
+        await supabase.auth.updateUser(UserAttributes(
+          data: {
+            "avatar": result,
+            ...supabase.auth.currentUser!.userMetadata!,
+          },
+        ));
+      }
+
+      return newId;
     } catch (e) {
       throw const SupabaseUploadImageException();
     }
@@ -81,7 +84,7 @@ class SupabaseCloudClient {
     required String bucketId,
   }) async {
     try {
-      return supabase.storage.from(bucketId).getPublicUrl("$fileId.png");
+      return supabase.storage.from(bucketId).getPublicUrl(fileId);
     } catch (e) {
       rethrow;
     }

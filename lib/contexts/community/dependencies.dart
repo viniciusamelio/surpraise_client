@@ -12,4 +12,13 @@ Future<void> communityDependencies() async {
       communityRepository: injected(),
     ),
   );
+  inject<NewCommunityController>(
+    DefaultNewCommunityController(
+      communityRepository: injected(),
+      sessionController: injected(),
+      imageManager: injected(),
+      imageController: injected(),
+    ),
+    singleton: false,
+  );
 }
