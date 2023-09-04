@@ -1,6 +1,4 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../protocols/database/query.dart';
+import '../../external_dependencies.dart';
 
 PostgrestFilterBuilder<dynamic> whereParser<T>({
   required PostgrestBuilder<T, T> builder,

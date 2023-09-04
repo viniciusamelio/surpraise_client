@@ -1,8 +1,5 @@
-import 'package:ez_either/ez_either.dart';
-import 'package:surpraise_infra/surpraise_infra.dart'
-    hide DatabaseDatasource, SaveQuery, GetQuery, FilterOperator;
-
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../auth.dart';
 
 class DefaultAuthService implements AuthService {

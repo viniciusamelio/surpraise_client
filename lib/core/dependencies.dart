@@ -1,8 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:scientisst_db/scientisst_db.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:surpraise_infra/surpraise_infra.dart' hide DatabaseDatasource;
-
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
@@ -11,6 +6,7 @@ import '../contexts/intro/intro.dart';
 import '../contexts/profile/dependencies.dart';
 import '../env.dart';
 import 'core.dart';
+import 'external_dependencies.dart';
 
 export "package:surpraise_core/surpraise_core.dart";
 

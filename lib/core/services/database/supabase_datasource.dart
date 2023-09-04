@@ -1,6 +1,5 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import '../../core.dart';
+import '../../external_dependencies.dart';
 import 'filter_parser.dart';
 
 class SupabaseDatasource implements DatabaseDatasource {
