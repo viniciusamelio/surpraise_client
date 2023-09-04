@@ -7,20 +7,24 @@ import '../../community.dart';
 
 class DefaultCommunityRepository implements CommunityRepository {
   DefaultCommunityRepository({
-    required HttpClient httpClient,
-  }) : _httpClient = httpClient;
+    required DatabaseDatasource databaseDatasource,
+  }) : _datasource = databaseDatasource;
 
-  final HttpClient _httpClient;
+  final DatabaseDatasource _datasource;
+
   @override
   AsyncAction<List<FindCommunityOutput>> getCommunities(String userId) async {
     try {
-      final communities = await _httpClient.get("/community/user/$userId");
-      if (communities.data["communities"].isEmpty) {
-        return Right([]);
-      }
+      final communities = await _datasource.get(
+        GetQuery(
+          sourceName: communitiesCollection,
+          value: userId,
+          fieldName: "user_id",
+        ),
+      );
 
       return Right(
-        communities.data["communities"]
+        (communities.multiData ?? [])
             .map<FindCommunityOutput>(
               (e) => CommunityMapper.findOutputFromMap(
                 e,
@@ -36,7 +40,13 @@ class DefaultCommunityRepository implements CommunityRepository {
   @override
   AsyncAction<UserDto?> getUserByTag(String tag) async {
     try {
-      final user = await _httpClient.get("/user/tag/$tag");
+      final user = await _datasource.get(
+        GetQuery(
+          sourceName: profilesCollection,
+          value: tag,
+          fieldName: "tag",
+        ),
+      );
 
       if (user.data == null) {
         return Right(null);
@@ -45,9 +55,9 @@ class DefaultCommunityRepository implements CommunityRepository {
       return Right(
         UserDto(
           tag: tag,
-          name: user.data["name"],
-          email: user.data["email"],
-          id: user.data["id"],
+          name: user.multiData![0]["name"],
+          email: user.multiData![0]["email"],
+          id: user.multiData![0]["id"],
           password: null,
         ),
       );
@@ -61,16 +71,42 @@ class DefaultCommunityRepository implements CommunityRepository {
     CreateCommunityInput input,
   ) async {
     try {
-      final community = await _httpClient.post(
-        "/community",
-        data: CommunityMapper.createMapFromInput(
-          input,
+      final community = await _datasource.save(
+        SaveQuery(
+          sourceName: communitiesCollection,
+          value: {
+            "owner_id": input.ownerId,
+            "imageUrl": input.imageUrl,
+            "description": input.description,
+            "title": input.title,
+          },
+        ),
+      );
+
+      await _datasource.save(
+        SaveQuery(
+          sourceName: communityMembersCollection,
+          value: {
+            "member_id": input.ownerId,
+            "community_id": community.multiData![0]["id"],
+            "role": "owner",
+          },
         ),
       );
 
       return Right(
-        CommunityMapper.createOutputFromMap(
-          community.data,
+        CreateCommunityOutput(
+          id: community.multiData![0]["id"],
+          description: community.multiData![0]["description"],
+          title: community.multiData![0]["title"],
+          members: [
+            {
+              "member_id": input.ownerId,
+              "community_id": community.multiData![0]["id"],
+              "role": "owner",
+            },
+          ],
+          ownerId: input.ownerId,
         ),
       );
     } on Exception catch (e) {

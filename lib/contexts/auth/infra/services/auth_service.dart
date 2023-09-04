@@ -36,7 +36,7 @@ class DefaultAuthService implements AuthService {
           tag: data["tag"],
           name: data["name"],
           email: data["email"],
-          id: data["id"],
+          id: user.id,
         ),
       );
     } on Exception catch (_) {
@@ -77,7 +77,10 @@ class DefaultAuthService implements AuthService {
 
       return Right(
         UserMapper.createUserOutputFromMap(
-          result.multiData!.first,
+          {
+            ...result.multiData!.first,
+            "id": user.id,
+          },
         ),
       );
     } on Exception catch (e) {

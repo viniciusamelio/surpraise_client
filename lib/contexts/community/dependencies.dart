@@ -4,7 +4,7 @@ import 'community.dart';
 Future<void> communityDependencies() async {
   inject<CommunityRepository>(
     DefaultCommunityRepository(
-      httpClient: injected(),
+      databaseDatasource: injected(),
     ),
   );
   inject<GetCommunitiesController>(
