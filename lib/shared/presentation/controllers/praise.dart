@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../contexts/community/community.dart';
 import '../../../contexts/praise/praise.dart';
 import '../../../core/core.dart';
+import '../../../core/external_dependencies.dart'
+    hide PraiseRepository, CommunityRepository;
 import '../../dtos/user.dart';
 import '../dtos/dtos.dart';
 
 abstract class PraiseController extends BaseStateController<void> {
   ValueNotifier<int> get activeStep;
-  ValueNotifier<DefaultState<Exception, UserDto>> get userState;
-  ValueNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
+  AtomNotifier<DefaultState<Exception, UserDto>> get userState;
+  AtomNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
       get communitiesState;
   PraiseFormDataDto get formData;
 
@@ -36,7 +38,7 @@ class DefaultPraiseController
 
   @override
   Future<void> sendPraise(String praiserId) async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final result = await _praiseRepository.send(
       PraiseInput(
         commmunityId: formData.communityId,
@@ -54,22 +56,24 @@ class DefaultPraiseController
 
   @override
   Future<void> getUserFromTag(String tag) async {
-    userState.value = LoadingState();
+    userState.set(LoadingState());
     final result = await _communityRepository.getUserByTag(tag);
     result.fold(
-      (left) => userState.value = ErrorState(left),
+      (left) => userState.set(ErrorState(left)),
       (right) {
         if (right == null) {
-          userState.value = ErrorState(Exception("User not found"));
+          userState.set(ErrorState(Exception("User not found")));
           return;
         }
-        userState.value = SuccessState(
-          UserDto(
-            tag: right.tag,
-            name: right.name,
-            email: right.email,
-            id: right.id,
-            password: null,
+        userState.set(
+          SuccessState(
+            UserDto(
+              tag: right.tag,
+              name: right.name,
+              email: right.email,
+              id: right.id,
+              password: null,
+            ),
           ),
         );
       },
@@ -77,10 +81,10 @@ class DefaultPraiseController
   }
 
   @override
-  final ValueNotifier<DefaultState<Exception, UserDto>> userState =
-      ValueNotifier(InitialState());
+  final AtomNotifier<DefaultState<Exception, UserDto>> userState =
+      AtomNotifier(InitialState());
 
   @override
-  final ValueNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
-      communitiesState = ValueNotifier(InitialState());
+  final AtomNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
+      communitiesState = AtomNotifier(InitialState());
 }

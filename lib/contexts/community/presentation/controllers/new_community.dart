@@ -49,7 +49,7 @@ class DefaultNewCommunityController
 
   @override
   Future<void> save() async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     String? imageUrl;
     if (imagePath.value.isNotEmpty) {
       final id = DateTime.now().microsecond;
@@ -78,12 +78,14 @@ class DefaultNewCommunityController
         imageUrl: imageUrl!,
       ),
     );
-    state.value = outputOrError.fold(
-      (left) => ErrorState(left),
-      (right) {
-        injected<ApplicationEventBus>().add(const CommunityAddedEvent());
-        return SuccessState(right);
-      },
+    state.set(
+      outputOrError.fold(
+        (left) => ErrorState(left),
+        (right) {
+          injected<ApplicationEventBus>().add(const CommunityAddedEvent());
+          return SuccessState(right);
+        },
+      ),
     );
   }
 
@@ -97,7 +99,7 @@ class DefaultNewCommunityController
 
   @override
   void dispose() {
-    state.value = InitialState();
+    state.set(InitialState());
     description.value = "";
     imagePath.value = "";
     name.value = "";

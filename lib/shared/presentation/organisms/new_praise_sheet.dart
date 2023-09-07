@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../contexts/community/community.dart';
 import '../../../core/core.dart';
+import '../../../core/external_dependencies.dart';
 import '../../shared.dart';
 
 class NewPraiseSheet extends StatefulWidget {
@@ -59,9 +59,12 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
           right: 24,
           left: 24,
         ),
-        child: DefaultStateBuilder(
-            state: controller.state,
-            onLoading: (_) => SizedBox(
+        child: PolymorphicAtomObserver(
+            atom: controller.state,
+            types: [
+              TypedAtomHandler(
+                type: LoadingState,
+                builder: (context, state) => SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +79,9 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
                     ],
                   ),
                 ),
-            builder: (context, state) {
+              ),
+            ],
+            defaultBuilder: (state) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

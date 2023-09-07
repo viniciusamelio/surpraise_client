@@ -1,6 +1,6 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../feed.dart';
 import '../molecules/molecules.dart';
 import '../../../../core/core.dart';
@@ -80,9 +80,9 @@ class _FeedScreenState extends State<FeedScreen> {
                 SizedBox(
                   height: Spacings.lg,
                 ),
-                ValueListenableBuilder<DefaultState>(
-                  valueListenable: controller.state,
-                  builder: (context, state, __) {
+                AtomObserver<DefaultState>(
+                  atom: controller.state,
+                  builder: (context, state) {
                     if (state is LoadingState || state is InitialState) {
                       return const CircularProgressIndicator();
                     } else if (state is ErrorState) {

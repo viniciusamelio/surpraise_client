@@ -24,7 +24,7 @@ class DefaultAuthService implements AuthService {
           sourceName: "profile",
           operator: FilterOperator.equalsTo,
           value: user.id,
-          fieldName: "user_id",
+          fieldName: "id",
         ),
       );
       if (result.failure) {
@@ -67,7 +67,7 @@ class DefaultAuthService implements AuthService {
             "name": input.name,
             "email": input.email,
             "tag": input.tag,
-            "user_id": user.id,
+            "id": user.id,
           },
         ),
       );

@@ -44,7 +44,7 @@ class DefaultProfileController
 
   @override
   Future<void> getPraises(String userId) async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final feedsOrError =
         await _feedRepository.getByUser(userId: userId, asPraiser: false);
     stateFromEither(feedsOrError);

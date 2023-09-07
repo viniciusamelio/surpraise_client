@@ -21,7 +21,7 @@ class SupabaseStorageService implements StorageService {
         bucketId: bucketId,
       );
       return Right(
-        result,
+        "$result.png",
       );
     } catch (e) {
       return Left(const GetFileException());

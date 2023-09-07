@@ -4,6 +4,7 @@ import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../shared.dart';
 
 class NewPraiseUserSelectionStep extends StatefulWidget {
@@ -42,21 +43,25 @@ class _NewPraiseUserSelectionStepState
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    return DefaultStateBuilder(
-        state: widget.controller.userState,
-        onLoading: (state) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: CircularProgressIndicator(
-                    color: context.theme.colorScheme.accentColor,
-                  ),
-                ),
-              ],
-            ),
-        builder: (context, userState) {
+    return PolymorphicAtomObserver(
+        atom: widget.controller.userState,
+        types: [
+          TypedAtomHandler(
+              type: LoadingState,
+              builder: (context, state) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CircularProgressIndicator(
+                          color: context.theme.colorScheme.accentColor,
+                        ),
+                      ),
+                    ],
+                  ))
+        ],
+        defaultBuilder: (userState) {
           return ValueListenableBuilder(
               valueListenable: widget.controller.activeStep,
               builder: (context, state, _) {

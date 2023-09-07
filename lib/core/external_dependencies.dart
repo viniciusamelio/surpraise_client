@@ -7,7 +7,8 @@ export "package:kiwi/kiwi.dart";
 
 export "package:permission_handler/permission_handler.dart";
 
-export "package:atom_notifier/atom_notifier.dart";
+export "package:atom_notifier/atom_notifier.dart"
+    hide DefaultState, SuccessState, ErrorState, LoadingState, InitialState;
 
 export "package:supabase_flutter/supabase_flutter.dart";
 

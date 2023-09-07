@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import '../core.dart';
+import '../external_dependencies.dart';
 
 abstract class BaseStateController<R> {
-  ValueNotifier<DefaultState<Exception, R>> get state;
+  AtomNotifier<DefaultState<Exception, R>> get state;
 }

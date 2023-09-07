@@ -25,7 +25,7 @@ class DefaultIntroController
 
   @override
   Future<void> handleFirstPage() async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final persistedUser = await authPersistanceService.getAuthenticatedUser();
     if (persistedUser == null) {
       Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(

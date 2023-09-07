@@ -2,6 +2,7 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../application/services/services.dart';
 import '../controllers/signup_controller.dart';
@@ -35,9 +36,9 @@ class _SignupScreenState extends State<SignupScreen> {
       title: "Crie sua conta",
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Builder(builder: (context) {
-        return ValueListenableBuilder(
-          valueListenable: controller.state,
-          builder: (context, state, _) {
+        return AtomObserver(
+          atom: controller.state,
+          builder: (context, state) {
             return SizedBox(
               width: MediaQuery.of(context).size.width -
                   (context.theme.spacingScheme.verticalSpacing * 4) * 2,

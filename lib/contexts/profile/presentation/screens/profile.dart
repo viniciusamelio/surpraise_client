@@ -6,8 +6,7 @@ import 'package:blurple/widgets/tab/tab_item.dart';
 import 'package:flutter/material.dart';
 import 'package:pressable/pressable.dart';
 import '../../../../core/core.dart';
-import '../../../../core/external_dependencies.dart'
-    hide AtomNotifier, LoadingState, SuccessState, ErrorState;
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
 import '../../../community/dtos/find_community_dto.dart';
@@ -84,9 +83,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  ValueListenableBuilder(
-                    valueListenable: controller.state,
-                    builder: (context, state, _) {
+                  AtomObserver(
+                    atom: controller.state,
+                    builder: (context, state) {
                       if (state is LoadingState) {
                         return const CircularProgressIndicator();
                       }

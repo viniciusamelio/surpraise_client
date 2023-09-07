@@ -1,42 +1,42 @@
-import 'package:ez_either/ez_either.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/shared.dart';
 import '../core.dart';
+import '../external_dependencies.dart';
 
 mixin BaseState<L extends Exception, R> {
-  final ValueNotifier<DefaultState<L, R>> state =
-      ValueNotifier(InitialState<L, R>());
+  final AtomNotifier<DefaultState<L, R>> state =
+      AtomNotifier(InitialState<L, R>());
 
-  void stateFromEither(Either<L, R> either) => either.fold(
-        (left) => state.value = ErrorState(left, type: left.runtimeType),
-        (right) => state.value = SuccessState(right),
+  void stateFromEither(Either<L, R> either) => state.set(
+        either.fold(
+          (left) => ErrorState(left, type: left.runtimeType),
+          (right) => SuccessState(right),
+        ),
       );
 
   void setDefaultErrorHandling() async {
-    state.listenState(
-      onError: (left) {
-        final context = navigatorKey.currentContext!;
+    state.on<ErrorState<L, R>>((left) {
+      final context = navigatorKey.currentContext!;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          ErrorSnack(message: left.toString()).build(
-            context,
-          ),
-        );
-      },
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        ErrorSnack(message: left.toString()).build(
+          context,
+        ),
+      );
+    });
   }
 }
 
 extension ListenState<L extends Exception, R>
-    on ValueNotifier<DefaultState<L, R>> {
+    on AtomNotifier<DefaultState<L, R>> {
   void listenState({
     void Function(L left)? onError,
     void Function(R right)? onSuccess,
     VoidCallback? onLoading,
   }) {
-    addListener(
-      () {
+    listen(
+      (value) {
         if (value is LoadingState && onLoading != null) {
           onLoading();
         }

@@ -66,7 +66,7 @@ class DefaultSignInController
 
   @override
   Future<void> signIn() async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final result = await _authService.signin(formData);
     stateFromEither(result);
   }

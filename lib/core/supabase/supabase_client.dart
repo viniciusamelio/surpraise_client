@@ -60,7 +60,7 @@ class SupabaseCloudClient {
     required File fileToSave,
   }) async {
     try {
-      final newId = "$fileId${DateTime.now().microsecondsSinceEpoch}.png";
+      final newId = "$fileId.png";
       final result = await supabase.storage.from(bucketId).upload(
           newId, fileToSave,
           fileOptions: const FileOptions(upsert: true));
@@ -73,7 +73,7 @@ class SupabaseCloudClient {
         ));
       }
 
-      return newId;
+      return "${Env.sbUrl}/storage/v1/object/public/$bucketId/$fileId.png";
     } catch (e) {
       throw const SupabaseUploadImageException();
     }

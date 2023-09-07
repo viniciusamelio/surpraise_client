@@ -35,7 +35,7 @@ class DefaultSignupController
 
   @override
   Future<void> signup() async {
-    state.value = LoadingState();
+    state.set(LoadingState());
 
     final result = await authService.signup(
       SignupCredentialsDto(
@@ -46,7 +46,7 @@ class DefaultSignupController
       ),
     );
     result.fold(
-      (left) => state.value = ErrorState(left),
+      (left) => state.set(ErrorState(left)),
       (right) async {
         final uploadedImage = await storageService.uploadImage(
           StorageImageDto(

@@ -17,7 +17,7 @@ class DefaultGetCommunitiesController
   final CommunityRepository _communityRepository;
   @override
   Future<void> getCommunities(String userId) async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final communitiesOrError =
         await _communityRepository.getCommunities(userId);
     stateFromEither(communitiesOrError);

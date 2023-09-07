@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../contexts/community/dtos/dtos.dart';
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 
 class NewPraiseCommunitySelectionStep extends StatelessWidget {
   const NewPraiseCommunitySelectionStep({
@@ -11,7 +12,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
     required this.onCommunitySelected,
   });
 
-  final ValueNotifier<DefaultState<Exception, List<ListUserCommunitiesOutput>>>
+  final AtomNotifier<DefaultState<Exception, List<ListUserCommunitiesOutput>>>
       notifier;
 
   final void Function(FindCommunityOutput community) onCommunitySelected;
@@ -30,8 +31,8 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
         const SizedBox(
           height: 32,
         ),
-        DefaultStateBuilder(
-          state: notifier,
+        AtomObserver(
+          atom: notifier,
           builder: (context, state) {
             return BaseSearchableDropdown<FindCommunityOutput>(
               suggestionsCallback: (pattern) async {
