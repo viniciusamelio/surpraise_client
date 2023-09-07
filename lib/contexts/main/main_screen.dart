@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../feed/feed.dart';
 import '../profile/profile.dart';
@@ -11,11 +12,12 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
   late final PageController pageController;
 
   @override
   void initState() {
+    checkSession();
     pageController = PageController(
       initialPage: 0,
     );

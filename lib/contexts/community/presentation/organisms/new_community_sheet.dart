@@ -23,6 +23,16 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
   void initState() {
     controller = injected<NewCommunityController>();
     formKey = GlobalKey<FormState>();
+    controller.state.listenState(
+      onSuccess: (right) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SuccessSnack(message: "Comunidade ${right.title} criada").build(
+            context,
+          ),
+        );
+      },
+    );
     super.initState();
   }
 

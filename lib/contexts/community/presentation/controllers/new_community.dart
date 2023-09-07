@@ -30,7 +30,9 @@ class DefaultNewCommunityController
   })  : _communityRepository = communityRepository,
         _imageManager = imageManager,
         _imageController = imageController,
-        _sessionController = sessionController;
+        _sessionController = sessionController {
+    setDefaultErrorHandling();
+  }
   final CommunityRepository _communityRepository;
   final SessionController _sessionController;
   final ImageManager _imageManager;
@@ -78,7 +80,10 @@ class DefaultNewCommunityController
     );
     state.value = outputOrError.fold(
       (left) => ErrorState(left),
-      (right) => SuccessState(right),
+      (right) {
+        injected<ApplicationEventBus>().add(const CommunityAddedEvent());
+        return SuccessState(right);
+      },
     );
   }
 

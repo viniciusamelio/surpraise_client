@@ -4,6 +4,7 @@ import 'package:surpraise_infra/surpraise_infra.dart' hide CommunityRepository;
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/user.dart';
 import '../../community.dart';
+import '../../dtos/dtos.dart';
 
 class DefaultCommunityRepository implements CommunityRepository {
   DefaultCommunityRepository({
@@ -13,22 +14,21 @@ class DefaultCommunityRepository implements CommunityRepository {
   final DatabaseDatasource _datasource;
 
   @override
-  AsyncAction<List<FindCommunityOutput>> getCommunities(String userId) async {
+  AsyncAction<List<ListUserCommunitiesOutput>> getCommunities(
+      String userId) async {
     try {
       final communities = await _datasource.get(
         GetQuery(
           sourceName: communitiesCollection,
           value: userId,
-          fieldName: "user_id",
+          fieldName: "owner_id",
         ),
       );
 
       return Right(
         (communities.multiData ?? [])
-            .map<FindCommunityOutput>(
-              (e) => CommunityMapper.findOutputFromMap(
-                e,
-              ),
+            .map<ListUserCommunitiesOutput>(
+              (e) => communitiesListToMap(e),
             )
             .toList(),
       );

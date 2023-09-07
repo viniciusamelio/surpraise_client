@@ -3,9 +3,10 @@ import '../../../community/application/application.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
+import '../../../community/dtos/dtos.dart';
 import '../../../feed/application/application.dart';
 
-typedef Communities = List<FindCommunityOutput>;
+typedef Communities = List<ListUserCommunitiesOutput>;
 typedef Praises = List<PraiseDto>;
 
 abstract class ProfileController extends BaseStateController<Praises> {

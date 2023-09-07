@@ -5,6 +5,8 @@ import 'package:blurple/widgets/tab/tab_item.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
+import '../../../community/application/application.dart';
+import '../../../community/dtos/find_community_dto.dart';
 import '../../profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -26,7 +28,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     controller = injected();
     controller.getCommunities(sessionController.currentUser!.id);
     controller.getPraises(sessionController.currentUser!.id);
+    injected<ApplicationEventBus>().on<CommunityAddedEvent>(
+      (_) {
+        controller.getCommunities(sessionController.currentUser!.id);
+      },
+      name: "CommunityAddedHandler",
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    injected<ApplicationEventBus>().removeListener("CommunityAddedHandler");
+    super.dispose();
   }
 
   @override
@@ -54,63 +68,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           Expanded(
-            child: PageView(
-              controller: pageController,
-              children: [
-                ValueListenableBuilder(
-                  valueListenable: controller.state,
-                  builder: (context, state, _) {
-                    if (state is LoadingState) {
-                      return const CircularProgressIndicator();
-                    }
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PageView(
+                controller: pageController,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: controller.state,
+                    builder: (context, state, _) {
+                      if (state is LoadingState) {
+                        return const CircularProgressIndicator();
+                      }
 
-                    final List<PraiseDto> data = (state as SuccessState).data;
-                    return SizedBox(
-                      child: ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.all(Spacings.lg),
-                            decoration: BoxDecoration(
-                              color: ColorTokens.concrete,
-                              borderRadius: BorderRadius.circular(
-                                8,
+                      final List<PraiseDto> data = (state as SuccessState).data;
+                      return SizedBox(
+                        child: ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: EdgeInsets.all(Spacings.lg),
+                              decoration: BoxDecoration(
+                                color: ColorTokens.concrete,
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                ValueListenableBuilder(
-                  valueListenable: controller.communitiesState,
-                  builder: (context, state, _) {
-                    if (state is LoadingState) {
-                      return const CircularProgressIndicator();
-                    }
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: controller.communitiesState,
+                    builder: (context, state, _) {
+                      if (state is LoadingState) {
+                        return const CircularProgressIndicator();
+                      }
 
-                    final List<FindCommunityOutput> data =
-                        (state as SuccessState).data;
-                    return SizedBox(
-                      child: ListView.builder(
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.all(Spacings.lg),
-                            decoration: BoxDecoration(
-                              color: ColorTokens.concrete,
-                              borderRadius: BorderRadius.circular(
-                                8,
+                      final List<ListUserCommunitiesOutput> data =
+                          (state as SuccessState).data;
+                      return SizedBox(
+                        child: ListView.separated(
+                          itemCount: data.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 8),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: EdgeInsets.all(Spacings.lg),
+                              decoration: BoxDecoration(
+                                color: ColorTokens.concrete,
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ],
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],

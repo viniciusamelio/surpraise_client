@@ -1,13 +1,14 @@
 import '../../../../core/core.dart';
 import '../../community.dart';
+import '../../dtos/dtos.dart';
 
 abstract class GetCommunitiesController
-    extends BaseStateController<List<FindCommunityOutput>> {
+    extends BaseStateController<List<ListUserCommunitiesOutput>> {
   Future<void> getCommunities(String userId);
 }
 
 class DefaultGetCommunitiesController
-    with BaseState<Exception, List<FindCommunityOutput>>
+    with BaseState<Exception, List<ListUserCommunitiesOutput>>
     implements GetCommunitiesController {
   DefaultGetCommunitiesController({
     required CommunityRepository communityRepository,

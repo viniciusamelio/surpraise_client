@@ -1,6 +1,7 @@
 import 'package:blurple/widgets/input/base_dropdown.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../contexts/community/dtos/dtos.dart';
 import '../../../../core/core.dart';
 
 class NewPraiseCommunitySelectionStep extends StatelessWidget {
@@ -10,7 +11,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
     required this.onCommunitySelected,
   });
 
-  final ValueNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
+  final ValueNotifier<DefaultState<Exception, List<ListUserCommunitiesOutput>>>
       notifier;
 
   final void Function(FindCommunityOutput community) onCommunitySelected;

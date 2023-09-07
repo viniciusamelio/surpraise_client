@@ -52,6 +52,10 @@ Future<void> _coreDependencies() async {
       imageUploader: injected(),
     ),
   );
+  inject<ApplicationEventBus>(
+    DefaultBus(),
+    singleton: true,
+  );
 }
 
 Future<void> setupDependencies() async {
