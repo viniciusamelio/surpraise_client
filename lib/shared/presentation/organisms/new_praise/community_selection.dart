@@ -12,8 +12,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
     required this.onCommunitySelected,
   });
 
-  final AtomNotifier<DefaultState<Exception, List<ListUserCommunitiesOutput>>>
-      notifier;
+  final AtomNotifier<DefaultState<Exception, List<CommunityOutput>>> notifier;
 
   final void Function(FindCommunityOutput community) onCommunitySelected;
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
 import 'contexts/community/community.dart';
+import 'contexts/community/dtos/find_community_dto.dart';
 import 'contexts/feed/presentation/presentation.dart';
 import 'contexts/intro/intro.dart';
 import 'contexts/main/main_screen.dart';
@@ -39,7 +40,10 @@ class App extends StatelessWidget {
               ProfileScreen.routeName: (context) => const ProfileScreen(),
               MainScreen.routeName: (context) => const MainScreen(),
               CommunityDetailsScreen.routeName: (context) =>
-                  const CommunityDetailsScreen(),
+                  CommunityDetailsScreen(
+                    community: ModalRoute.of(context)?.settings.arguments
+                        as CommunityOutput,
+                  ),
             },
           ),
         );

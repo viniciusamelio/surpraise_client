@@ -64,21 +64,7 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
             types: [
               TypedAtomHandler(
                 type: LoadingState,
-                builder: (context, state) => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: CircularProgressIndicator(
-                          color: context.theme.colorScheme.accentColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                builder: (context, state) => const LoaderMolecule(),
               ),
             ],
             defaultBuilder: (state) {

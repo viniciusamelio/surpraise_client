@@ -21,4 +21,9 @@ Future<void> communityDependencies() async {
     ),
     singleton: false,
   );
+  inject<CommunityDetailsController>(
+    DefaultCommunityDetailsController(
+      communityRepository: injected(),
+    ),
+  );
 }

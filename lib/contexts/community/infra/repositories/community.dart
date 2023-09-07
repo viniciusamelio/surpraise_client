@@ -14,7 +14,7 @@ class DefaultCommunityRepository implements CommunityRepository {
   final DatabaseDatasource _datasource;
 
   @override
-  AsyncAction<List<ListUserCommunitiesOutput>> getCommunities(
+  AsyncAction<List<CommunityOutput>> getCommunities(
     String userId,
   ) async {
     try {
@@ -28,7 +28,7 @@ class DefaultCommunityRepository implements CommunityRepository {
 
       return Right(
         (communities.multiData ?? [])
-            .map<ListUserCommunitiesOutput>(
+            .map<CommunityOutput>(
               (e) => communitiesListToMap(e),
             )
             .toList(),
@@ -125,7 +125,7 @@ class DefaultCommunityRepository implements CommunityRepository {
           sourceName: communitiesCollection,
           value: id,
           fieldName: "id",
-          select: "community_member(role), profile(tag, name, id)",
+          select: "community_member(role, member_id), profile(tag, name, id)",
         ),
       );
       if (communities.failure) {
@@ -139,9 +139,9 @@ class DefaultCommunityRepository implements CommunityRepository {
         communities.multiData!
             .map(
               (e) => FindCommunityMemberOutput(
-                id: e["id"],
+                id: e["community_member"][0]["member_id"],
                 communityId: id,
-                role: e["community_member"]["role"],
+                role: e["community_member"][0]["role"],
                 name: e["profile"]["name"],
                 tag: e["profile"]["tag"],
               ),

@@ -1,26 +1,25 @@
 import '../../../core/core.dart';
 
-class ListUserCommunitiesOutput {
-  const ListUserCommunitiesOutput({
+class CommunityOutput {
+  const CommunityOutput({
     required this.id,
     required this.ownerId,
     required this.description,
     required this.title,
-    required this.url,
+    required this.image,
   });
 
   final String id;
   final String ownerId;
   final String description;
   final String title;
-  final String url;
+  final String image;
 }
 
-ListUserCommunitiesOutput communitiesListToMap(Json json) =>
-    ListUserCommunitiesOutput(
+CommunityOutput communitiesListToMap(Json json) => CommunityOutput(
       id: json["id"],
       ownerId: json["owner_id"],
       description: json["description"],
       title: json["title"],
-      url: json["imageUrl"],
+      image: json["imageUrl"],
     );

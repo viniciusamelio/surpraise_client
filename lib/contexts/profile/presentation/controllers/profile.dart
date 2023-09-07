@@ -6,7 +6,7 @@ import '../../../../shared/dtos/dtos.dart';
 import '../../../community/dtos/dtos.dart';
 import '../../../feed/application/application.dart';
 
-typedef Communities = List<ListUserCommunitiesOutput>;
+typedef Communities = List<CommunityOutput>;
 typedef Praises = List<PraiseDto>;
 
 abstract class ProfileController extends BaseStateController<Praises> {

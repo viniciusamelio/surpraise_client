@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return const CircularProgressIndicator();
                       }
 
-                      final List<ListUserCommunitiesOutput> data =
+                      final List<CommunityOutput> data =
                           (state as SuccessState).data;
                       return SizedBox(
                         child: ListView.separated(
@@ -147,7 +147,7 @@ class _CommunityTileMolecule extends StatelessWidget {
     required this.item,
   });
 
-  final ListUserCommunitiesOutput item;
+  final CommunityOutput item;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +155,7 @@ class _CommunityTileMolecule extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).pushNamed(
           CommunityDetailsScreen.routeName,
-          arguments: item.id,
+          arguments: item,
         );
       },
       child: Container(
@@ -184,7 +184,7 @@ class _CommunityTileMolecule extends StatelessWidget {
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: CachedNetworkImageProvider(
-                    item.url,
+                    item.image,
                   ),
                 ),
               ),
