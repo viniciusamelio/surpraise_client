@@ -194,12 +194,14 @@ class _CommunityTileMolecule extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        item.title,
-                        style: context.theme.fontScheme.p2
-                            .copyWith(color: Colors.white),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      Flexible(
+                        child: Text(
+                          item.title,
+                          style: context.theme.fontScheme.p2
+                              .copyWith(color: Colors.white),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Visibility(
                         visible:
