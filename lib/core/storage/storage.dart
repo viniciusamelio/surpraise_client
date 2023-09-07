@@ -1,6 +1,7 @@
 import 'package:ez_either/ez_either.dart';
 
 import '../core.dart';
+import '../external_dependencies.dart';
 import 'exception.dart';
 
 class SupabaseStorageService implements StorageService {

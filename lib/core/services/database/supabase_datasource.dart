@@ -51,7 +51,9 @@ class SupabaseDatasource implements DatabaseDatasource {
         }
       }
 
-      final List result = await sbquery.select();
+      final List result = await sbquery.select(
+        query.select ?? "*",
+      );
       return QueryResult(
         success: true,
         failure: false,

@@ -15,7 +15,8 @@ class DefaultCommunityRepository implements CommunityRepository {
 
   @override
   AsyncAction<List<ListUserCommunitiesOutput>> getCommunities(
-      String userId) async {
+    String userId,
+  ) async {
     try {
       final communities = await _datasource.get(
         GetQuery(
@@ -108,6 +109,44 @@ class DefaultCommunityRepository implements CommunityRepository {
           ],
           ownerId: input.ownerId,
         ),
+      );
+    } on Exception catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  AsyncAction<List<FindCommunityMemberOutput>> getCommunityMembers(
+    String id,
+  ) async {
+    try {
+      final communities = await _datasource.get(
+        GetQuery(
+          sourceName: communitiesCollection,
+          value: id,
+          fieldName: "id",
+          select: "community_member(role), profile(tag, name, id)",
+        ),
+      );
+      if (communities.failure) {
+        return Left(
+          Exception(
+            "Something went wrong querying community members",
+          ),
+        );
+      }
+      return Right(
+        communities.multiData!
+            .map(
+              (e) => FindCommunityMemberOutput(
+                id: e["id"],
+                communityId: id,
+                role: e["community_member"]["role"],
+                name: e["profile"]["name"],
+                tag: e["profile"]["tag"],
+              ),
+            )
+            .toList(),
       );
     } on Exception catch (e) {
       return Left(e);

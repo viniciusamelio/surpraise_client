@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
+import 'contexts/community/community.dart';
 import 'contexts/feed/presentation/presentation.dart';
 import 'contexts/intro/intro.dart';
 import 'contexts/main/main_screen.dart';
@@ -37,6 +38,8 @@ class App extends StatelessWidget {
               IntroScreen.routeName: (context) => const IntroScreen(),
               ProfileScreen.routeName: (context) => const ProfileScreen(),
               MainScreen.routeName: (context) => const MainScreen(),
+              CommunityDetailsScreen.routeName: (context) =>
+                  const CommunityDetailsScreen(),
             },
           ),
         );

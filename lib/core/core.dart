@@ -1,6 +1,8 @@
 export "./types.dart";
 export "./dependencies.dart";
 
+export "./utils.dart";
+
 export "./exceptions/exceptions.dart";
 
 export "./protocols/protocols.dart";

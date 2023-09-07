@@ -9,7 +9,7 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart'
     hide AtomNotifier, LoadingState, SuccessState, ErrorState;
 import '../../../../shared/shared.dart';
-import '../../../community/application/application.dart';
+import '../../../community/community.dart';
 import '../../../community/dtos/find_community_dto.dart';
 import '../../profile.dart';
 
@@ -153,7 +153,12 @@ class _CommunityTileMolecule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pressable.scale(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed(
+          CommunityDetailsScreen.routeName,
+          arguments: item.id,
+        );
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: Spacings.md - 2,

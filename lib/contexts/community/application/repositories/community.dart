@@ -5,7 +5,9 @@ import '../../dtos/dtos.dart';
 
 abstract class CommunityRepository {
   AsyncAction<List<ListUserCommunitiesOutput>> getCommunities(String userId);
+  AsyncAction<List<FindCommunityMemberDto>> getCommunityMembers(String id);
   AsyncAction<GetUserOutput?> getUserByTag(String tag);
   AsyncAction<CreateCommunityOutput> createCommunity(
-      CreateCommunityInput input);
+    CreateCommunityInput input,
+  );
 }
