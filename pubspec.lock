@@ -385,6 +385,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
   functions_client:
     dependency: transitive
     description:
@@ -809,6 +817,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
+  pressable:
+    dependency: "direct main"
+    description:
+      name: pressable
+      sha256: "110c4980aad24a35274ab55900eb6b626d22aea88e5b32c6cde80dc58bc36a39"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   rational:
     dependency: transitive
     description:
