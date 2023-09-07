@@ -15,6 +15,7 @@ class ErrorSnack extends StatelessWidget {
     final BlurpleThemeData theme = BlurpleThemeData.of(context);
     return SnackBar(
       backgroundColor: theme.colorScheme.dangerColor,
+      behavior: SnackBarBehavior.floating,
       content: ListTile(
         leading: const Icon(HeroiconsSolid.xCircle, color: Colors.white),
         title: Text(
