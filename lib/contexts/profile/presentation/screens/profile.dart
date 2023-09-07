@@ -48,6 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenPadding = EdgeInsets.symmetric(
+      horizontal: Spacings.xxl,
+    );
     return Scaffold(
       body: Column(
         children: [
@@ -57,22 +60,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(
             height: 20,
           ),
-          BlurpleTabBar(
-            onChangeActive: (index) => pageController.jumpToPage(index),
-            items: const [
-              DefaultTabItem(
-                isActive: true,
-                child: Text("Meus praises"),
-              ),
-              DefaultTabItem(
-                isActive: false,
-                child: Text("Comunidades"),
-              ),
-            ],
+          Padding(
+            padding: screenPadding,
+            child: BlurpleTabBar(
+              onChangeActive: (index) => pageController.jumpToPage(index),
+              items: const [
+                DefaultTabItem(
+                  isActive: true,
+                  child: Text("Meus praises"),
+                ),
+                DefaultTabItem(
+                  isActive: false,
+                  child: Text("Comunidades"),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: screenPadding,
               child: PageView(
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
