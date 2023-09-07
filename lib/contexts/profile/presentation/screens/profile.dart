@@ -1,5 +1,6 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/tokens/color_tokens.dart';
+import 'package:blurple/widgets/badge/base_badge.dart';
 import 'package:blurple/widgets/tab/tab.dart';
 import 'package:blurple/widgets/tab/tab_item.dart';
 import 'package:flutter/material.dart';
@@ -191,12 +192,35 @@ class _CommunityTileMolecule extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    item.title,
-                    style: context.theme.fontScheme.p2
-                        .copyWith(color: Colors.white),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      Text(
+                        item.title,
+                        style: context.theme.fontScheme.p2
+                            .copyWith(color: Colors.white),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Visibility(
+                        visible:
+                            injected<SessionController>().currentUser?.id ==
+                                item.ownerId,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: Spacings.sm,
+                          ),
+                          child: Transform.scale(
+                            scale: .8,
+                            child: BaseBadge.text(
+                              label: "Admin",
+                              accentColor:
+                                  context.theme.colorScheme.successColor,
+                              child: Container(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: Spacings.xs,
