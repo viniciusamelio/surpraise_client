@@ -187,7 +187,7 @@ class _CommunityTileMolecule extends StatelessWidget {
             SizedBox(
               width: Spacings.sm,
             ),
-            Flexible(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -210,14 +210,12 @@ class _CommunityTileMolecule extends StatelessWidget {
                 ],
               ),
             ),
-            Flexible(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  HeroiconsSolid.chevronRight,
-                  size: 24,
-                  color: context.theme.colorScheme.accentColor,
-                ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(
+                HeroiconsSolid.chevronRight,
+                size: 24,
+                color: context.theme.colorScheme.accentColor,
               ),
             ),
           ],
