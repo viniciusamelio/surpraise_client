@@ -51,6 +51,22 @@ class SupabaseDatasource implements DatabaseDatasource {
         }
       }
 
+      if (query.filters != null && query.filters!.isNotEmpty) {
+        for (var filter in query.filters!) {
+          if (filter is AndFilter) {
+            sbquery = sbquery.filter(
+              filter.fieldName,
+              filter.operator.value,
+              filter.value,
+            );
+          } else {
+            sbquery = sbquery.or(
+              "${filter.fieldName}${filterParser(filter.operator)}${filter.value}",
+            );
+          }
+        }
+      }
+
       final List result = await sbquery.select(
         query.select ?? "*",
       );
