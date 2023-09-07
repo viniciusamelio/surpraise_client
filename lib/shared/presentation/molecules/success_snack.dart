@@ -18,6 +18,7 @@ class SuccessSnack extends StatelessWidget {
     final BlurpleThemeData theme = BlurpleThemeData.of(context);
     return SnackBar(
       backgroundColor: ColorTokens.concrete,
+      behavior: SnackBarBehavior.floating,
       content: ListTile(
         leading: Icon(
           HeroiconsSolid.checkBadge,
