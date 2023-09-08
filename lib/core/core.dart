@@ -29,3 +29,5 @@ export "./collection_keys.dart";
 export "./mixins/mixins.dart";
 
 export "./events/events.dart";
+
+export "./enums/enums.dart";

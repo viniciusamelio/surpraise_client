@@ -71,59 +71,24 @@ class _NewPraiseUserSelectionStepState
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        BaseInput(
-                          hintText: "@ de quem vai receber o #praise",
-                          hintStyle: context.theme.fontScheme.input,
+                        UserSearchInput(
                           controller: userFieldController,
-                          maxLines: 1,
-                          enabled: state == 1,
-                          suffixIcon: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: BorderedIconButton(
-                                onPressed: () {
-                                  widget.controller.getUserFromTag(
-                                    "@${userFieldController.text.trim().replaceAll('@', '')}",
-                                  );
-                                },
-                                padding: const EdgeInsets.all(2),
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: state == 1
-                                      ? context.theme.colorScheme.accentColor
-                                      : Colors.transparent,
-                                ),
-                                preffixIcon: Icon(
-                                  Icons.search,
-                                  size: 16,
-                                  color: state == 1
-                                      ? context.theme.colorScheme.accentColor
-                                      : context.theme.colorScheme
-                                          .inputForegroundColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                          onEditingCompleted: () {
+                          hint: "@ de quem vai receber o #praise",
+                          action: () {
                             widget.controller.getUserFromTag(
-                                "@${userFieldController.text.trim().replaceAll('@', '')}");
+                              "@${userFieldController.text.trim().replaceAll('@', '')}",
+                            );
                           },
-                        ),
-                        userState is ErrorState
-                            ? const SizedBox.shrink()
-                            : const SizedBox(
-                                height: 12,
-                              ),
-                        Visibility(
-                          visible: userState is ErrorState,
-                          child: Text(
-                            "Não conseguimos encontrar nenhum usuário com o @ especificado",
-                            style: context.theme.fontScheme.p1.copyWith(
-                              color: context.theme.colorScheme.dangerColor,
-                            ),
-                          ),
+                          enabled: state == 1,
+                          borderColor: state == 1
+                              ? context.theme.colorScheme.accentColor
+                              : Colors.transparent,
+                          iconColor: state == 1
+                              ? context.theme.colorScheme.accentColor
+                              : context.theme.colorScheme.inputForegroundColor,
+                          errorText: userState is ErrorState
+                              ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
+                              : null,
                         ),
                         const SizedBox(
                           height: 12,

@@ -131,7 +131,17 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                     child: SizedBox.square(
                                       dimension: 36,
                                       child: BorderedIconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            builder: (context) =>
+                                                const InviteMemberSheet(),
+                                          );
+                                        },
                                         padding: EdgeInsets.zero,
                                         foregroundColor:
                                             theme.colorScheme.dangerColor,

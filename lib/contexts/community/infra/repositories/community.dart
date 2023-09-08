@@ -125,7 +125,8 @@ class DefaultCommunityRepository implements CommunityRepository {
           sourceName: communitiesCollection,
           value: id,
           fieldName: "id",
-          select: "community_member(role, member_id), profile(tag, name, id)",
+          select:
+              "community_member(role, member_id), profile!community_owner_id_fkey(tag, name, id)",
         ),
       );
       if (communities.failure) {
