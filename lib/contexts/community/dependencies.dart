@@ -7,6 +7,11 @@ Future<void> communityDependencies() async {
       databaseDatasource: injected(),
     ),
   );
+  inject<InviteRepository>(
+    DefaultInviteRepository(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<GetCommunitiesController>(
     DefaultGetCommunitiesController(
       communityRepository: injected(),
@@ -25,5 +30,12 @@ Future<void> communityDependencies() async {
     DefaultCommunityDetailsController(
       communityRepository: injected(),
     ),
+  );
+  inject<InviteController>(
+    DefaultInviteController(
+      inviteRepository: injected(),
+      communityRepository: injected(),
+    ),
+    singleton: false,
   );
 }

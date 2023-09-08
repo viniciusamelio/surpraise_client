@@ -40,4 +40,12 @@ class SuccessSnack extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> show({
+    required BuildContext context,
+  }) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      build(context),
+    );
+  }
 }

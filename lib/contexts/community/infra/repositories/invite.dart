@@ -11,7 +11,7 @@ class DefaultInviteRepository implements InviteRepository {
 
   @override
   AsyncAction<void> inviteMember({
-    required String tag,
+    required String memberId,
     required String communityId,
     required Role role,
   }) async {
@@ -20,9 +20,9 @@ class DefaultInviteRepository implements InviteRepository {
         SaveQuery(
           sourceName: invitesCollection,
           value: {
-            "tag": tag,
+            "member_id": memberId,
             "community_id": communityId,
-            "role": role.name,
+            "role": role.value,
           },
         ),
       );

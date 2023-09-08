@@ -49,8 +49,8 @@ class DefaultCommunityRepository implements CommunityRepository {
         ),
       );
 
-      if (user.data == null) {
-        return Right(null);
+      if (user.multiData == null || user.multiData!.isEmpty) {
+        return Left(Exception("User not found"));
       }
 
       return Right(

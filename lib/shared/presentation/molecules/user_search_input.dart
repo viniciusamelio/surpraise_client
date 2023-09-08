@@ -27,35 +27,39 @@ class UserSearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BaseInput(
-          hintText: hint,
-          hintStyle: context.theme.fontScheme.input,
-          controller: controller,
-          maxLines: 1,
-          enabled: enabled,
-          suffixIcon: SizedBox(
-            width: 18,
-            height: 18,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: BorderedIconButton(
-                onPressed: action,
-                padding: const EdgeInsets.all(2),
-                borderSide: BorderSide(
-                  width: 2,
-                  color: borderColor ?? Colors.transparent,
-                ),
-                preffixIcon: Icon(
-                  Icons.search,
-                  size: 16,
-                  color: iconColor ??
-                      context.theme.colorScheme.inputForegroundColor,
+        Focus(
+          onFocusChange: (_) => action(),
+          child: BaseInput(
+            hintText: hint,
+            hintStyle: context.theme.fontScheme.input,
+            controller: controller,
+            maxLines: 1,
+            enabled: enabled,
+            suffixIcon: SizedBox(
+              width: 18,
+              height: 18,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: BorderedIconButton(
+                  onPressed: action,
+                  padding: const EdgeInsets.all(2),
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: borderColor ?? Colors.transparent,
+                  ),
+                  preffixIcon: Icon(
+                    Icons.search,
+                    size: 16,
+                    color: iconColor ??
+                        context.theme.colorScheme.inputForegroundColor,
+                  ),
                 ),
               ),
             ),
+            onEditingCompleted: action,
           ),
-          onEditingCompleted: action,
         ),
         errorText == null
             ? const SizedBox.shrink()

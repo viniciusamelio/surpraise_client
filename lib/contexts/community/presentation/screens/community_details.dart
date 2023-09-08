@@ -133,13 +133,16 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                       child: BorderedIconButton(
                                         onPressed: () {
                                           showModalBottomSheet(
+                                            isScrollControlled: true,
                                             context: context,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(16),
                                             ),
                                             builder: (context) =>
-                                                const InviteMemberSheet(),
+                                                InviteMemberSheet(
+                                              communityId: widget.community.id,
+                                            ),
                                           );
                                         },
                                         padding: EdgeInsets.zero,

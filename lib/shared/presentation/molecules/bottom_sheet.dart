@@ -7,20 +7,24 @@ class BottomSheetMolecule extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(16),
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(16),
+          ),
+          color: context.theme.colorScheme.inputBackgroundColor,
         ),
-        color: context.theme.colorScheme.inputBackgroundColor,
+        padding: const EdgeInsets.only(
+          bottom: 12,
+          top: 24,
+          right: 24,
+          left: 24,
+        ),
+        child: child,
       ),
-      padding: const EdgeInsets.only(
-        bottom: 12,
-        top: 24,
-        right: 24,
-        left: 24,
-      ),
-      child: child,
     );
   }
 }
