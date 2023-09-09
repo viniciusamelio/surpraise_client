@@ -1,16 +1,19 @@
-import 'package:ez_either/ez_either.dart';
-
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/dtos/dtos.dart';
 import '../../../../shared/mappers/mappers.dart';
 import '../../application/application.dart';
+import '../../dtos/invite.dart';
 
 class DefaultFeedRepository implements FeedRepository {
   const DefaultFeedRepository({
     required HttpClient httpClient,
-  }) : _httpClient = httpClient;
+    required DatabaseDatasource databaseDatasource,
+  })  : _httpClient = httpClient,
+        _databaseDatasource = databaseDatasource;
 
   final HttpClient _httpClient;
+  final DatabaseDatasource _databaseDatasource;
 
   @override
   AsyncAction<List<PraiseDto>> getByUser({
@@ -33,6 +36,31 @@ class DefaultFeedRepository implements FeedRepository {
               (e) => FeedPraiseMapper.fromMap(e),
             )
             .toList(),
+      );
+    } on Exception catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  AsyncAction<List<InviteDto>> getInvites({
+    required String userId,
+  }) async {
+    try {
+      final invitesOrError = await _databaseDatasource.get(
+        GetQuery(
+          sourceName: invitesCollection,
+          value: userId,
+          fieldName: "member_id",
+        ),
+      );
+
+      if (invitesOrError.failure) {
+        return Left(Exception("Sometihng went wrong getting invites"));
+      }
+
+      return Right(
+        invitesOrError.multiData!.map(inviteFromMap).toList(),
       );
     } on Exception catch (e) {
       return Left(e);

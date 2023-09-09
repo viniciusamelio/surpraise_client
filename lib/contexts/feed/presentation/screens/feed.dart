@@ -32,6 +32,7 @@ class _FeedScreenState extends State<FeedScreen> {
     sessionController.currentUser = user! as UserDto;
     if (controller.state.value is InitialState) {
       controller.getPraises(sessionController.currentUser!.id);
+      controller.getInvites(sessionController.currentUser!.id);
     }
     super.didChangeDependencies();
   }
