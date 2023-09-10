@@ -133,7 +133,21 @@ class _FeedScreenState extends State<FeedScreen> {
                                         size: 16,
                                         color: theme.colorScheme.warningColor,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ConfirmSnack(
+                                          leadingIcon: Icon(
+                                            HeroiconsMini.exclamationTriangle,
+                                            size: 24,
+                                            color:
+                                                theme.colorScheme.warningColor,
+                                          ),
+                                          message:
+                                              "Deseja mesmo recusar o convite??",
+                                          onConfirm: () {},
+                                        ).show(
+                                          context: context,
+                                        );
+                                      },
                                     ),
                                   ),
                                   SizedBox(
@@ -148,7 +162,21 @@ class _FeedScreenState extends State<FeedScreen> {
                                         size: 16,
                                         color: theme.colorScheme.successColor,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ConfirmSnack(
+                                          leadingIcon: Icon(
+                                            HeroiconsMini.envelopeOpen,
+                                            size: 24,
+                                            color:
+                                                theme.colorScheme.accentColor,
+                                          ),
+                                          message:
+                                              "Deseja mesmo aceitar o convite??",
+                                          onConfirm: () {},
+                                        ).show(
+                                          context: context,
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],

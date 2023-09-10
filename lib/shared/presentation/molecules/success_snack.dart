@@ -19,6 +19,7 @@ class SuccessSnack extends StatelessWidget {
     return SnackBar(
       backgroundColor: ColorTokens.concrete,
       behavior: SnackBarBehavior.floating,
+      elevation: 0,
       content: ListTile(
         leading: Icon(
           HeroiconsSolid.checkCircle,
