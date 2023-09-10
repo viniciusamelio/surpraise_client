@@ -6,4 +6,10 @@ abstract class InviteRepository {
     required String communityId,
     required Role role,
   });
+
+  AsyncAction<void> answerInvitation({
+    required String memberId,
+    required String communityId,
+    required bool accepted,
+  });
 }

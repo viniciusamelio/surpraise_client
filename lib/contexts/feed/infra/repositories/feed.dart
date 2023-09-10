@@ -52,6 +52,7 @@ class DefaultFeedRepository implements FeedRepository {
           sourceName: invitesCollection,
           value: userId,
           fieldName: "member_id",
+          select: "community_id, role, community(title)",
         ),
       );
 

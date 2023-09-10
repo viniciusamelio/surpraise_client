@@ -34,4 +34,31 @@ class DefaultInviteRepository implements InviteRepository {
       return Left(e);
     }
   }
+
+  @override
+  AsyncAction<void> answerInvitation({
+    required String memberId,
+    required String communityId,
+    required bool accepted,
+  }) async {
+    try {
+      final answerOrError = await _datasource.save(
+        SaveQuery(
+          sourceName: invitesCollection,
+          value: {
+            "member_id": memberId,
+            "community_id": communityId,
+            "status": accepted ? "accepted" : "rejected",
+          },
+        ),
+      );
+      if (answerOrError.failure) {
+        return Left(Exception("Something went wrong answering invitation"));
+      }
+
+      return Right(null);
+    } on Exception catch (e) {
+      return Left(e);
+    }
+  }
 }

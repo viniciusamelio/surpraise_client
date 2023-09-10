@@ -13,7 +13,7 @@ class InviteDto {
 }
 
 InviteDto inviteFromMap(Json map) => InviteDto(
-      communityTitle: map["community_title"],
+      communityTitle: map["community"]["title"],
       communityId: map["community_id"],
       role: Role.values.singleWhere((element) => element.value == map["role"]),
     );
