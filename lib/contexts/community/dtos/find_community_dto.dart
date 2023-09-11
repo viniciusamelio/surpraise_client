@@ -16,7 +16,7 @@ class CommunityOutput {
   final String image;
 }
 
-CommunityOutput communitiesListToMap(Json json) => CommunityOutput(
+CommunityOutput communityOutputFromMap(Json json) => CommunityOutput(
       id: json["id"],
       ownerId: json["owner_id"],
       description: json["description"],

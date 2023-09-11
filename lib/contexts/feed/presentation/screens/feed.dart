@@ -38,6 +38,10 @@ class _FeedScreenState extends State<FeedScreen> {
       controller.invitesState.set(
         SuccessState(invites),
       );
+      const SuccessSnack(
+        message: "Convite respondido",
+        duration: 2,
+      ).show(context: context);
     });
     super.initState();
   }

@@ -29,7 +29,7 @@ class DefaultCommunityRepository implements CommunityRepository {
       return Right(
         (communities.multiData ?? [])
             .map<CommunityOutput>(
-              (e) => communitiesListToMap(e["community"]),
+              (e) => communityOutputFromMap(e["community"]),
             )
             .toList(),
       );

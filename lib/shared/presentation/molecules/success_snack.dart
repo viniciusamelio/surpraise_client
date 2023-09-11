@@ -8,10 +8,12 @@ class SuccessSnack extends StatelessWidget {
     super.key,
     required this.message,
     this.title = "Sucesso!",
+    this.duration = 4,
   });
 
   final String message;
   final String title;
+  final int duration;
 
   @override
   SnackBar build(BuildContext context) {
@@ -19,6 +21,7 @@ class SuccessSnack extends StatelessWidget {
     return SnackBar(
       backgroundColor: ColorTokens.concrete,
       behavior: SnackBarBehavior.floating,
+      duration: Duration(seconds: duration),
       elevation: 0,
       content: ListTile(
         leading: Icon(
