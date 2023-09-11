@@ -30,19 +30,22 @@ class _FeedScreenState extends State<FeedScreen> {
     controller = injected();
     answerInviteController = injected();
 
-    injected<ApplicationEventBus>().on<InviteAnsweredEvent>((event) {
-      final List<InviteDto> invites = (controller.invitesState.value
-              as SuccessState<Exception, List<InviteDto>>)
-          .data;
-      invites.removeWhere((element) => element.id == event.data);
-      controller.invitesState.set(
-        SuccessState(invites),
-      );
-      const SuccessSnack(
-        message: "Convite respondido",
-        duration: 2,
-      ).show(context: context);
-    });
+    injected<ApplicationEventBus>().on<InviteAnsweredEvent>(
+      (event) {
+        final List<InviteDto> invites = (controller.invitesState.value
+                as SuccessState<Exception, List<InviteDto>>)
+            .data;
+        invites.removeWhere((element) => element.id == event.data);
+        controller.invitesState.set(
+          SuccessState(invites),
+        );
+        const SuccessSnack(
+          message: "Convite respondido",
+          duration: 2,
+        ).show(context: context);
+      },
+      name: "inviteAnsweredHandler",
+    );
     super.initState();
   }
 
@@ -55,6 +58,12 @@ class _FeedScreenState extends State<FeedScreen> {
       controller.getInvites(sessionController.currentUser!.id);
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    injected<ApplicationEventBus>().removeListener("inviteAnsweredHandler");
+    super.dispose();
   }
 
   BlurpleThemeData get theme => context.theme;
