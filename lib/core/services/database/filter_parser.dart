@@ -19,6 +19,8 @@ PostgrestFilterBuilder<dynamic> whereParser<T>({
       return PostgrestFilterBuilder(builder).lte(fieldName, value);
     case FilterOperator.notEqualsTo:
       return PostgrestFilterBuilder(builder).neq(fieldName, value);
+    case FilterOperator.inValues:
+      return PostgrestFilterBuilder(builder).contains(fieldName, value);
   }
 }
 
@@ -36,5 +38,7 @@ String filterParser(FilterOperator operator) {
       return "lte";
     case FilterOperator.notEqualsTo:
       return "neq";
+    case FilterOperator.inValues:
+      return "in";
   }
 }

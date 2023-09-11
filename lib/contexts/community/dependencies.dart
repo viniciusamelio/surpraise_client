@@ -1,4 +1,5 @@
 import '../../core/core.dart';
+import '../feed/feed.dart';
 import 'community.dart';
 
 Future<void> communityDependencies() async {
@@ -37,5 +38,11 @@ Future<void> communityDependencies() async {
       communityRepository: injected(),
     ),
     singleton: false,
+  );
+  inject<AnswerInviteController>(
+    DefaultAnswerInviteController(
+      inviteRepository: injected(),
+      sessionController: injected(),
+    ),
   );
 }

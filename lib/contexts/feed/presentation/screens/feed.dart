@@ -4,6 +4,7 @@ import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../application/events/events.dart';
 import '../../dtos/dtos.dart';
 import '../../feed.dart';
 import '../molecules/molecules.dart';
@@ -21,12 +22,23 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   late final SessionController sessionController;
   late final FeedController controller;
+  late final AnswerInviteController answerInviteController;
 
   @override
   void initState() {
     sessionController = injected();
     controller = injected();
+    answerInviteController = injected();
 
+    injected<ApplicationEventBus>().on<InviteAnsweredEvent>((event) {
+      final List<InviteDto> invites = (controller.invitesState.value
+              as SuccessState<Exception, List<InviteDto>>)
+          .data;
+      invites.removeWhere((element) => element.id == event.data);
+      controller.invitesState.set(
+        SuccessState(invites),
+      );
+    });
     super.initState();
   }
 
@@ -143,7 +155,12 @@ class _FeedScreenState extends State<FeedScreen> {
                                           ),
                                           message:
                                               "Deseja mesmo recusar o convite??",
-                                          onConfirm: () {},
+                                          onConfirm: () {
+                                            answerInviteController.answerInvite(
+                                              inviteId: invite.id,
+                                              accept: false,
+                                            );
+                                          },
                                         ).show(
                                           context: context,
                                         );
@@ -172,7 +189,12 @@ class _FeedScreenState extends State<FeedScreen> {
                                           ),
                                           message:
                                               "Deseja mesmo aceitar o convite??",
-                                          onConfirm: () {},
+                                          onConfirm: () {
+                                            answerInviteController.answerInvite(
+                                              inviteId: invite.id,
+                                              accept: true,
+                                            );
+                                          },
                                         ).show(
                                           context: context,
                                         );

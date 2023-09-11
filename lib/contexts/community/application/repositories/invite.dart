@@ -8,8 +8,7 @@ abstract class InviteRepository {
   });
 
   AsyncAction<void> answerInvitation({
-    required String memberId,
-    required String communityId,
+    required String inviteId,
     required bool accepted,
   });
 }

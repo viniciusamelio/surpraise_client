@@ -20,16 +20,16 @@ class DefaultCommunityRepository implements CommunityRepository {
     try {
       final communities = await _datasource.get(
         GetQuery(
-          sourceName: communitiesCollection,
-          value: userId,
-          fieldName: "owner_id",
-        ),
+            sourceName: communityMembersCollection,
+            value: userId,
+            fieldName: "member_id",
+            select: "community(*)"),
       );
 
       return Right(
         (communities.multiData ?? [])
             .map<CommunityOutput>(
-              (e) => communitiesListToMap(e),
+              (e) => communitiesListToMap(e["community"]),
             )
             .toList(),
       );
@@ -122,11 +122,10 @@ class DefaultCommunityRepository implements CommunityRepository {
     try {
       final communities = await _datasource.get(
         GetQuery(
-          sourceName: communitiesCollection,
+          sourceName: communityMembersCollection,
           value: id,
-          fieldName: "id",
-          select:
-              "community_member(role, member_id), profile!community_owner_id_fkey(tag, name, id)",
+          fieldName: "community_id",
+          select: "role, member_id, profile(tag, name, id)",
         ),
       );
       if (communities.failure) {
@@ -140,9 +139,9 @@ class DefaultCommunityRepository implements CommunityRepository {
         communities.multiData!
             .map(
               (e) => FindCommunityMemberOutput(
-                id: e["community_member"][0]["member_id"],
+                id: e["member_id"],
                 communityId: id,
-                role: e["community_member"][0]["role"],
+                role: e["role"],
                 name: e["profile"]["name"],
                 tag: e["profile"]["tag"],
               ),

@@ -58,7 +58,7 @@ class ConfirmSnack extends StatelessWidget {
                   color: theme.colorScheme.dangerColor,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   if (onCancel != null) {
                     onCancel!();
                   }
@@ -78,7 +78,7 @@ class ConfirmSnack extends StatelessWidget {
                   color: theme.colorScheme.successColor,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   onConfirm();
                 },
               ),

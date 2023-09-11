@@ -49,11 +49,17 @@ class DefaultFeedRepository implements FeedRepository {
     try {
       final invitesOrError = await _databaseDatasource.get(
         GetQuery(
-          sourceName: invitesCollection,
-          value: userId,
-          fieldName: "member_id",
-          select: "community_id, role, community(title)",
-        ),
+            sourceName: invitesCollection,
+            value: userId,
+            fieldName: "member_id",
+            select: "id,community_id, role, community(title)",
+            filters: [
+              AndFilter(
+                fieldName: "status",
+                operator: FilterOperator.equalsTo,
+                value: "pending",
+              ),
+            ]),
       );
 
       if (invitesOrError.failure) {

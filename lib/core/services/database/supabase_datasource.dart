@@ -41,22 +41,22 @@ class SupabaseDatasource implements DatabaseDatasource {
         fieldName: query.fieldName,
       );
 
-      if (query.filters != null && query.filters!.isNotEmpty) {
-        for (final filter in query.filters!) {
-          sbquery = sbquery.filter(
-            filter.fieldName,
-            filter.operator.value,
-            filter.value,
-          );
-        }
-      }
+      // if (query.filters != null && query.filters!.isNotEmpty) {
+      //   for (final filter in query.filters!) {
+      //     sbquery = sbquery.filter(
+      //       filter.fieldName,
+      //       filter.operator.value,
+      //       filter.value,
+      //     );
+      //   }
+      // }
 
       if (query.filters != null && query.filters!.isNotEmpty) {
         for (var filter in query.filters!) {
           if (filter is AndFilter) {
             sbquery = sbquery.filter(
               filter.fieldName,
-              filter.operator.value,
+              filterParser(filter.operator),
               filter.value,
             );
             continue;
@@ -135,8 +135,10 @@ class SupabaseDatasource implements DatabaseDatasource {
       return QueryResult(
         success: true,
         failure: false,
-        multiData: (result.data as List).cast<Json>(),
-        registersAffected: result.count,
+        multiData: result is List<dynamic>
+            ? result.cast<Json>()
+            : (result.data as List).cast<Json>(),
+        registersAffected: result is List<dynamic> ? null : result.count,
       );
     } catch (e) {
       return QueryResult(
