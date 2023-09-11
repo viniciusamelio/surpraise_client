@@ -35,6 +35,10 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
     controller.getMembers(id: widget.community.id);
     owner = injected<SessionController>().currentUser?.id ==
         widget.community.ownerId;
+    controller.leaveState.on<SuccessState>((_) {
+      injected<ApplicationEventBus>().add(const LeftCommunityEvent());
+      Navigator.pop(context);
+    });
     super.initState();
   }
 
@@ -95,7 +99,25 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                   SizedBox.square(
                                     dimension: 36,
                                     child: BorderedIconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ConfirmSnack(
+                                          leadingIcon: Icon(
+                                            HeroiconsMini.arrowLeftOnRectangle,
+                                            size: 24,
+                                            color:
+                                                theme.colorScheme.dangerColor,
+                                          ),
+                                          message:
+                                              "Tem certeza que deseja sair de ${widget.community.title}?",
+                                          onConfirm: () async {
+                                            await controller.leave(
+                                              communityId: widget.community.id,
+                                            );
+                                          },
+                                        ).show(
+                                          context: context,
+                                        );
+                                      },
                                       padding: EdgeInsets.zero,
                                       foregroundColor:
                                           theme.colorScheme.dangerColor,

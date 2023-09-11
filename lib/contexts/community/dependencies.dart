@@ -30,6 +30,7 @@ Future<void> communityDependencies() async {
   inject<CommunityDetailsController>(
     DefaultCommunityDetailsController(
       communityRepository: injected(),
+      sessionController: injected(),
     ),
   );
   inject<InviteController>(

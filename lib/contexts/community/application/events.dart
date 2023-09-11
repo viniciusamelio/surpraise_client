@@ -6,3 +6,9 @@ class CommunityAddedEvent implements ApplicationEvent<void> {
   @override
   final void data;
 }
+
+class LeftCommunityEvent implements ApplicationEvent<void> {
+  const LeftCommunityEvent({this.data});
+  @override
+  final void data;
+}

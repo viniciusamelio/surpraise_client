@@ -7,7 +7,7 @@ import '../../community.dart';
 import '../../dtos/dtos.dart';
 
 class DefaultCommunityRepository implements CommunityRepository {
-  DefaultCommunityRepository({
+  const DefaultCommunityRepository({
     required DatabaseDatasource databaseDatasource,
   }) : _datasource = databaseDatasource;
 
@@ -148,6 +148,35 @@ class DefaultCommunityRepository implements CommunityRepository {
             )
             .toList(),
       );
+    } on Exception catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  AsyncAction<void> leaveCommunity({
+    required String communityId,
+    required String memberId,
+  }) async {
+    try {
+      final leaveCommunityResponseOrError = await _datasource.delete(
+        GetQuery(
+          sourceName: communityMembersCollection,
+          value: communityId,
+          fieldName: "community_id",
+          filters: [
+            AggregateFilter.and(
+              operator: FilterOperator.equalsTo,
+              value: memberId,
+              fieldName: "member_id",
+            ),
+          ],
+        ),
+      );
+      if (leaveCommunityResponseOrError.failure) {
+        return Left(Exception("Something went wrong leaving community"));
+      }
+      return Right(null);
     } on Exception catch (e) {
       return Left(e);
     }

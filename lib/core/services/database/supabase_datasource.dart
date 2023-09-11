@@ -11,10 +11,19 @@ class SupabaseDatasource implements DatabaseDatasource {
   @override
   Future<QueryResult> delete(GetQuery query) async {
     try {
-      final List<Json> result = await supabase
+      var sbQuery = supabase
           .from(query.sourceName)
           .delete()
-          .match({query.fieldName: query.value}).select();
+          .match({query.fieldName: query.value});
+      if (query.filters != null) {
+        for (var filter in query.filters!) {
+          sbQuery = sbQuery.filter(
+              filter.fieldName, filterParser(filter.operator), filter.value);
+        }
+      }
+
+      final PostgrestList result = await sbQuery.select();
+
       return QueryResult(
         success: true,
         failure: false,
