@@ -69,6 +69,14 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                   builder: (context, value) {
                     final List<FindCommunityMemberOutput> members =
                         (value as SuccessState).data;
+                    // TODO: finish member fitering
+                    controller.filteredMembers.set(members
+                        .where(
+                          (element) => element.name.toLowerCase().contains(
+                                controller.memberFilter.value.toLowerCase(),
+                              ),
+                        )
+                        .toList());
                     return Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: Spacings.lg,

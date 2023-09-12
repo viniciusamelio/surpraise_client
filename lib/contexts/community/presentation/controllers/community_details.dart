@@ -7,6 +7,8 @@ import '../../dtos/dtos.dart';
 abstract class CommunityDetailsController
     extends BaseStateController<List<FindCommunityMemberOutput>> {
   Future<void> getMembers({required String id});
+  AtomNotifier<String> get memberFilter;
+  AtomNotifier<List<FindCommunityMemberOutput>> get filteredMembers;
 
   AtomNotifier<DefaultState<Exception, void>> get leaveState;
   Future<void> leave({
@@ -52,4 +54,11 @@ class DefaultCommunityDetailsController
   @override
   final AtomNotifier<DefaultState<Exception, void>> leaveState =
       AtomNotifier(InitialState());
+
+  @override
+  final AtomNotifier<String> memberFilter = AtomNotifier("");
+
+  @override
+  final AtomNotifier<List<FindCommunityMemberOutput>> filteredMembers =
+      AtomNotifier([]);
 }
