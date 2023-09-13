@@ -5,8 +5,7 @@ on:
   
 jobs:
   test:
-    runs-on: ghcr.io/cirruslabs/flutter:latest
-
+    runs-on: ghcr.io/cirruslabs/android-sdk:34-ndk
     steps:
       - uses: actions/checkout@v3
 
