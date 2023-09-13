@@ -8,12 +8,15 @@ abstract class CommunityDetailsController
     extends BaseStateController<List<FindCommunityMemberOutput>> {
   Future<void> getMembers({required String id});
   AtomNotifier<String> get memberFilter;
-  AtomNotifier<List<FindCommunityMemberOutput>> get filteredMembers;
 
   AtomNotifier<DefaultState<Exception, void>> get leaveState;
   Future<void> leave({
     required String communityId,
   });
+
+  AtomNotifier<bool> get showSearchbar;
+
+  void dispose();
 }
 
 class DefaultCommunityDetailsController
@@ -59,6 +62,13 @@ class DefaultCommunityDetailsController
   final AtomNotifier<String> memberFilter = AtomNotifier("");
 
   @override
-  final AtomNotifier<List<FindCommunityMemberOutput>> filteredMembers =
-      AtomNotifier([]);
+  final AtomNotifier<bool> showSearchbar = AtomNotifier(false);
+
+  @override
+  void dispose() {
+    showSearchbar.set(false);
+    memberFilter.set("");
+    leaveState.set(InitialState());
+    state.set(InitialState());
+  }
 }

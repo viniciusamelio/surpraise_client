@@ -37,12 +37,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       name: "CommunityAddedHandler",
     );
+    injected<ApplicationEventBus>().on<LeftCommunityEvent>(
+      (event) {
+        controller.getCommunities(sessionController.currentUser!.id);
+      },
+      name: "LeftCommunityHandler",
+    );
     super.initState();
   }
 
   @override
   void dispose() {
     injected<ApplicationEventBus>().removeListener("CommunityAddedHandler");
+    injected<ApplicationEventBus>().removeListener("LeftCommunityHandler");
     super.dispose();
   }
 
