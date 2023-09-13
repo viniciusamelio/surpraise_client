@@ -6,8 +6,8 @@ import 'presentation/controllers/controllers.dart';
 Future<void> authDependencies() async {
   inject<AuthService>(
     DefaultAuthService(
-      appWriteAuthService: injected(),
-      httpClient: injected(),
+      supabaseClient: injected(),
+      databaseDatasource: injected(),
     ),
   );
   inject<AuthPersistanceService>(
@@ -19,12 +19,14 @@ Future<void> authDependencies() async {
     DefaultSignupController(
       authService: injected(),
       authPersistanceService: injected(),
+      storageService: injected(),
     ),
   );
   inject<SignInController>(
     DefaultSignInController(
       authService: injected(),
       authPersistanceService: injected(),
+      storageService: injected(),
     ),
   );
   inject<SessionController>(
@@ -32,5 +34,6 @@ Future<void> authDependencies() async {
       authService: injected(),
       authPersistanceService: injected(),
     ),
+    singleton: true,
   );
 }

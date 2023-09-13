@@ -2,7 +2,8 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/presentation/templates/content_scaffold.dart';
+import '../../../../core/external_dependencies.dart';
+import '../../../../shared/shared.dart';
 import '../../application/services/services.dart';
 import '../controllers/signup_controller.dart';
 import '../widgets/widgets.dart';
@@ -35,9 +36,9 @@ class _SignupScreenState extends State<SignupScreen> {
       title: "Crie sua conta",
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Builder(builder: (context) {
-        return ValueListenableBuilder(
-          valueListenable: controller.state,
-          builder: (context, state, _) {
+        return AtomObserver(
+          atom: controller.state,
+          builder: (context, state) {
             return SizedBox(
               width: MediaQuery.of(context).size.width -
                   (context.theme.spacingScheme.verticalSpacing * 4) * 2,
@@ -53,6 +54,16 @@ class _SignupScreenState extends State<SignupScreen> {
                   : BaseButton.text(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
+                          if (controller.profilePicture.value == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const ErrorSnack(
+                                      message: "Selecione uma imagem de perfil")
+                                  .build(context),
+                            );
+                            return;
+                          }
+                          controller.formData.profilePicture =
+                              controller.profilePicture.value!;
                           formKey.currentState!.save();
                           controller.signup();
                         }

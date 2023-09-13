@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../../env.dart';
+import '../../../auth/auth.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../auth/presentation/screens/login.dart';
-import '../../../feed/presentation/presentation.dart';
+import '../../../main/main_screen.dart';
 
 abstract class IntroController extends BaseStateController<bool> {
   Future<void> handleFirstPage();
@@ -12,13 +13,19 @@ abstract class IntroController extends BaseStateController<bool> {
 class DefaultIntroController
     with BaseState<Exception, bool>
     implements IntroController {
-  DefaultIntroController({required this.authPersistanceService});
+  DefaultIntroController({
+    required this.authPersistanceService,
+    required this.storageService,
+    required this.authService,
+  });
 
   final AuthPersistanceService authPersistanceService;
+  final StorageService storageService;
+  final AuthService authService;
 
   @override
   Future<void> handleFirstPage() async {
-    state.value = LoadingState();
+    state.set(LoadingState());
     final persistedUser = await authPersistanceService.getAuthenticatedUser();
     if (persistedUser == null) {
       Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
@@ -26,9 +33,22 @@ class DefaultIntroController
       );
       return;
     }
+    final formData = SignInFormDataDto();
+    formData.password = persistedUser.password!;
+    formData.username = persistedUser.email;
+    await authService.signin(formData);
+    final avatar = await storageService.getImage(
+      bucketId: Env.avatarBucket,
+      fileId: persistedUser.id,
+    );
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-      FeedScreen.routeName,
-      arguments: persistedUser,
+      MainScreen.routeName,
+      arguments: persistedUser.copyWith(
+        avatarUrl: avatar.fold(
+          (left) => null,
+          (right) => right,
+        ),
+      ),
     );
   }
 }

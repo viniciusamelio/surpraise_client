@@ -1,7 +1,7 @@
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../controllers/signin_controller.dart';
 
 import '../widgets/widgets.dart';
@@ -52,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: ValueListenableBuilder(
-                      valueListenable: controller.state,
-                      builder: (context, state, _) {
+                    child: AtomObserver(
+                      atom: controller.state,
+                      builder: (context, state) {
                         return BorderedIconButton(
                           onPressed: () {
                             if (formKey.currentState!.validate() &&

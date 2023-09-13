@@ -14,22 +14,24 @@ class ErrorSnack extends StatelessWidget {
   SnackBar build(BuildContext context) {
     final BlurpleThemeData theme = BlurpleThemeData.of(context);
     return SnackBar(
-        backgroundColor: theme.colorScheme.dangerColor,
-        content: ListTile(
-          leading: const Icon(HeroiconsSolid.xCircle, color: Colors.white),
-          title: Text(
-            "Oops..",
-            style: theme.fontScheme.p2.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+      backgroundColor: theme.colorScheme.dangerColor,
+      behavior: SnackBarBehavior.floating,
+      content: ListTile(
+        leading: const Icon(HeroiconsSolid.xCircle, color: Colors.white),
+        title: Text(
+          "Oops..",
+          style: theme.fontScheme.p2.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
-          subtitle: Text(
-            message,
-            style: theme.fontScheme.p2.copyWith(
-              color: Colors.white,
-            ),
+        ),
+        subtitle: Text(
+          message,
+          style: theme.fontScheme.p2.copyWith(
+            color: Colors.white,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

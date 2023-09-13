@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
+import 'contexts/community/community.dart';
+import 'contexts/community/dtos/find_community_dto.dart';
 import 'contexts/feed/presentation/presentation.dart';
 import 'contexts/intro/intro.dart';
+import 'contexts/main/main_screen.dart';
+import 'contexts/profile/presentation/presentation.dart';
 import 'core/core.dart';
 
 class App extends StatelessWidget {
@@ -33,6 +37,13 @@ class App extends StatelessWidget {
               SignupScreen.routeName: (context) => const SignupScreen(),
               FeedScreen.routeName: (context) => const FeedScreen(),
               IntroScreen.routeName: (context) => const IntroScreen(),
+              ProfileScreen.routeName: (context) => const ProfileScreen(),
+              MainScreen.routeName: (context) => const MainScreen(),
+              CommunityDetailsScreen.routeName: (context) =>
+                  CommunityDetailsScreen(
+                    community: ModalRoute.of(context)?.settings.arguments
+                        as CommunityOutput,
+                  ),
             },
           ),
         );

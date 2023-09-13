@@ -5,7 +5,7 @@ import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SupabaseCloudClient.init();
   await setupDependencies();
-  await AppWriteService.init();
   runApp(const App());
 }

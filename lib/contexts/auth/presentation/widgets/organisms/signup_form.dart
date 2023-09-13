@@ -1,9 +1,9 @@
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import '../../controllers/signup_controller.dart';
 
 import '../../../../../core/core.dart';
+import '../../controllers/signup_controller.dart';
 
 class SignupFormOrganism extends StatefulWidget {
   const SignupFormOrganism({
@@ -69,6 +69,66 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
               HeroiconsSolid.lockClosed,
             ),
             obscureText: true,
+            maxLines: 1,
+          ),
+          SizedBox(
+            height: context.theme.spacingScheme.verticalSpacing * 2,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: ValueListenableBuilder(
+              valueListenable: controller.profilePicture,
+              builder: (context, picture, _) {
+                final bool selectedFile = picture != null;
+                return InkWell(
+                  onTap: () async {
+                    final image = await injected<ImageManager>().select();
+                    controller.profilePicture.value =
+                        image ?? controller.profilePicture.value;
+                  },
+                  child: Container(
+                    padding: context.theme.spacingScheme.elevatedPadding,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        context.theme.radiusScheme.inputRadius,
+                      ),
+                      border: Border.all(
+                        color: context.theme.colorScheme.borderColor,
+                        width: .3,
+                      ),
+                      color: context.theme.colorScheme.inputBackgroundColor,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Selecione sua foto de perfil",
+                          style: context.theme.fontScheme.p2.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(
+                          height:
+                              context.theme.spacingScheme.verticalSpacing * 1.5,
+                        ),
+                        !selectedFile
+                            ? Icon(
+                                Icons.image_not_supported,
+                                color: context
+                                    .theme.colorScheme.inputForegroundColor
+                                    .withOpacity(.75),
+                                size: 42,
+                              )
+                            : Image.memory(
+                                picture.readAsBytesSync(),
+                                width: 80,
+                                fit: BoxFit.fitWidth,
+                              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

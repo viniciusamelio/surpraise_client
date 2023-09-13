@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:surpraise_client/contexts/feed/presentation/presentation.dart';
-import 'package:surpraise_client/shared/shared.dart';
+import '../../../../shared/shared.dart';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 import '../../../../core/core.dart';
+import '../../../../env.dart';
+import '../../../main/main_screen.dart';
 import '../../application/application.dart';
 import '../../dtos/dtos.dart';
 
@@ -20,22 +21,32 @@ class DefaultSignInController
   DefaultSignInController({
     required AuthService authService,
     required AuthPersistanceService authPersistanceService,
+    required StorageService storageService,
   })  : _authService = authService,
+        _storageService = storageService,
         _authPersistanceService = authPersistanceService {
     setDefaultErrorHandling();
     state.listenState(
       onSuccess: (right) async {
-        await _authPersistanceService.saveAuthenticatedUserData(
-          UserDto(
-            tag: right.tag,
-            name: right.email,
-            email: right.email,
-            id: right.id,
+        final avatar = await _storageService.getImage(
+          bucketId: Env.avatarBucket,
+          fileId: right.id,
+        );
+        final dto = UserDto(
+          tag: right.tag,
+          name: right.name,
+          email: right.email,
+          password: formData.password,
+          id: right.id,
+          avatarUrl: avatar.fold(
+            (left) => null,
+            (right) => right,
           ),
         );
+        await _authPersistanceService.saveAuthenticatedUserData(dto);
         Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
-          FeedScreen.routeName,
-          arguments: right,
+          MainScreen.routeName,
+          arguments: dto,
         );
       },
     );
@@ -43,6 +54,7 @@ class DefaultSignInController
 
   final AuthService _authService;
   final AuthPersistanceService _authPersistanceService;
+  final StorageService _storageService;
 
   @override
   final SignInFormDataDto formData = SignInFormDataDto();
@@ -54,14 +66,8 @@ class DefaultSignInController
 
   @override
   Future<void> signIn() async {
-    state.value = LoadingState();
-    final result = await _authService.signinStepOne(formData);
-    result.fold(
-      (left) => state.value = ErrorState(left),
-      (right) async {
-        final result = await _authService.signinStepTwo(right);
-        stateFromEither(result);
-      },
-    );
+    state.set(LoadingState());
+    final result = await _authService.signin(formData);
+    stateFromEither(result);
   }
 }
