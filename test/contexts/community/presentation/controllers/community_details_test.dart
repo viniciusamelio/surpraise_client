@@ -8,17 +8,7 @@ import 'package:surpraise_client/core/external_dependencies.dart'
 import 'package:surpraise_client/core/state/default_state.dart';
 import 'package:surpraise_client/shared/shared.dart';
 
-class MockSessionController extends Mock implements SessionController {
-  @override
-  UserDto? get currentUser => UserDto(
-        id: faker.guid.guid(),
-        name: faker.person.name(),
-        email: faker.internet.email(),
-        tag: "@fake",
-      );
-}
-
-class MockCommunityRepository extends Mock implements CommunityRepository {}
+import '../../../../mocks.dart';
 
 void main() {
   group("Community Details Controller: ", () {
