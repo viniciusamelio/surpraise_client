@@ -161,8 +161,8 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                     height: Spacings.xl,
                                   ),
                                   SizedBox(
-                                    height: MediaQuery.of(context).size.height -
-                                        444,
+                                    height:
+                                        MediaQuery.of(context).size.height * .6,
                                     child: GridView.builder(
                                       physics: const BouncingScrollPhysics(),
                                       gridDelegate:

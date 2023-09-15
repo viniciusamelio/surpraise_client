@@ -62,8 +62,10 @@ class DefaultNewCommunityController
       );
 
       if (uploadedFileOrError.isLeft()) {
-        ErrorState(
-          uploadedFileOrError.fold((left) => left, (right) => null)!,
+        state.set(
+          ErrorState(
+            uploadedFileOrError.fold((left) => left, (right) => null)!,
+          ),
         );
         return;
       }
