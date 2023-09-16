@@ -142,7 +142,7 @@ class _InviteMemberSheetState extends State<InviteMemberSheet> {
                   controller.selectedRole,
                   controller.userSearchState,
                 ],
-                builder: (context, _) {
+                builder: (context) {
                   bool buttonEnabled = controller.selectedRole.value != null &&
                       controller.userSearchState.value is SuccessState;
                   return BaseButton.icon(

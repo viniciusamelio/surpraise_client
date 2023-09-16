@@ -1,3 +1,5 @@
+import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:blurple/widgets/input/base_dropdown.dart';
 import 'package:blurple/widgets/input/base_input.dart';
@@ -31,13 +33,22 @@ class _NewPraiseUserSelectionStepState
         TextEditingController(text: widget.controller.formData.praisedTag);
     widget.controller.userState.listenState(
       onSuccess: (right) {
-        widget.controller.activeStep.value = 2;
+        widget.controller.activeStep.set(2);
         widget.controller.formData.praisedId = right.id;
         widget.controller.formData.praisedTag = right.tag;
       },
     );
     super.initState();
   }
+
+  @override
+  void dispose() {
+    userFieldController.dispose();
+    topicController.dispose();
+    super.dispose();
+  }
+
+  BlurpleThemeData get theme => context.theme;
 
   @override
   Widget build(BuildContext context) {
@@ -62,121 +73,191 @@ class _NewPraiseUserSelectionStepState
                   ))
         ],
         defaultBuilder: (userState) {
-          return ValueListenableBuilder(
-              valueListenable: widget.controller.activeStep,
-              builder: (context, state, _) {
-                return SingleChildScrollView(
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        UserSearchInput(
-                          controller: userFieldController,
-                          hint: "@ de quem vai receber o #praise",
-                          action: () {
-                            widget.controller.getUserFromTag(
-                              "@${userFieldController.text.trim().replaceAll('@', '')}",
-                            );
-                          },
-                          enabled: state == 1,
-                          borderColor: state == 1
-                              ? context.theme.colorScheme.accentColor
-                              : Colors.transparent,
-                          iconColor: state == 1
-                              ? context.theme.colorScheme.accentColor
-                              : context.theme.colorScheme.inputForegroundColor,
-                          errorText: userState is ErrorState
-                              ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
-                              : null,
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        BaseSearchableDropdown<TopicValues>(
-                          hint: "Motivo do #praise",
-                          controller: topicController,
-                          enabled: state == 2,
-                          itemBuilder: (context, value) => ListTile(
-                            tileColor:
-                                context.theme.colorScheme.inputBackgroundColor,
-                            title: Text(
-                              value.name,
-                              style: context.theme.fontScheme.p2.copyWith(
-                                color:
-                                    context.theme.colorScheme.foregroundColor,
+          return AtomObserver(
+              atom: widget.controller.activeStep,
+              builder: (context, state) {
+                return Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AtomObserver(
+                        atom: widget.controller.state,
+                        builder: (context, state) {
+                          return Visibility(
+                            visible: state is ErrorState,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 16,
+                              ),
+                              child: ListTile(
+                                leading: const Icon(
+                                  HeroiconsSolid.xCircle,
+                                  color: Colors.white,
+                                ),
+                                title: Text(
+                                  "Oops..",
+                                  style: theme.fontScheme.p2.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  "Algo deu errado ao enviar o praise, tente novamente",
+                                  style: theme.fontScheme.p2.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      UserSearchInput(
+                        controller: userFieldController,
+                        hint: "@ de quem vai receber o #praise",
+                        action: () {
+                          widget.controller.getUserFromTag(
+                            "@${userFieldController.text.trim().replaceAll('@', '')}",
+                          );
+                        },
+                        enabled: state == 1,
+                        borderColor: state == 1
+                            ? context.theme.colorScheme.accentColor
+                            : Colors.transparent,
+                        iconColor: state == 1
+                            ? context.theme.colorScheme.accentColor
+                            : context.theme.colorScheme.inputForegroundColor,
+                        errorText: userState is ErrorState
+                            ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
+                            : null,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AbsorbPointer(
+                              absorbing: state != 2,
+                              child: BaseSearchableDropdown<TopicValues>(
+                                hint: "Motivo do #praise",
+                                controller: topicController,
+                                enabled: state == 2,
+                                itemBuilder: (context, value) => ListTile(
+                                  tileColor: context
+                                      .theme.colorScheme.inputBackgroundColor,
+                                  title: Text(
+                                    value.name,
+                                    style: context.theme.fontScheme.p2.copyWith(
+                                      color: context
+                                          .theme.colorScheme.foregroundColor,
+                                    ),
+                                  ),
+                                ),
+                                onSuggestionSelected: (value) {
+                                  widget.controller.formData.topic =
+                                      value.value;
+                                  topicController.text = value.value;
+                                },
+                                suggestionsCallback: (pattern) =>
+                                    TopicValues.values.where(
+                                  (element) => element.name.contains(
+                                    pattern,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          onSuggestionSelected: (value) {
-                            widget.controller.formData.topic = value.value;
-                            topicController.text = value.value;
-                          },
-                          suggestionsCallback: (pattern) =>
-                              TopicValues.values.where(
-                            (element) => element.name.contains(
-                              pattern,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        BaseInput.large(
-                          hintText: "Solta a matraca e elogie com vontade!",
-                          validator: (value) => message(value ?? ""),
-                          onSaved: (value) =>
-                              widget.controller.formData.message = value!,
-                          minLines: 3,
-                          hintStyle: context.theme.fontScheme.input,
-                          enabled: state == 2,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: BorderedButton(
-                            onPressed: () {
-                              if (state == 2 &&
-                                  formKey.currentState!.validate()) {
-                                if (widget.controller.formData.topic == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const ErrorSnack(
-                                            message:
-                                                "Precisamos de um motivo para o praise")
-                                        .build(context),
-                                  );
-                                  return;
-                                }
-                                formKey.currentState!.save();
-                                widget.controller.sendPraise(
-                                  injected<SessionController>().currentUser!.id,
+                          AnimatedBuilder(
+                              animation: topicController,
+                              builder: (context, _) {
+                                return Visibility(
+                                  visible: state == 2 &&
+                                      topicController.text.isNotEmpty,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: SizedBox.square(
+                                      dimension: 48,
+                                      child: BaseButton.icon(
+                                        padding: EdgeInsets.zero,
+                                        backgroundColor: ColorTokens.concrete,
+                                        icon: Icon(
+                                          HeroiconsMini.xMark,
+                                          size: 18,
+                                          color: context.theme.colorScheme
+                                              .inputForegroundColor,
+                                        ),
+                                        onPressed: () {
+                                          widget.controller.formData.topic =
+                                              null;
+                                          topicController.clear();
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 );
+                              })
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      BaseInput.large(
+                        hintText: "Solta a matraca e elogie com vontade!",
+                        validator: (value) => message(value ?? ""),
+                        onSaved: (value) =>
+                            widget.controller.formData.message = value!,
+                        minLines: 3,
+                        hintStyle: context.theme.fontScheme.input,
+                        enabled: state == 2,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: BorderedButton(
+                          onPressed: () {
+                            if (state == 2 &&
+                                formKey.currentState!.validate()) {
+                              if (widget.controller.formData.topic == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const ErrorSnack(
+                                          message:
+                                              "Precisamos de um motivo para o praise")
+                                      .build(context),
+                                );
+                                return;
                               }
-                            },
-                            padding: const EdgeInsets.all(12),
-                            borderSide: BorderSide(
+                              formKey.currentState!.save();
+                              widget.controller.sendPraise(
+                                injected<SessionController>().currentUser!.id,
+                              );
+                            }
+                          },
+                          padding: const EdgeInsets.all(12),
+                          borderSide: BorderSide(
+                            color: state == 2
+                                ? context.theme.colorScheme.accentColor
+                                : context
+                                    .theme.colorScheme.inputForegroundColor,
+                          ),
+                          child: Text(
+                            "#praise  >",
+                            style: context.theme.fontScheme.input.copyWith(
                               color: state == 2
                                   ? context.theme.colorScheme.accentColor
                                   : context
                                       .theme.colorScheme.inputForegroundColor,
-                            ),
-                            child: Text(
-                              "#praise  >",
-                              style: context.theme.fontScheme.input.copyWith(
-                                color: state == 2
-                                    ? context.theme.colorScheme.accentColor
-                                    : context
-                                        .theme.colorScheme.inputForegroundColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               });
