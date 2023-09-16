@@ -10,7 +10,9 @@ mixin BaseState<L extends Exception, R> {
 
   void stateFromEither(Either<L, R> either) => state.set(
         either.fold(
-          (left) => ErrorState(left, type: left.runtimeType),
+          (left) {
+            return ErrorState(left, type: left.runtimeType);
+          },
           (right) => SuccessState(right),
         ),
       );

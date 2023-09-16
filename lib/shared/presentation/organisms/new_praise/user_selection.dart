@@ -4,6 +4,7 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:blurple/widgets/input/base_dropdown.dart';
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
+import 'package:pressable/pressable.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
@@ -85,16 +86,23 @@ class _NewPraiseUserSelectionStepState
                       AtomObserver(
                         atom: widget.controller.state,
                         builder: (context, state) {
+                          // TODO Extract this widget to reuse it where i cant display a snackbar
                           return Visibility(
                             visible: state is ErrorState,
-                            child: Padding(
+                            child: Container(
+                              height: 80,
                               padding: const EdgeInsets.only(
                                 bottom: 16,
                               ),
+                              decoration: BoxDecoration(
+                                color: Colors.black12,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               child: ListTile(
-                                leading: const Icon(
+                                isThreeLine: true,
+                                leading: Icon(
                                   HeroiconsSolid.xCircle,
-                                  color: Colors.white,
+                                  color: theme.colorScheme.dangerColor,
                                 ),
                                 title: Text(
                                   "Oops..",
@@ -104,9 +112,18 @@ class _NewPraiseUserSelectionStepState
                                   ),
                                 ),
                                 subtitle: Text(
-                                  "Algo deu errado ao enviar o praise, tente novamente",
+                                  "${state is ErrorState ? state.exception is ApplicationException ? (state.exception as ApplicationException).message : state.exception : ''}",
                                   style: theme.fontScheme.p2.copyWith(
                                     color: Colors.white,
+                                  ),
+                                ),
+                                trailing: Pressable.scale(
+                                  onPressed: () {
+                                    widget.controller.state.set(InitialState());
+                                  },
+                                  child: const Icon(
+                                    HeroiconsSolid.xMark,
+                                    size: 18,
                                   ),
                                 ),
                               ),
