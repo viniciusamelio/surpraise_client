@@ -34,7 +34,9 @@ dependencies:
   surpraise_core:
     git: https://github.com/viniciusamelio/surpraise_core
   surpraise_infra:
-    git: https://github.com/viniciusamelio/surpraise_infra
+    git:
+      url: https://github.com/viniciusamelio/surpraise_infra
+      ref: feat/supabase-migration
   blurple:
     git: https://github.com/viniciusamelio/blurple.git
   ez_either: ^1.0.0

@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: animated_bottom_navigation_bar
-      sha256: "241307d13d3b1eeb2768017af906a0132e7a4569298d9e96a111faf154d6bf26"
+      sha256: "57a24ba33801d8170c5dc1fb2f9130f94a484ed1834b6e106f6d075a90473002"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   app_links:
     dependency: transitive
     description:
@@ -1212,7 +1212,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f16f196ee2e78cb7d0deb8d2edee921870188d9a
+      resolved-ref: "64e6e771159209ac061864a1378e029a97abe0aa"
       url: "https://github.com/viniciusamelio/surpraise_core"
     source: git
     version: "1.0.0"
@@ -1220,8 +1220,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: e4331854a07e3d3c39ce63e135d11fd5b129d056
+      ref: "feat/supabase-migration"
+      resolved-ref: "01c5fd062962eecc5650b9f13289da073deca32f"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
@@ -1453,10 +1453,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: "9427774649fd3c8b7ff53523051395d13aed2ca355822b822e6493d79f5fc05a"
+      sha256: ddc167c6676f57c8b367d19fcbee267d6dc6adf81bd6c3cb87981d30746e0a6d
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.0"
+    version: "3.10.1"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
