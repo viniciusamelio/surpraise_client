@@ -23,7 +23,7 @@ class DefaultCommunityRepository implements CommunityRepository {
             sourceName: communityMembersCollection,
             value: userId,
             fieldName: "member_id",
-            select: "community(*)"),
+            select: "$communitiesCollection(*)"),
       );
 
       return Right(

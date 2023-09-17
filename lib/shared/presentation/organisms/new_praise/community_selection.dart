@@ -14,12 +14,13 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
 
   final AtomNotifier<DefaultState<Exception, List<CommunityOutput>>> notifier;
 
-  final void Function(FindCommunityOutput community) onCommunitySelected;
+  final void Function(CommunityOutput community) onCommunitySelected;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           "Vamos começar selecionando a comunidade de quem vai receber o praise",
@@ -33,10 +34,10 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
         AtomObserver(
           atom: notifier,
           builder: (context, state) {
-            return BaseSearchableDropdown<FindCommunityOutput>(
+            return BaseSearchableDropdown<CommunityOutput>(
               suggestionsCallback: (pattern) async {
                 final data =
-                    state as SuccessState<Exception, List<FindCommunityOutput>>;
+                    state as SuccessState<Exception, List<CommunityOutput>>;
                 return data.data.where(
                   (element) => element.title
                       .toLowerCase()

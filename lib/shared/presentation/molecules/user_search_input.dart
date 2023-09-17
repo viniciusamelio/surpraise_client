@@ -30,34 +30,36 @@ class UserSearchInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Focus(
-          onFocusChange: (_) => action(),
+          onFocusChange: (focused) => !focused ? action() : null,
           child: BaseInput(
             hintText: hint,
             hintStyle: context.theme.fontScheme.input,
             controller: controller,
             maxLines: 1,
             enabled: enabled,
-            suffixIcon: SizedBox(
-              width: 18,
-              height: 18,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: BorderedIconButton(
-                  onPressed: action,
-                  padding: const EdgeInsets.all(2),
-                  borderSide: BorderSide(
-                    width: 2,
-                    color: borderColor ?? Colors.transparent,
+            suffixIcon: !enabled
+                ? null
+                : SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: BorderedIconButton(
+                        onPressed: action,
+                        padding: const EdgeInsets.all(2),
+                        borderSide: BorderSide(
+                          width: 2,
+                          color: borderColor ?? Colors.transparent,
+                        ),
+                        preffixIcon: Icon(
+                          Icons.search,
+                          size: 16,
+                          color: iconColor ??
+                              context.theme.colorScheme.inputForegroundColor,
+                        ),
+                      ),
+                    ),
                   ),
-                  preffixIcon: Icon(
-                    Icons.search,
-                    size: 16,
-                    color: iconColor ??
-                        context.theme.colorScheme.inputForegroundColor,
-                  ),
-                ),
-              ),
-            ),
             onEditingCompleted: action,
           ),
         ),

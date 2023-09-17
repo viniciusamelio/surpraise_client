@@ -23,6 +23,7 @@ class App extends StatelessWidget {
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: MaterialApp(
             title: '#surpraise',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: false,
               scaffoldBackgroundColor: theme.colorScheme.backgroundColor,

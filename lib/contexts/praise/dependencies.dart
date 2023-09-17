@@ -1,17 +1,24 @@
+import '../../core/external_dependencies.dart';
 import '../../shared/shared.dart';
 
 import '../../core/core.dart';
-import 'praise.dart';
 
 Future<void> praiseDependencies() async {
   inject<PraiseRepository>(
-    DefaultPraiseRepository(
-      httpClient: injected(),
+    PraiseRepository(
+      datasource: injected(),
+    ),
+  );
+  inject<PraiseUsecase>(
+    DbPraiseUsecase(
+      createPraiseRepository: injected<PraiseRepository>(),
+      findPraiseUsersRepository: injected<PraiseRepository>(),
+      idService: injected(),
     ),
   );
   inject<PraiseController>(
     DefaultPraiseController(
-      praiseRepository: injected(),
+      praiseUsecase: injected(),
       communityRepository: injected(),
     ),
   );
