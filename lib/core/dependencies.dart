@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
@@ -55,6 +57,17 @@ Future<void> _coreDependencies() async {
   inject<ApplicationEventBus>(
     DefaultBus(),
     singleton: true,
+  );
+  inject<TranslationService>(
+    DefaultTranslationService(),
+  );
+
+  await injected<TranslationService>().init(supportedLocales: [
+    const Locale("pt"),
+  ]);
+
+  await injected<TranslationService>().load(
+    const Locale("pt"),
   );
 }
 

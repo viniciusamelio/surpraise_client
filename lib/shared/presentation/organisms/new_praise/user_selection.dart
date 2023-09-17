@@ -86,144 +86,85 @@ class _NewPraiseUserSelectionStepState
                       AtomObserver(
                         atom: widget.controller.state,
                         builder: (context, state) {
-                          // TODO Extract this widget to reuse it where i cant display a snackbar
                           return Visibility(
                             visible: state is ErrorState,
-                            child: Container(
-                              height: 80,
-                              padding: const EdgeInsets.only(
-                                bottom: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black12,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: ListTile(
-                                isThreeLine: true,
-                                leading: Icon(
-                                  HeroiconsSolid.xCircle,
-                                  color: theme.colorScheme.dangerColor,
-                                ),
-                                title: Text(
-                                  "Oops..",
-                                  style: theme.fontScheme.p2.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "${state is ErrorState ? state.exception is ApplicationException ? (state.exception as ApplicationException).message : state.exception : ''}",
-                                  style: theme.fontScheme.p2.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                trailing: Pressable.scale(
-                                  onPressed: () {
-                                    widget.controller.state.set(InitialState());
-                                  },
-                                  child: const Icon(
-                                    HeroiconsSolid.xMark,
-                                    size: 18,
-                                  ),
-                                ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: _ErrorMessageMolecule(
+                                onClosePressed: () {
+                                  widget.controller.state.set(InitialState());
+                                },
+                                state: state,
                               ),
                             ),
                           );
                         },
-                      ),
-                      UserSearchInput(
-                        controller: userFieldController,
-                        hint: "@ de quem vai receber o #praise",
-                        action: () {
-                          widget.controller.getUserFromTag(
-                            "@${userFieldController.text.trim().replaceAll('@', '')}",
-                          );
-                        },
-                        enabled: state == 1,
-                        borderColor: state == 1
-                            ? context.theme.colorScheme.accentColor
-                            : Colors.transparent,
-                        iconColor: state == 1
-                            ? context.theme.colorScheme.accentColor
-                            : context.theme.colorScheme.inputForegroundColor,
-                        errorText: userState is ErrorState
-                            ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
-                            : null,
-                      ),
-                      const SizedBox(
-                        height: 12,
                       ),
                       Row(
                         children: [
                           Expanded(
-                            child: AbsorbPointer(
-                              absorbing: state != 2,
-                              child: BaseSearchableDropdown<TopicValues>(
-                                hint: "Motivo do #praise",
-                                controller: topicController,
-                                enabled: state == 2,
-                                itemBuilder: (context, value) => ListTile(
-                                  tileColor: context
-                                      .theme.colorScheme.inputBackgroundColor,
-                                  title: Text(
-                                    value.name,
-                                    style: context.theme.fontScheme.p2.copyWith(
-                                      color: context
-                                          .theme.colorScheme.foregroundColor,
-                                    ),
+                            child: UserSearchInput(
+                              controller: userFieldController,
+                              hint: "@ de quem vai receber o #praise",
+                              action: () {
+                                widget.controller.getUserFromTag(
+                                  "@${userFieldController.text.trim().replaceAll('@', '')}",
+                                );
+                              },
+                              enabled: state == 1,
+                              borderColor: state == 1
+                                  ? context.theme.colorScheme.accentColor
+                                  : Colors.transparent,
+                              iconColor: state == 1
+                                  ? context.theme.colorScheme.accentColor
+                                  : context
+                                      .theme.colorScheme.inputForegroundColor,
+                              errorText: userState is ErrorState
+                                  ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
+                                  : null,
+                            ),
+                          ),
+                          Visibility(
+                            visible: state == 2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: SizedBox.square(
+                                dimension: 48,
+                                child: BaseButton.icon(
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: ColorTokens.concrete,
+                                  icon: Icon(
+                                    HeroiconsMini.xMark,
+                                    size: 18,
+                                    color: context
+                                        .theme.colorScheme.inputForegroundColor,
                                   ),
-                                ),
-                                onSuggestionSelected: (value) {
-                                  widget.controller.formData.topic =
-                                      value.value;
-                                  topicController.text = value.value;
-                                },
-                                suggestionsCallback: (pattern) =>
-                                    TopicValues.values.where(
-                                  (element) => element.name.contains(
-                                    pattern,
-                                  ),
+                                  onPressed: () {
+                                    userFieldController.clear();
+                                    widget.controller.activeStep.set(1);
+                                    widget.controller.userState.set(
+                                      InitialState(),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                           ),
-                          AnimatedBuilder(
-                              animation: topicController,
-                              builder: (context, _) {
-                                return Visibility(
-                                  visible: state == 2 &&
-                                      topicController.text.isNotEmpty,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: SizedBox.square(
-                                      dimension: 48,
-                                      child: BaseButton.icon(
-                                        padding: EdgeInsets.zero,
-                                        backgroundColor: ColorTokens.concrete,
-                                        icon: Icon(
-                                          HeroiconsMini.xMark,
-                                          size: 18,
-                                          color: context.theme.colorScheme
-                                              .inputForegroundColor,
-                                        ),
-                                        onPressed: () {
-                                          widget.controller.formData.topic =
-                                              null;
-                                          topicController.clear();
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              })
                         ],
                       ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      _reasonRow(state),
                       const SizedBox(
                         height: 12,
                       ),
                       BaseInput.large(
                         hintText: "Solta a matraca e elogie com vontade!",
                         validator: (value) => message(value ?? ""),
+                        controller: TextEditingController(
+                          text: widget.controller.formData.message,
+                        ),
                         onSaved: (value) =>
                             widget.controller.formData.message = value!,
                         minLines: 3,
@@ -242,9 +183,9 @@ class _NewPraiseUserSelectionStepState
                               if (widget.controller.formData.topic == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const ErrorSnack(
-                                          message:
-                                              "Precisamos de um motivo para o praise")
-                                      .build(context),
+                                    message:
+                                        "Precisamos de um motivo para o praise",
+                                  ).build(context),
                                 );
                                 return;
                               }
@@ -279,6 +220,120 @@ class _NewPraiseUserSelectionStepState
                 );
               });
         });
+  }
+
+  Row _reasonRow(int state) {
+    return Row(
+      children: [
+        Expanded(
+          child: AbsorbPointer(
+            absorbing: state != 2,
+            child: BaseSearchableDropdown<TopicValues>(
+              hint: "Motivo do #praise",
+              controller: topicController,
+              enabled: state == 2,
+              itemBuilder: (context, value) => ListTile(
+                tileColor: context.theme.colorScheme.inputBackgroundColor,
+                title: Text(
+                  value.name,
+                  style: context.theme.fontScheme.p2.copyWith(
+                    color: context.theme.colorScheme.foregroundColor,
+                  ),
+                ),
+              ),
+              onSuggestionSelected: (value) {
+                widget.controller.formData.topic = value.value;
+                topicController.text = value.value;
+              },
+              suggestionsCallback: (pattern) => TopicValues.values.where(
+                (element) => element.name.contains(
+                  pattern,
+                ),
+              ),
+            ),
+          ),
+        ),
+        AnimatedBuilder(
+            animation: topicController,
+            builder: (context, _) {
+              return Visibility(
+                visible: state == 2 && topicController.text.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: SizedBox.square(
+                    dimension: 48,
+                    child: BaseButton.icon(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: ColorTokens.concrete,
+                      icon: Icon(
+                        HeroiconsMini.xMark,
+                        size: 18,
+                        color: context.theme.colorScheme.inputForegroundColor,
+                      ),
+                      onPressed: () {
+                        widget.controller.formData.topic = null;
+                        topicController.clear();
+                      },
+                    ),
+                  ),
+                ),
+              );
+            })
+      ],
+    );
+  }
+}
+
+class _ErrorMessageMolecule extends StatelessWidget {
+  const _ErrorMessageMolecule({
+    required this.onClosePressed,
+    required this.state,
+  });
+
+  final VoidCallback onClosePressed;
+  final DefaultState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+
+    return Container(
+      height: 80,
+      padding: const EdgeInsets.only(
+        bottom: 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: ListTile(
+        isThreeLine: true,
+        leading: Icon(
+          HeroiconsSolid.xCircle,
+          color: theme.colorScheme.dangerColor,
+        ),
+        title: Text(
+          "Oops..",
+          style: theme.fontScheme.p2.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          "${state is ErrorState ? (state as ErrorState).exception is ApplicationException ? injected<TranslationService>().get(((state as ErrorState).exception as ApplicationException).message) : (state as ErrorState).exception : ''}",
+          style: theme.fontScheme.p2.copyWith(
+            color: Colors.white,
+          ),
+        ),
+        trailing: Pressable.scale(
+          onPressed: onClosePressed,
+          child: const Icon(
+            HeroiconsSolid.xMark,
+            size: 18,
+          ),
+        ),
+      ),
+    );
   }
 }
 
