@@ -79,143 +79,149 @@ class _NewPraiseUserSelectionStepState
               builder: (context, state) {
                 return Form(
                   key: formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AtomObserver(
-                        atom: widget.controller.state,
-                        builder: (context, state) {
-                          return Visibility(
-                            visible: state is ErrorState,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _ErrorMessageMolecule(
-                                onClosePressed: () {
-                                  widget.controller.state.set(InitialState());
-                                },
-                                state: state,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      Row(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: UserSearchInput(
-                              controller: userFieldController,
-                              hint: "@ de quem vai receber o #praise",
-                              action: () {
-                                widget.controller.getUserFromTag(
-                                  "@${userFieldController.text.trim().replaceAll('@', '')}",
-                                );
-                              },
-                              enabled: state == 1,
-                              borderColor: state == 1
-                                  ? context.theme.colorScheme.accentColor
-                                  : Colors.transparent,
-                              iconColor: state == 1
-                                  ? context.theme.colorScheme.accentColor
-                                  : context
-                                      .theme.colorScheme.inputForegroundColor,
-                              errorText: userState is ErrorState
-                                  ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
-                                  : null,
-                            ),
-                          ),
-                          Visibility(
-                            visible: state == 2,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: SizedBox.square(
-                                dimension: 48,
-                                child: BaseButton.icon(
-                                  padding: EdgeInsets.zero,
-                                  backgroundColor: ColorTokens.concrete,
-                                  icon: Icon(
-                                    HeroiconsMini.xMark,
-                                    size: 18,
-                                    color: context
-                                        .theme.colorScheme.inputForegroundColor,
+                          AtomObserver(
+                            atom: widget.controller.state,
+                            builder: (context, state) {
+                              return Visibility(
+                                visible: state is ErrorState,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: ErrorMessageMolecule(
+                                    onClosePressed: () {
+                                      widget.controller.state
+                                          .set(InitialState());
+                                    },
+                                    state: state,
                                   ),
-                                  onPressed: () {
-                                    userFieldController.clear();
-                                    widget.controller.activeStep.set(1);
-                                    widget.controller.userState.set(
-                                      InitialState(),
+                                ),
+                              );
+                            },
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: UserSearchInput(
+                                  controller: userFieldController,
+                                  hint: "@ de quem vai receber o #praise",
+                                  action: () {
+                                    widget.controller.getUserFromTag(
+                                      "@${userFieldController.text.trim().replaceAll('@', '')}",
                                     );
                                   },
+                                  enabled: state == 1,
+                                  borderColor: state == 1
+                                      ? context.theme.colorScheme.accentColor
+                                      : Colors.transparent,
+                                  iconColor: state == 1
+                                      ? context.theme.colorScheme.accentColor
+                                      : context.theme.colorScheme
+                                          .inputForegroundColor,
+                                  errorText: userState is ErrorState
+                                      ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
+                                      : null,
+                                ),
+                              ),
+                              Visibility(
+                                visible: state == 2,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: SizedBox.square(
+                                    dimension: 48,
+                                    child: BaseButton.icon(
+                                      padding: EdgeInsets.zero,
+                                      backgroundColor: ColorTokens.concrete,
+                                      icon: Icon(
+                                        HeroiconsMini.xMark,
+                                        size: 18,
+                                        color: context.theme.colorScheme
+                                            .inputForegroundColor,
+                                      ),
+                                      onPressed: () {
+                                        userFieldController.clear();
+                                        widget.controller.activeStep.set(1);
+                                        widget.controller.userState.set(
+                                          InitialState(),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          _reasonRow(state),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          BaseInput.large(
+                            hintText: "Solta a matraca e elogie com vontade!",
+                            validator: (value) => message(value ?? ""),
+                            onSaved: (value) =>
+                                widget.controller.formData.message = value!,
+                            minLines: 3,
+                            hintStyle: context.theme.fontScheme.input,
+                            enabled: state == 2,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: BorderedButton(
+                              onPressed: () {
+                                if (state == 2 &&
+                                    formKey.currentState!.validate()) {
+                                  if (widget.controller.formData.topic ==
+                                      null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const ErrorSnack(
+                                        message:
+                                            "Precisamos de um motivo para o praise",
+                                      ).build(context),
+                                    );
+                                    return;
+                                  }
+                                  formKey.currentState!.save();
+                                  widget.controller.sendPraise(
+                                    injected<SessionController>()
+                                        .currentUser!
+                                        .id,
+                                  );
+                                }
+                              },
+                              padding: const EdgeInsets.all(12),
+                              borderSide: BorderSide(
+                                color: state == 2
+                                    ? context.theme.colorScheme.accentColor
+                                    : context
+                                        .theme.colorScheme.inputForegroundColor,
+                              ),
+                              child: Text(
+                                "#praise  >",
+                                style: context.theme.fontScheme.input.copyWith(
+                                  color: state == 2
+                                      ? context.theme.colorScheme.accentColor
+                                      : context.theme.colorScheme
+                                          .inputForegroundColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      _reasonRow(state),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      BaseInput.large(
-                        hintText: "Solta a matraca e elogie com vontade!",
-                        validator: (value) => message(value ?? ""),
-                        controller: TextEditingController(
-                          text: widget.controller.formData.message,
-                        ),
-                        onSaved: (value) =>
-                            widget.controller.formData.message = value!,
-                        minLines: 3,
-                        hintStyle: context.theme.fontScheme.input,
-                        enabled: state == 2,
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: BorderedButton(
-                          onPressed: () {
-                            if (state == 2 &&
-                                formKey.currentState!.validate()) {
-                              if (widget.controller.formData.topic == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const ErrorSnack(
-                                    message:
-                                        "Precisamos de um motivo para o praise",
-                                  ).build(context),
-                                );
-                                return;
-                              }
-                              formKey.currentState!.save();
-                              widget.controller.sendPraise(
-                                injected<SessionController>().currentUser!.id,
-                              );
-                            }
-                          },
-                          padding: const EdgeInsets.all(12),
-                          borderSide: BorderSide(
-                            color: state == 2
-                                ? context.theme.colorScheme.accentColor
-                                : context
-                                    .theme.colorScheme.inputForegroundColor,
-                          ),
-                          child: Text(
-                            "#praise  >",
-                            style: context.theme.fontScheme.input.copyWith(
-                              color: state == 2
-                                  ? context.theme.colorScheme.accentColor
-                                  : context
-                                      .theme.colorScheme.inputForegroundColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 );
               });
@@ -284,8 +290,9 @@ class _NewPraiseUserSelectionStepState
   }
 }
 
-class _ErrorMessageMolecule extends StatelessWidget {
-  const _ErrorMessageMolecule({
+class ErrorMessageMolecule extends StatelessWidget {
+  const ErrorMessageMolecule({
+    super.key,
     required this.onClosePressed,
     required this.state,
   });

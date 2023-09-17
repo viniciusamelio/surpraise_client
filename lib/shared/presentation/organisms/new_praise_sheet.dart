@@ -50,7 +50,7 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
   @override
   Widget build(BuildContext context) {
     return BottomSheetMolecule(
-      child: PolymorphicAtomObserver(
+      child: PolymorphicAtomObserver<DefaultState<Exception, void>>(
           atom: controller.state,
           types: [
             TypedAtomHandler(

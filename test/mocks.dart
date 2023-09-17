@@ -19,3 +19,5 @@ class MockCommunityRepository extends Mock implements CommunityRepository {}
 class MockImageManager extends Mock implements ImageManager {}
 
 class MockImageController extends Mock implements ImageController {}
+
+class MockPraiseUsecase extends Mock implements PraiseUsecase {}
