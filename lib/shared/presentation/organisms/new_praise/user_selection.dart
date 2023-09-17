@@ -82,7 +82,7 @@ class _NewPraiseUserSelectionStepState
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height - 120,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
