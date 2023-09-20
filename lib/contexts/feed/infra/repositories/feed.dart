@@ -22,7 +22,7 @@ class DefaultFeedRepository implements FeedRepository {
           sourceName: communityMembersCollection,
           value: userId,
           fieldName: "member_id",
-          select: "$communitiesCollection(id, title, description, imageUrl)",
+          select: "$communitiesCollection(id)",
           filters: [
             AndFilter(
               fieldName: "active",
@@ -36,27 +36,27 @@ class DefaultFeedRepository implements FeedRepository {
         return Left(Exception("Something went wrong getting your communities"));
       }
 
-      final feedPraises = await _databaseDatasource.get(
-        GetQuery(
-          sourceName: praisesCollection,
-          operator: FilterOperator.inValues,
-          value: communitiesOrError.multiData!
-              .map((e) => e[communitiesCollection]["id"])
-              .toList()
-              .cast<String>(),
-          fieldName: "community_id",
-          select:
-              "id, praiser_id, praised_id, community_id, description, message, topic, $profilesCollection(tag, name, id, email) as praiser, $communitiesCollection(title)",
-        ),
-      );
+      final ids = communitiesOrError.multiData!
+          .map((e) => "${e[communitiesCollection]["id"]}")
+          .toList();
+      final List<PraiseDto> praises = [];
 
-      if (feedPraises.failure) {
-        return Left(Exception("Something went wrong getting your feed"));
-      }
+      for (final id in ids) {
+        final feedPraises = await _databaseDatasource.get(
+          GetQuery(
+            sourceName: praisesCollection,
+            value: id,
+            fieldName: "community_id",
+            select:
+                "id, praiser_id, praised_id, community_id, message, topic, profile!praise_praiser_id_fkey(tag, name, id, email), $communitiesCollection(title)",
+          ),
+        );
 
-      // TODO: revisar a query e a forma de referenciar 2 relacionamentos com a mesma tabela para pegar o praised & praiser
-      return Right(feedPraises.multiData!
-          .map<PraiseDto>(
+        if (feedPraises.failure) {
+          return Left(Exception("Something went wrong getting your feed"));
+        }
+        praises.addAll(
+          feedPraises.multiData!.map<PraiseDto>(
             (e) => PraiseDto(
               id: e["id"],
               message: e["message"],
@@ -64,14 +64,16 @@ class DefaultFeedRepository implements FeedRepository {
               communityName: e[communitiesCollection]["title"],
               communityId: e["community_id"],
               praiser: UserDto(
-                tag: e["praiser"]["tag"],
-                name: e["praiser"]["name"],
-                email: e["praiser"]["email"],
-                id: e["praiser"]["id"],
+                tag: e[profilesCollection]["tag"],
+                name: e[profilesCollection]["name"],
+                email: e[profilesCollection]["email"],
+                id: e[profilesCollection]["id"],
               ),
             ),
-          )
-          .toList());
+          ),
+        );
+      }
+      return Right(praises);
     } on Exception catch (e) {
       return Left(e);
     }
