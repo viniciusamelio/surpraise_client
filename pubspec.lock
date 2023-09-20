@@ -270,10 +270,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_macos
-      sha256: "182c3f8350cee659f7b115e956047ee3dc672a96665883a545e81581b9a82c72"
+      sha256: b15c3da8bd4908b9918111fa486903f5808e388b8d1c559949f584725a6594d6
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.3+2"
+    version: "0.9.3+3"
   file_selector_platform_interface:
     dependency: transitive
     description:
@@ -453,10 +453,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: af61c5c6a2374d9032b7e4b388de0bb0442f4bedc56372d5382c1ef61c85f1f3
+      sha256: "3d15ee24bd05c6b4e5587f6dba727a7c031e5513424aa2ab4fb35b42f8c45ba7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.1"
+    version: "1.12.2"
   heroicons_flutter:
     dependency: "direct main"
     description:
@@ -685,10 +685,10 @@ packages:
     dependency: transitive
     description:
       name: mongo_dart_query
-      sha256: "84807c79771ce5bb1a29f98ce4746d7ff9fe54d80638ea99f9acbb5374995bae"
+      sha256: "25d9da8aa2f9c98e8ec0f40a1b720d553535d78fc3731a21d58f18788188ed1c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   node_preamble:
     dependency: transitive
     description:
@@ -893,10 +893,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: d6cc0f60c7dc761f84d1c6d11d9e02b3ad90399bd84639a28c1c024adbaa9bde
+      sha256: "87e35d3a59e327188321befbfbfcc5a7a2e71f0d0a13d975cbc7d169387ec712"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.5.1"
   power_extensions:
     dependency: transitive
     description:
@@ -933,10 +933,10 @@ packages:
     dependency: transitive
     description:
       name: realtime_client
-      sha256: b4b7bb293417dafc73943ed639209b2dcb796db8495e56bba29a4e26fadef5cd
+      sha256: e84e328dbca6830dec6c4b168ba452ea8c667f5bf45039505b3c8acb5e2c9d82
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   retry:
     dependency: transitive
     description:
@@ -1186,18 +1186,18 @@ packages:
     dependency: transitive
     description:
       name: supabase
-      sha256: "4bfa8f673b39c036ed82829a2ddc462dcacfc36fe168b680664ab954c7d91ccd"
+      sha256: "0b4625845558b42639a3cd13b0d3ea69132e6228bdbf484f38ef4c71363f82b1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.3"
+    version: "1.11.5"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: "9ed8299c665467588d2415a38d8a4c924c3bc864fbeaf857e352f9011af35f05"
+      sha256: cbc955e44f5feaa2958793f0df1fe055ea7a5ca003184a51172492bcdde8a724
       url: "https://pub.dev"
     source: hosted
-    version: "1.10.16"
+    version: "1.10.18"
   surpraise_backend_dependencies:
     dependency: transitive
     description:
@@ -1477,10 +1477,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "9e82a402b7f3d518fb9c02d0e9ae45952df31b9bf34d77baf19da2de03fc2aaa"
+      sha256: c97defd418eef4ec88c0d1652cdce84b9f7b63dd7198e266d06ac1710d527067
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.7"
+    version: "5.0.8"
   xdg_directories:
     dependency: transitive
     description:
