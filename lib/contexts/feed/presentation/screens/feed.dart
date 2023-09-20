@@ -13,8 +13,13 @@ import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
 
 class FeedScreen extends StatefulWidget {
-  const FeedScreen({super.key});
+  const FeedScreen({
+    super.key,
+    required this.user,
+  });
   static const String routeName = '/feed/';
+
+  final UserDto user;
   @override
   State<FeedScreen> createState() => _FeedScreenState();
 }
@@ -51,8 +56,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   void didChangeDependencies() {
-    final user = ModalRoute.of(context)!.settings.arguments;
-    sessionController.currentUser = user! as UserDto;
+    sessionController.currentUser = widget.user;
     if (controller.state.value is InitialState) {
       controller.getPraises(sessionController.currentUser!.id);
       controller.getInvites(sessionController.currentUser!.id);
