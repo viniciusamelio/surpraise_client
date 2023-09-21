@@ -1,5 +1,6 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../../../env.dart';
 import '../../../../shared/dtos/dtos.dart';
 import '../../../../shared/mappers/mappers.dart';
 import '../../application/application.dart';
@@ -8,72 +9,53 @@ import '../../dtos/invite.dart';
 class DefaultFeedRepository implements FeedRepository {
   const DefaultFeedRepository({
     required DatabaseDatasource databaseDatasource,
-  }) : _databaseDatasource = databaseDatasource;
+    required HttpClient httpClient,
+  })  : _databaseDatasource = databaseDatasource,
+        _httpClient = httpClient;
 
   final DatabaseDatasource _databaseDatasource;
+  final HttpClient _httpClient;
 
   @override
   AsyncAction<List<PraiseDto>> get({
     required String userId,
   }) async {
     try {
-      final communitiesOrError = await _databaseDatasource.get(
-        GetQuery(
-          sourceName: communityMembersCollection,
-          value: userId,
-          fieldName: "member_id",
-          select: "$communitiesCollection(id)",
-          filters: [
-            AndFilter(
-              fieldName: "active",
-              operator: FilterOperator.equalsTo,
-              value: true,
-            ),
-          ],
-        ),
+      final feed = await _httpClient.post(
+        "${Env.sbUrl}/functions/v1/feed",
+        data: {
+          "userId": userId,
+        },
       );
-      if (communitiesOrError.failure) {
-        return Left(Exception("Something went wrong getting your communities"));
+      if (feed.statusCode != 200) {
+        return Left(Exception("Something went wrong getting your feed"));
       }
 
-      final ids = communitiesOrError.multiData!
-          .map((e) => "${e[communitiesCollection]["id"]}")
-          .toList();
-      final List<PraiseDto> praises = [];
-
-      for (final id in ids) {
-        final feedPraises = await _databaseDatasource.get(
-          GetQuery(
-            sourceName: praisesCollection,
-            value: id,
-            fieldName: "community_id",
-            select:
-                "id, praiser_id, praised_id, community_id, message, topic, profile!praise_praiser_id_fkey(tag, name, id, email), $communitiesCollection(title)",
-          ),
-        );
-
-        if (feedPraises.failure) {
-          return Left(Exception("Something went wrong getting your feed"));
-        }
-        praises.addAll(
-          feedPraises.multiData!.map<PraiseDto>(
-            (e) => PraiseDto(
-              id: e["id"],
-              message: e["message"],
-              topic: e["topic"],
-              communityName: e[communitiesCollection]["title"],
-              communityId: e["community_id"],
-              praiser: UserDto(
-                tag: e[profilesCollection]["tag"],
-                name: e[profilesCollection]["name"],
-                email: e[profilesCollection]["email"],
-                id: e[profilesCollection]["id"],
+      return Right(
+        (feed.data as List)
+            .map<PraiseDto>(
+              (e) => PraiseDto(
+                id: e["praise_id"],
+                message: e["message"],
+                topic: e["topic"],
+                communityName: e["title"],
+                communityId: e["community_id"],
+                praiser: UserDto(
+                  tag: e["praiser_tag"],
+                  name: e["praiser_name"],
+                  email: e["praiser_email"],
+                  id: e["praiser_id"],
+                ),
+                praised: UserDto(
+                  tag: e["praised_tag"],
+                  name: e["praised_name"],
+                  email: e["praised_email"],
+                  id: e["praised_id"],
+                ),
               ),
-            ),
-          ),
-        );
-      }
-      return Right(praises);
+            )
+            .toList(),
+      );
     } on Exception catch (e) {
       return Left(e);
     }

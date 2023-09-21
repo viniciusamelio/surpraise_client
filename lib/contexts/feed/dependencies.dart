@@ -5,6 +5,7 @@ Future<void> feedDependencies() async {
   inject<FeedRepository>(
     DefaultFeedRepository(
       databaseDatasource: injected(),
+      httpClient: injected(),
     ),
   );
   inject<FeedController>(
