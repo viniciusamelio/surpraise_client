@@ -134,7 +134,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     if (state is LoadingState || state is InitialState) {
                       return const CircularProgressIndicator();
                     } else if (state is ErrorState) {
-                      return const Text("error");
+                      return const ErrorWidgetMolecule(
+                        message: "Deu ruim ao recuperar seu feed",
+                      );
                     }
 
                     final List<PraiseDto> data = (state as SuccessState).data;
