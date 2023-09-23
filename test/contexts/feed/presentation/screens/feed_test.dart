@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/feed/feed.dart';
+import 'package:surpraise_client/contexts/feed/presentation/molecules/molecules.dart';
 import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart';
+import 'package:surpraise_client/env.dart';
 import 'package:surpraise_client/shared/shared.dart';
 
 import '../../../../mocks.dart';
@@ -81,6 +83,7 @@ void main() {
       "sut should show feed when it is returned successfully and it is not empty",
       (tester) async {
         final message = faker.lorem.words(4).join(" ");
+        Env.sbUrl = "https://mock.com";
         when(
           () => feedRepository.get(
             userId: any(named: "userId"),
@@ -99,6 +102,12 @@ void main() {
                 email: faker.internet.email(),
                 id: faker.guid.guid(),
               ),
+              praised: UserDto(
+                tag: "@${faker.person.name()}",
+                name: faker.person.name(),
+                email: faker.internet.email(),
+                id: faker.guid.guid(),
+              ),
             )
           ]),
         );
@@ -110,6 +119,7 @@ void main() {
 
         expect(find.text("error"), findsNothing);
         expect(find.text(message), findsOneWidget);
+        expect(find.byType(PraiseCardMolecule), findsOneWidget);
       },
     );
 
