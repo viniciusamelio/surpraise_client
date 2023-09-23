@@ -2,6 +2,7 @@ import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../../praise/praise.dart';
 import '../../application/events/events.dart';
 import '../../dtos/dtos.dart';
 import '../../feed.dart';
@@ -50,6 +51,10 @@ class _FeedScreenState extends State<FeedScreen> {
       },
       name: "inviteAnsweredHandler",
     );
+
+    injected<ApplicationEventBus>().on<PraiseSentEvent>((event) {
+      controller.getPraises(sessionController.currentUser!.id);
+    });
     super.initState();
   }
 
