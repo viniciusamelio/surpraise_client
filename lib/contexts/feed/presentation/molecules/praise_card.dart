@@ -3,13 +3,23 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
+import '../../../../shared/presentation/controllers/session.dart';
+
+enum PraiseCardMode {
+  feed,
+  profile;
+
+  bool isFeed() => this == PraiseCardMode.feed;
+}
 
 class PraiseCardMolecule extends StatelessWidget {
   const PraiseCardMolecule({
     super.key,
+    this.mode = PraiseCardMode.feed,
     required this.praise,
   });
   final PraiseDto praise;
+  final PraiseCardMode mode;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +32,10 @@ class PraiseCardMolecule extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _CardHeader(praise: praise),
+          _CardHeader(
+            praise: praise,
+            mode: mode,
+          ),
           Divider(
             color: theme.colorScheme.inputForegroundColor,
             height: 28,
@@ -56,13 +69,18 @@ class PraiseCardMolecule extends StatelessWidget {
 class _CardHeader extends StatelessWidget {
   const _CardHeader({
     required this.praise,
+    required this.mode,
   });
 
   final PraiseDto praise;
+  final PraiseCardMode mode;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
+    final SessionController sessionController = injected();
+
+    final UserDto praised = praise.praised ?? sessionController.currentUser!;
     return Row(
       children: [
         SizedBox.square(
@@ -70,7 +88,7 @@ class _CardHeader extends StatelessWidget {
           child: CircleAvatar(
             backgroundImage: NetworkImage(
               getAvatarFromId(
-                praise.praised!.id,
+                mode.isFeed() ? praised.id : praise.praiser.id,
               ),
             ),
           ),
@@ -83,7 +101,7 @@ class _CardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                praise.praised!.name,
+                mode.isFeed() ? praised.name : praise.praiser.name,
                 style: theme.fontScheme.p2.copyWith(
                   color: theme.colorScheme.accentColor,
                   fontWeight: FontWeight.bold,
@@ -91,7 +109,7 @@ class _CardHeader extends StatelessWidget {
               ),
               Text.rich(
                 TextSpan(
-                    text: "Recebeu um ",
+                    text: mode.isFeed() ? "Recebeu um " : "Enviou um",
                     style: theme.fontScheme.p1,
                     children: [
                       TextSpan(

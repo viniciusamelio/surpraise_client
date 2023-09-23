@@ -10,6 +10,7 @@ import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
 import '../../../community/dtos/find_community_dto.dart';
+import '../../../feed/presentation/molecules/molecules.dart';
 import '../../profile.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -94,22 +95,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     atom: controller.state,
                     builder: (context, state) {
                       if (state is LoadingState) {
-                        return const CircularProgressIndicator();
+                        return const LoaderMolecule();
+                      } else if (state is ErrorState) {
+                        return const ErrorWidgetMolecule(
+                          message: "Deu ruim ao recuperar seus #praises",
+                        );
                       }
 
                       final List<PraiseDto> data = (state as SuccessState).data;
                       return SizedBox(
-                        child: ListView.builder(
+                        child: ListView.separated(
                           itemCount: data.length,
+                          physics: const BouncingScrollPhysics(),
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: Spacings.md,
+                          ),
                           itemBuilder: (context, index) {
-                            return Container(
-                              padding: EdgeInsets.all(Spacings.lg),
-                              decoration: BoxDecoration(
-                                color: ColorTokens.concrete,
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ),
-                              ),
+                            return PraiseCardMolecule(
+                              praise: data[index],
+                              mode: PraiseCardMode.profile,
                             );
                           },
                         ),

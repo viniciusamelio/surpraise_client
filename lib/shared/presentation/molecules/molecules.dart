@@ -6,3 +6,4 @@ export "./success_snack.dart";
 export "./loader.dart";
 export "./user_search_input.dart";
 export "./confirm_snack.dart";
+export "./error_widget.dart";

@@ -2,7 +2,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../env.dart';
 import '../../../../shared/dtos/dtos.dart';
-import '../../../../shared/mappers/mappers.dart';
 import '../../application/application.dart';
 import '../../dtos/invite.dart';
 
@@ -69,15 +68,26 @@ class DefaultFeedRepository implements FeedRepository {
     try {
       final praisesOrError = await _getFeedByUser(
         userId: userId,
-        asPraiser: asPraiser,
       );
       if (praisesOrError.failure) {
         return Left(Exception("Something went wrong getting your feeed"));
       }
       return Right(
-        praisesOrError.multiData!
-            .map<PraiseDto>(FeedPraiseMapper.fromMap)
-            .toList(),
+        praisesOrError.multiData!.map<PraiseDto>((e) {
+          return PraiseDto(
+            id: e["id"],
+            message: e["message"],
+            topic: e["topic"],
+            communityName: e["community"]["title"],
+            communityId: e["community_id"],
+            praiser: UserDto(
+              tag: e["profile"]["tag"],
+              name: e["profile"]["name"],
+              email: e["profile"]["email"],
+              id: e["profile"]["id"],
+            ),
+          );
+        }).toList(),
       );
     } on Exception catch (e) {
       return Left(e);
@@ -86,29 +96,16 @@ class DefaultFeedRepository implements FeedRepository {
 
   Future<QueryResult> _getFeedByUser({
     required String userId,
-    required bool? asPraiser,
   }) async {
-    if (asPraiser != null) {
-      return await _databaseDatasource.get(
-        GetQuery(
-          sourceName: praisesCollection,
-          value: userId,
-          fieldName: asPraiser ? "praiser_id" : "praised_id",
-        ),
-      );
-    }
+    const String select =
+        "*, $communitiesCollection(title), $profilesCollection!praise_praiser_id_fkey(name, tag, id, email)";
+
     return await _databaseDatasource.get(
       GetQuery(
         sourceName: praisesCollection,
         value: userId,
-        fieldName: "praiser_id",
-        filters: [
-          OrFilter(
-            fieldName: "praised_id",
-            value: userId,
-            operator: FilterOperator.equalsTo,
-          ),
-        ],
+        fieldName: "praised_id",
+        select: select,
       ),
     );
   }
