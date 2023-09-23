@@ -1,7 +1,5 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
-import 'package:blurple/tokens/color_tokens.dart';
-import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../application/events/events.dart';
@@ -11,6 +9,7 @@ import '../molecules/molecules.dart';
 import '../../../../core/core.dart';
 
 import '../../../../shared/shared.dart';
+import '../organisms/organisms.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -123,108 +122,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     if (state is! SuccessState) return const SizedBox.shrink();
                     final List<InviteDto> data = (state as SuccessState).data;
                     if (data.isEmpty) return const SizedBox.shrink();
-                    return Container(
-                      height: 64,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: ColorTokens.concrete,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: PageView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          final invite = data[index];
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width - 32,
-                            child: ListTile(
-                              leading: Icon(
-                                HeroiconsSolid.envelopeOpen,
-                                color: theme.colorScheme.accentColor,
-                                size: 24,
-                              ),
-                              title: Text(
-                                "Você recebeu um convite para a comunidade ${invite.communityTitle} como ${invite.role.display}",
-                                style: theme.fontScheme.p1,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox.square(
-                                    dimension: 32,
-                                    child: BorderedIconButton(
-                                      padding: const EdgeInsets.all(0),
-                                      preffixIcon: Icon(
-                                        HeroiconsMini.exclamationTriangle,
-                                        size: 16,
-                                        color: theme.colorScheme.warningColor,
-                                      ),
-                                      onPressed: () {
-                                        ConfirmSnack(
-                                          leadingIcon: Icon(
-                                            HeroiconsMini.exclamationTriangle,
-                                            size: 24,
-                                            color:
-                                                theme.colorScheme.warningColor,
-                                          ),
-                                          message:
-                                              "Deseja mesmo recusar o convite??",
-                                          onConfirm: () {
-                                            answerInviteController.answerInvite(
-                                              inviteId: invite.id,
-                                              accept: false,
-                                            );
-                                          },
-                                        ).show(
-                                          context: context,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: Spacings.sm,
-                                  ),
-                                  SizedBox.square(
-                                    dimension: 32,
-                                    child: BorderedIconButton(
-                                      padding: const EdgeInsets.all(0),
-                                      preffixIcon: Icon(
-                                        HeroiconsMini.checkCircle,
-                                        size: 16,
-                                        color: theme.colorScheme.successColor,
-                                      ),
-                                      onPressed: () {
-                                        ConfirmSnack(
-                                          leadingIcon: Icon(
-                                            HeroiconsMini.envelopeOpen,
-                                            size: 24,
-                                            color:
-                                                theme.colorScheme.accentColor,
-                                          ),
-                                          message:
-                                              "Deseja mesmo aceitar o convite??",
-                                          onConfirm: () {
-                                            answerInviteController.answerInvite(
-                                              inviteId: invite.id,
-                                              accept: true,
-                                            );
-                                          },
-                                        ).show(
-                                          context: context,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                    return InvitesSectionOrganism(
+                      data: data,
+                      answerInviteController: answerInviteController,
                     );
                   },
                 ),
