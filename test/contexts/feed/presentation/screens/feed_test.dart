@@ -73,9 +73,9 @@ void main() {
         await tester.pumpWidget(
           sut,
         );
-        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 100));
 
-        expect(find.text("error"), findsOneWidget);
+        expect(find.byType(ErrorWidgetMolecule), findsOneWidget);
       },
     );
 
@@ -117,7 +117,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text("error"), findsNothing);
+        expect(find.byType(ErrorWidgetMolecule), findsNothing);
         expect(find.text(message), findsOneWidget);
         expect(find.byType(PraiseCardMolecule), findsOneWidget);
       },
