@@ -78,6 +78,7 @@ class _FeedScreenState extends State<FeedScreen> {
       child: Stack(
         children: [
           SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.all(
               Spacings.lg,
             ),
@@ -258,10 +259,15 @@ class _FeedScreenState extends State<FeedScreen> {
                     }
                     return SizedBox(
                       height: (300 * data.length).toDouble(),
-                      child: ListView.builder(
+                      child: ListView.separated(
                         itemCount: data.length,
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 20,
+                        ),
                         itemBuilder: (context, index) =>
-                            Text(data[index].message),
+                            PraiseCardMolecule(praise: data[index]),
                       ),
                     );
                   },
