@@ -5,6 +5,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
+import '../organisms/organisms.dart';
 
 class ProfileHeaderOrganism extends StatelessWidget {
   const ProfileHeaderOrganism({
@@ -91,7 +92,12 @@ class ProfileHeaderOrganism extends StatelessWidget {
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showCustomModalBottomSheet(
+                        context: context,
+                        child: const EditNameSheetTabOrganism(),
+                      );
+                    },
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [

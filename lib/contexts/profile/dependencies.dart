@@ -8,4 +8,7 @@ Future<void> profileDependencies() async {
       feedRepository: injected(),
     ),
   );
+  inject<EditProfileController>(
+    DefaultEditProfileController(),
+  );
 }
