@@ -43,9 +43,11 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       body: PageView(
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          FeedScreen(),
-          ProfileScreen(),
+        children: [
+          FeedScreen(
+            user: ModalRoute.of(context)!.settings.arguments as UserDto,
+          ),
+          const ProfileScreen(),
         ],
       ),
     );

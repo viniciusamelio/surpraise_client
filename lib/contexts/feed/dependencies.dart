@@ -4,8 +4,8 @@ import '../../core/di/di.dart';
 Future<void> feedDependencies() async {
   inject<FeedRepository>(
     DefaultFeedRepository(
-      httpClient: injected(),
       databaseDatasource: injected(),
+      httpClient: injected(),
     ),
   );
   inject<FeedController>(

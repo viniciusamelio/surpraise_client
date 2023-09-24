@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/core.dart';
+import '../../../core/external_dependencies.dart';
 
 class LoaderMolecule extends StatelessWidget {
   const LoaderMolecule({
@@ -14,12 +14,11 @@ class LoaderMolecule extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
+          LottieBuilder.asset(
+            "assets/animations/loading.json",
             width: 120,
             height: 120,
-            child: CircularProgressIndicator(
-              color: context.theme.colorScheme.accentColor,
-            ),
+            fit: BoxFit.fill,
           ),
         ],
       ),

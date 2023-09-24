@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/community/community.dart';
+import 'package:surpraise_client/contexts/feed/feed.dart';
 import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/shared/shared.dart';
 
@@ -11,6 +12,7 @@ class MockSessionController extends Mock implements SessionController {
         name: faker.person.name(),
         email: faker.internet.email(),
         tag: "@fake",
+        avatarUrl: faker.internet.httpsUrl(),
       );
 }
 
@@ -21,3 +23,8 @@ class MockImageManager extends Mock implements ImageManager {}
 class MockImageController extends Mock implements ImageController {}
 
 class MockPraiseUsecase extends Mock implements PraiseUsecase {}
+
+class MockAnswerInviteController extends Mock
+    implements AnswerInviteController {}
+
+class MockFeedRepository extends Mock implements FeedRepository {}
