@@ -7,12 +7,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/community/community.dart';
 import 'package:surpraise_client/contexts/community/dtos/dtos.dart';
-import 'package:surpraise_client/core/di/di.dart';
+import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart'
     hide CommunityRepository, equals;
-import 'package:surpraise_client/core/protocols/protocols.dart';
-import 'package:surpraise_client/core/services/services.dart';
-import 'package:surpraise_client/core/state/default_state.dart';
 import 'package:surpraise_client/shared/shared.dart';
 
 import '../../../mocks.dart';
@@ -45,6 +42,7 @@ void main() {
       inject<GetCommunitiesController>(communitiesController);
       inject<PraiseController>(controller);
       inject<TranslationService>(DefaultTranslationService());
+      inject<ApplicationEventBus>(DefaultBus());
       final translationService = injected<TranslationService>();
       await translationService.init(
         supportedLocales: [
