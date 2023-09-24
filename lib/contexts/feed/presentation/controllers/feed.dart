@@ -24,7 +24,7 @@ class DefaultFeedController
   @override
   Future<void> getPraises(String userId) async {
     state.set(LoadingState());
-    final praisesOrError = await repository.getByUser(userId: userId);
+    final praisesOrError = await repository.get(userId: userId);
     stateFromEither(praisesOrError);
   }
 

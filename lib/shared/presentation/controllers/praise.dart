@@ -1,4 +1,5 @@
 import '../../../contexts/community/community.dart';
+import '../../../contexts/praise/praise.dart';
 import '../../../core/core.dart';
 import '../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../dtos/user.dart';
@@ -26,6 +27,9 @@ class DefaultPraiseController
   })  : _usecase = praiseUsecase,
         _communityRepository = communityRepository {
     setDefaultErrorHandling();
+    state.on<SuccessState>((value) {
+      injected<ApplicationEventBus>().add(const PraiseSentEvent(null));
+    });
   }
 
   final PraiseUsecase _usecase;

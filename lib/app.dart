@@ -10,6 +10,7 @@ import 'contexts/intro/intro.dart';
 import 'contexts/main/main_screen.dart';
 import 'contexts/profile/presentation/presentation.dart';
 import 'core/core.dart';
+import 'shared/dtos/dtos.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -36,7 +37,9 @@ class App extends StatelessWidget {
             routes: {
               LoginScreen.routeName: (context) => const LoginScreen(),
               SignupScreen.routeName: (context) => const SignupScreen(),
-              FeedScreen.routeName: (context) => const FeedScreen(),
+              FeedScreen.routeName: (context) => FeedScreen(
+                    user: ModalRoute.of(context)!.settings.arguments as UserDto,
+                  ),
               IntroScreen.routeName: (context) => const IntroScreen(),
               ProfileScreen.routeName: (context) => const ProfileScreen(),
               MainScreen.routeName: (context) => const MainScreen(),
