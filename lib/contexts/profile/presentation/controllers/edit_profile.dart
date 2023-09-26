@@ -1,20 +1,27 @@
-import 'package:atom_notifier/notifier.dart';
-
-import '../../../../core/state/base_state_controller.dart';
-import '../../../../core/state/default_state.dart';
-import '../../dtos/edit_profile.dart';
+import '../../../../core/core.dart';
+import '../../profile.dart';
 
 abstract class EditProfileController extends BaseStateController<void> {
-  Future<void> update(EditProfileDto input);
+  Future<void> update(EditUserInput input);
 }
 
-class DefaultEditProfileController implements EditProfileController {
-  @override
-  final AtomNotifier<DefaultState<Exception, void>> state =
-      AtomNotifier(InitialState());
+class DefaultEditProfileController
+    with BaseState<Exception, void>
+    implements EditProfileController {
+  DefaultEditProfileController({
+    required EditUserRepository userRepository,
+  }) : _userRepository = userRepository {
+    setDefaultErrorHandling();
+  }
+  final EditUserRepository _userRepository;
 
   @override
-  Future<void> update(EditProfileDto input) async {
-    // TODO: implement update
+  Future<void> update(EditUserInput input) async {
+    state.set(LoadingState());
+    final editedUserOrError = await _userRepository.edit(input);
+    stateFromEither(editedUserOrError);
+    editedUserOrError.fold((left) => null, (right) {
+      injected<ApplicationEventBus>().add(ProfileEditedEvent(right));
+    });
   }
 }

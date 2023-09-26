@@ -15,10 +15,11 @@ class UserDto extends GetUserOutput {
 
   UserDto copyWith({
     String? avatarUrl,
+    String? name,
   }) {
     return UserDto(
       tag: tag,
-      name: name,
+      name: name ?? this.name,
       password: password,
       email: email,
       id: id,

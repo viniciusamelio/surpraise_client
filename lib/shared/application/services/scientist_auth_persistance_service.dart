@@ -12,13 +12,17 @@ class ScientistAuthPersistanceService implements AuthPersistanceService {
 
   @override
   Future<void> saveAuthenticatedUserData(UserDto user) async {
-    await _database.add(
-      data: {
-        ...SavedUserMapper.toMap(user),
-        "_id": "userData",
-      },
-      collection: _collection,
-    );
+    try {
+      await _database.add(
+        data: {
+          ...SavedUserMapper.toMap(user),
+          "_id": "userData",
+        },
+        collection: _collection,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override

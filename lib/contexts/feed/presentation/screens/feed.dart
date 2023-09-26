@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../praise/praise.dart';
+import '../../../profile/profile.dart';
 import '../../application/events/events.dart';
 import '../../dtos/dtos.dart';
 import '../../feed.dart';
@@ -28,9 +31,11 @@ class _FeedScreenState extends State<FeedScreen> {
   late final SessionController sessionController;
   late final FeedController controller;
   late final AnswerInviteController answerInviteController;
+  late final StreamController<EditUserOutput> profileEditedStream;
 
   @override
   void initState() {
+    profileEditedStream = StreamController.broadcast();
     sessionController = injected();
     controller = injected();
     answerInviteController = injected();
@@ -52,9 +57,18 @@ class _FeedScreenState extends State<FeedScreen> {
       name: "inviteAnsweredHandler",
     );
 
-    injected<ApplicationEventBus>().on<PraiseSentEvent>((event) {
-      controller.getPraises(sessionController.currentUser!.id);
-    });
+    injected<ApplicationEventBus>().on<PraiseSentEvent>(
+      (event) {
+        controller.getPraises(sessionController.currentUser!.id);
+      },
+      name: "praiseSentHandler",
+    );
+    injected<ApplicationEventBus>().on<ProfileEditedEvent>(
+      (event) {
+        profileEditedStream.add(event.data);
+      },
+      name: "editedProfileHandler",
+    );
     super.initState();
   }
 
@@ -71,6 +85,8 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void dispose() {
     injected<ApplicationEventBus>().removeListener("inviteAnsweredHandler");
+    injected<ApplicationEventBus>().removeListener("praiseSentHandler");
+    injected<ApplicationEventBus>().removeListener("editedProfileHandler");
     super.dispose();
   }
 
@@ -88,9 +104,20 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
             child: Column(
               children: [
-                UserDisplayer(
-                  user: sessionController.currentUser!,
-                ),
+                StreamBuilder(
+                    stream: profileEditedStream.stream,
+                    builder: (context, snapshot) {
+                      return UserDisplayer(
+                        user: snapshot.hasData
+                            ? UserDto(
+                                tag: snapshot.data!.tag,
+                                name: snapshot.data!.name,
+                                email: snapshot.data!.email,
+                                id: snapshot.data!.id,
+                              )
+                            : sessionController.currentUser!,
+                      );
+                    }),
                 SizedBox(
                   height: Spacings.lg,
                 ),

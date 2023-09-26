@@ -1,4 +1,5 @@
 import '../../core/core.dart';
+import '../../core/external_dependencies.dart';
 import 'presentation/controllers/controllers.dart';
 
 Future<void> profileDependencies() async {
@@ -8,7 +9,14 @@ Future<void> profileDependencies() async {
       feedRepository: injected(),
     ),
   );
+  inject<EditUserRepository>(
+    UserRepository(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<EditProfileController>(
-    DefaultEditProfileController(),
+    DefaultEditProfileController(
+      userRepository: injected(),
+    ),
   );
 }

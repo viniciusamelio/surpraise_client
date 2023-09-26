@@ -4,6 +4,7 @@ import '../../../core/core.dart';
 
 import '../../shared.dart';
 
+// TODO: Change database in order to use one which can be listened to changes and reflect directly to the UI through this controller
 abstract class SessionController {
   late UserDto? currentUser;
 

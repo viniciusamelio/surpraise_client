@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/widgets/tab/tab.dart';
 import 'package:blurple/widgets/tab/tab_item.dart';
@@ -19,9 +21,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final ProfileController controller;
   late final SessionController sessionController;
   late final PageController pageController;
-
+  late final StreamController<EditUserOutput> editedUserStream;
   @override
   void initState() {
+    editedUserStream = StreamController.broadcast();
     pageController = PageController();
     sessionController = injected();
     controller = injected();
