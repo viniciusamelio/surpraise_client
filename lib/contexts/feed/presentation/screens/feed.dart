@@ -160,50 +160,62 @@ class _FeedScreenState extends State<FeedScreen> {
                     );
                   },
                 ),
-                AtomObserver<DefaultState>(
+                PolymorphicAtomObserver<
+                    DefaultState<Exception, List<PraiseDto>>>(
                   atom: controller.state,
-                  builder: (context, state) {
-                    if (state is LoadingState || state is InitialState) {
-                      return const CircularProgressIndicator();
-                    } else if (state is ErrorState) {
-                      return const ErrorWidgetMolecule(
-                        message: "Deu ruim ao recuperar seu feed",
-                      );
-                    }
+                  types: [
+                    TypedAtomHandler(
+                      type: ErrorState<Exception, List<PraiseDto>>,
+                      builder: (context, state) {
+                        return const ErrorWidgetMolecule(
+                          message: "Deu ruim ao recuperar seu feed",
+                        );
+                      },
+                    ),
+                    TypedAtomHandler(
+                      type: SuccessState<Exception, List<PraiseDto>>,
+                      builder: (context, state) {
+                        final List<PraiseDto> data =
+                            (state as SuccessState).data;
 
-                    final List<PraiseDto> data = (state as SuccessState).data;
-
-                    if (data.isEmpty) {
-                      return Column(
-                        children: [
-                          LottieBuilder.asset(
-                            "assets/animations/empty-state.json",
-                            height: 280,
-                          ),
-                          Text(
-                            "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
-                            style: context.theme.fontScheme.p2.copyWith(
-                              fontSize: 18,
-                              color: context.theme.colorScheme.foregroundColor,
+                        if (data.isEmpty) {
+                          return Column(
+                            children: [
+                              LottieBuilder.asset(
+                                "assets/animations/empty-state.json",
+                                height: 280,
+                              ),
+                              Text(
+                                "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
+                                style: context.theme.fontScheme.p2.copyWith(
+                                  fontSize: 18,
+                                  color:
+                                      context.theme.colorScheme.foregroundColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          );
+                        }
+                        return SizedBox(
+                          height: (300 * data.length).toDouble(),
+                          child: ListView.separated(
+                            itemCount: data.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 20,
                             ),
-                            textAlign: TextAlign.center,
+                            itemBuilder: (context, index) =>
+                                PraiseCardMolecule(praise: data[index]),
                           ),
-                        ],
-                      );
-                    }
-                    return SizedBox(
-                      height: (300 * data.length).toDouble(),
-                      child: ListView.separated(
-                        itemCount: data.length,
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 20,
-                        ),
-                        itemBuilder: (context, index) =>
-                            PraiseCardMolecule(praise: data[index]),
-                      ),
-                    );
+                        );
+                      },
+                    ),
+                  ],
+                  defaultBuilder: (state) {
+                    return const LoaderMolecule();
                   },
                 ),
               ],
