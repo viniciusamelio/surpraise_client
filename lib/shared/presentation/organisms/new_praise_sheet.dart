@@ -24,7 +24,8 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
     sessionController = injected();
     controller = injected();
     communitiesController = injected();
-    communitiesController.getCommunities(sessionController.currentUser!.id);
+    communitiesController
+        .getCommunities(sessionController.currentUser.value!.id);
     controller.activeStep.listen(
       (value) {
         if (mounted) {

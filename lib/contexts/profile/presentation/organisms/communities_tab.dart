@@ -113,9 +113,11 @@ class _CommunityTileMolecule extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible:
-                            injected<SessionController>().currentUser?.id ==
-                                item.ownerId,
+                        visible: injected<SessionController>()
+                                .currentUser
+                                .value
+                                ?.id ==
+                            item.ownerId,
                         child: Padding(
                           padding: EdgeInsets.only(
                             bottom: Spacings.sm,

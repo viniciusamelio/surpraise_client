@@ -126,7 +126,7 @@ void main() {
                     "role": "owner",
                   }
                 ],
-                ownerId: sessionController.currentUser!.id,
+                ownerId: sessionController.currentUser.value!.id,
               ),
             ),
           );

@@ -47,7 +47,7 @@ void main() {
           navigatorKey: navigatorKey,
           home: Scaffold(
             body: FeedScreen(
-              user: sessionController.currentUser!,
+              user: sessionController.currentUser.value!,
             ),
           ),
         ),

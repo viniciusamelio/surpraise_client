@@ -80,7 +80,8 @@ class _CardHeader extends StatelessWidget {
     final theme = context.theme;
     final SessionController sessionController = injected();
 
-    final UserDto praised = praise.praised ?? sessionController.currentUser!;
+    final UserDto praised =
+        praise.praised ?? sessionController.currentUser.value!;
     return Row(
       children: [
         SizedBox.square(

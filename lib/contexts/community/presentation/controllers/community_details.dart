@@ -44,7 +44,7 @@ class DefaultCommunityDetailsController
     leaveState.set(LoadingState());
     final leaveResponseOrError = await _communityRepository.leaveCommunity(
       communityId: communityId,
-      memberId: _sessionController.currentUser!.id,
+      memberId: _sessionController.currentUser.value!.id,
     );
     leaveState.set(
       leaveResponseOrError.fold(

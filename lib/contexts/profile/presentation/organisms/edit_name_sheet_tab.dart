@@ -25,7 +25,7 @@ class _EditNameSheetTabOrganismState extends State<EditNameSheetTabOrganism> {
   void initState() {
     sessionController = injected();
     nameController = TextEditingController(
-      text: sessionController.currentUser!.name,
+      text: sessionController.currentUser.value!.name,
     );
     formKey = GlobalKey<FormState>();
     controller = injected();
@@ -79,10 +79,10 @@ class _EditNameSheetTabOrganismState extends State<EditNameSheetTabOrganism> {
                       if (formKey.currentState!.validate()) {
                         controller.update(
                           EditUserInput(
-                            id: sessionController.currentUser!.id,
+                            id: sessionController.currentUser.value!.id,
                             name: nameController.text,
-                            tag: sessionController.currentUser!.tag,
-                            email: sessionController.currentUser!.email,
+                            tag: sessionController.currentUser.value!.tag,
+                            email: sessionController.currentUser.value!.email,
                           ),
                         );
                       }

@@ -11,8 +11,8 @@ Future<void> authDependencies() async {
     ),
   );
   inject<AuthPersistanceService>(
-    ScientistAuthPersistanceService(
-      database: injected(),
+    HiveAuthPersistanceService(
+      hiveBox: injected(),
     ),
   );
   inject<SignupController>(

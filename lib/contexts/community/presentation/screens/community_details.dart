@@ -34,7 +34,7 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
   void initState() {
     controller = injected();
     controller.getMembers(id: widget.community.id);
-    owner = injected<SessionController>().currentUser?.id ==
+    owner = injected<SessionController>().currentUser.value?.id ==
         widget.community.ownerId;
     controller.leaveState.on<SuccessState>((_) {
       injected<ApplicationEventBus>().add(const LeftCommunityEvent());

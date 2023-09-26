@@ -194,7 +194,8 @@ class _NewPraiseUserSelectionStepState
                                   formKey.currentState!.save();
                                   widget.controller.sendPraise(
                                     injected<SessionController>()
-                                        .currentUser!
+                                        .currentUser
+                                        .value!
                                         .id,
                                   );
                                 }

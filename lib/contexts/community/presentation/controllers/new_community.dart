@@ -75,7 +75,7 @@ class DefaultNewCommunityController
     final outputOrError = await _communityRepository.createCommunity(
       CreateCommunityInput(
         description: description.value,
-        ownerId: _sessionController.currentUser!.id,
+        ownerId: _sessionController.currentUser.value!.id,
         title: name.value,
         imageUrl: imageUrl!,
       ),

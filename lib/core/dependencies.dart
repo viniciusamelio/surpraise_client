@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:hive/hive.dart';
+
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
@@ -61,6 +63,8 @@ Future<void> _coreDependencies() async {
   inject<TranslationService>(
     DefaultTranslationService(),
   );
+  final box = await Hive.openBox("user");
+  inject<Box>(box);
 
   await injected<TranslationService>().init(supportedLocales: [
     const Locale("pt"),

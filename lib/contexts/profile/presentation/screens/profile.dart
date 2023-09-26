@@ -5,6 +5,7 @@ import 'package:blurple/widgets/tab/tab.dart';
 import 'package:blurple/widgets/tab/tab_item.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
 import '../../profile.dart';
@@ -28,17 +29,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     pageController = PageController();
     sessionController = injected();
     controller = injected();
-    controller.getCommunities(sessionController.currentUser!.id);
-    controller.getPraises(sessionController.currentUser!.id);
+    controller.getCommunities(sessionController.currentUser.value!.id);
+    controller.getPraises(sessionController.currentUser.value!.id);
     injected<ApplicationEventBus>().on<CommunityAddedEvent>(
       (_) {
-        controller.getCommunities(sessionController.currentUser!.id);
+        controller.getCommunities(sessionController.currentUser.value!.id);
       },
       name: "CommunityAddedHandler",
     );
     injected<ApplicationEventBus>().on<LeftCommunityEvent>(
       (event) {
-        controller.getCommunities(sessionController.currentUser!.id);
+        controller.getCommunities(sessionController.currentUser.value!.id);
       },
       name: "LeftCommunityHandler",
     );
@@ -60,8 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Column(
         children: [
-          ProfileHeaderOrganism(
-            user: sessionController.currentUser!,
+          AtomObserver(
+            atom: sessionController.currentUser,
+            builder: (context, user) {
+              return ProfileHeaderOrganism(
+                user: user!,
+              );
+            },
           ),
           const SizedBox(
             height: 20,

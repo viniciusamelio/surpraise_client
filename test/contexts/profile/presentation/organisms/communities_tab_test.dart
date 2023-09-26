@@ -70,7 +70,8 @@ void main() {
                     [
                       CommunityOutput(
                         id: faker.guid.guid(),
-                        ownerId: injected<SessionController>().currentUser!.id,
+                        ownerId:
+                            injected<SessionController>().currentUser.value!.id,
                         description: faker.lorem.words(3).join(","),
                         title: faker.lorem.word(),
                         image: faker.internet.httpsUrl(),

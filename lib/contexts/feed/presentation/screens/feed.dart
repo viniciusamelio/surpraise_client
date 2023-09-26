@@ -5,7 +5,6 @@ import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../praise/praise.dart';
-import '../../../profile/profile.dart';
 import '../../application/events/events.dart';
 import '../../dtos/dtos.dart';
 import '../../feed.dart';
@@ -59,25 +58,18 @@ class _FeedScreenState extends State<FeedScreen> {
 
     injected<ApplicationEventBus>().on<PraiseSentEvent>(
       (event) {
-        controller.getPraises(sessionController.currentUser!.id);
+        controller.getPraises(sessionController.currentUser.value!.id);
       },
       name: "praiseSentHandler",
-    );
-    injected<ApplicationEventBus>().on<ProfileEditedEvent>(
-      (event) {
-        profileEditedStream.add(event.data);
-      },
-      name: "editedProfileHandler",
     );
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    sessionController.currentUser = widget.user;
     if (controller.state.value is InitialState) {
-      controller.getPraises(sessionController.currentUser!.id);
-      controller.getInvites(sessionController.currentUser!.id);
+      controller.getPraises(sessionController.currentUser.value!.id);
+      controller.getInvites(sessionController.currentUser.value!.id);
     }
     super.didChangeDependencies();
   }
@@ -104,20 +96,7 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
             child: Column(
               children: [
-                StreamBuilder(
-                    stream: profileEditedStream.stream,
-                    builder: (context, snapshot) {
-                      return UserDisplayer(
-                        user: snapshot.hasData
-                            ? UserDto(
-                                tag: snapshot.data!.tag,
-                                name: snapshot.data!.name,
-                                email: snapshot.data!.email,
-                                id: snapshot.data!.id,
-                              )
-                            : sessionController.currentUser!,
-                      );
-                    }),
+                const UserDisplayer(),
                 SizedBox(
                   height: Spacings.lg,
                 ),
