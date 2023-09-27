@@ -18,6 +18,7 @@ class UploadImageDto {
 }
 
 abstract class ImageController {
+  Future<File?> pickFile();
   AsyncAction<String> upload(UploadImageDto input);
 
   AtomAppState get state;
@@ -26,8 +27,11 @@ abstract class ImageController {
 class DefaultImageController implements ImageController {
   DefaultImageController({
     required ImageUploader imageUploader,
-  }) : _imageUploader = imageUploader;
+    required ImageManager imageManager,
+  })  : _imageUploader = imageUploader,
+        _imageManager = imageManager;
   final ImageUploader _imageUploader;
+  final ImageManager _imageManager;
 
   final AtomNotifier<AtomAppState> _state = AtomNotifier(InitialState());
 
@@ -47,5 +51,10 @@ class DefaultImageController implements ImageController {
       _state.fromSuccess,
     );
     return result;
+  }
+
+  @override
+  Future<File?> pickFile() async {
+    return await _imageManager.select();
   }
 }

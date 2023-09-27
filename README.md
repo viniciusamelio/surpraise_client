@@ -3,5 +3,5 @@ Surpraise é uma rede social com a única e exclusiva finalidade de enviar #prai
 
 
 ## Sobre o projeto
-Client mobile, desenvolvido em Flutter, implementando as integrações com a API <a href="https://github.com/viniciusamelio/surpraise_api">Surpraise API</a>, que por sua vez implementa e integra com os demais projetos: <a href="https://github.com/viniciusamelio/surpraise_core">Surpraise Core</a> e <a href="https://github.com/viniciusamelio/surpraise_infra">Surpraise Infra</a>.
+Client mobile, desenvolvido em Flutter, utilizando da técnica de multi-repo para compor as camadas arquiteturais do app: <a href="https://github.com/viniciusamelio/surpraise_core">Surpraise Core</a> e <a href="https://github.com/viniciusamelio/surpraise_infra">Surpraise Infra</a>.
 

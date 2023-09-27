@@ -5,17 +5,24 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
+import '../../../../shared/presentation/molecules/confirm_snack.dart';
+import '../../../../shared/presentation/organisms/organisms.dart';
+import '../organisms/organisms.dart';
 
 class ProfileHeaderOrganism extends StatelessWidget {
   const ProfileHeaderOrganism({
     Key? key,
     required this.user,
+    required this.onRemoveAvatarConfirmed,
+    required this.uploadAction,
   }) : super(key: key);
   final UserDto user;
+  final VoidCallback uploadAction;
+  final VoidCallback onRemoveAvatarConfirmed;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 280,
+      height: 285,
       width: double.maxFinite,
       child: Stack(
         children: [
@@ -35,14 +42,11 @@ class ProfileHeaderOrganism extends StatelessWidget {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      SizedBox(
-                        height: 180,
-                        width: 180,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.avatarUrl!,
-                          ),
-                        ),
+                      AvatarMolecule(
+                        size: 180,
+                        iconSize: 66,
+                        image: user.cachedAvatar,
+                        imageUrl: user.avatarUrl,
                       ),
                       Positioned(
                         bottom: -12,
@@ -53,32 +57,45 @@ class ProfileHeaderOrganism extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox.square(
-                                dimension: 24,
+                                dimension: 36,
                                 child: BorderedIconButton(
                                   padding: const EdgeInsets.all(2),
                                   preffixIcon: Icon(
                                     HeroiconsSolid.cloudArrowUp,
                                     color:
                                         context.theme.colorScheme.accentColor,
-                                    size: 12,
+                                    size: 24,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: uploadAction,
                                 ),
                               ),
                               const SizedBox(
                                 width: 6,
                               ),
                               SizedBox.square(
-                                dimension: 24,
+                                dimension: 36,
                                 child: BorderedIconButton(
                                   padding: const EdgeInsets.all(2),
                                   preffixIcon: Icon(
                                     Icons.close,
                                     color:
                                         context.theme.colorScheme.dangerColor,
-                                    size: 12,
+                                    size: 24,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    ConfirmSnack(
+                                      leadingIcon: Icon(
+                                        HeroiconsMini.camera,
+                                        color: context.theme.colorScheme
+                                            .inputForegroundColor,
+                                      ),
+                                      message:
+                                          "Tem certeza que quer remover o avatar?",
+                                      onConfirm: onRemoveAvatarConfirmed,
+                                    ).show(
+                                      context: context,
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -88,10 +105,15 @@ class ProfileHeaderOrganism extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showCustomModalBottomSheet(
+                        context: context,
+                        child: const EditNameSheetTabOrganism(),
+                      );
+                    },
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [

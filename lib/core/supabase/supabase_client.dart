@@ -89,4 +89,23 @@ class SupabaseCloudClient {
       rethrow;
     }
   }
+
+  Future<void> deleteImage({
+    required String fileId,
+    required String bucketId,
+  }) async {
+    try {
+      await supabase.storage.from(bucketId).remove(["$fileId.png"]);
+      if (bucketId == Env.avatarBucket) {
+        await supabase.auth.updateUser(UserAttributes(
+          data: {
+            "avatar": null,
+            ...supabase.auth.currentUser!.userMetadata!,
+          },
+        ));
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

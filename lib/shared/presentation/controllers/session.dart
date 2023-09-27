@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import '../../../contexts/auth/auth.dart';
 import '../../../core/core.dart';
 
+import '../../../core/external_dependencies.dart';
 import '../../shared.dart';
 
 abstract class SessionController {
-  late UserDto? currentUser;
+  AtomNotifier<UserDto?> get currentUser;
 
   Future<void> logout();
+
+  Future<void> updateUser(UserDto input);
 }
 
 class DefaultSessionController implements SessionController {
@@ -20,7 +23,7 @@ class DefaultSessionController implements SessionController {
   final AuthPersistanceService authPersistanceService;
 
   @override
-  UserDto? currentUser;
+  final AtomNotifier<UserDto?> currentUser = AtomNotifier(null);
 
   @override
   Future<void> logout() async {
@@ -29,5 +32,11 @@ class DefaultSessionController implements SessionController {
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
       LoginScreen.routeName,
     );
+  }
+
+  @override
+  Future<void> updateUser(UserDto input) async {
+    await authPersistanceService.saveAuthenticatedUserData(input);
+    currentUser.set(input);
   }
 }

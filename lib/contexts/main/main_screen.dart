@@ -21,7 +21,40 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
     pageController = PageController(
       initialPage: 0,
     );
+    injected<ApplicationEventBus>().on<ProfileEditedEvent>((event) {
+      sessionController.updateUser(
+        sessionController.currentUser.value!.copyWith(
+          name: event.data.name,
+          avatarUrl: sessionController.currentUser.value!.avatarUrl,
+        ),
+      );
+    });
+    injected<ApplicationEventBus>().on<AvatarRemovedEvent>((event) {
+      sessionController.updateUser(
+        sessionController.currentUser.value!.copyWith(
+          avatarUrl: "",
+        ),
+      );
+    });
+    injected<ApplicationEventBus>().on<AvatarUpdatedEvent>((event) {
+      sessionController.updateUser(
+        sessionController.currentUser.value!.copyWith(
+          avatarUrl: getAvatarFromId(sessionController.currentUser.value!.id),
+          cachedAvatar: event.data,
+        ),
+      );
+    });
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (sessionController.currentUser.value == null) {
+      sessionController.currentUser.set(
+        ModalRoute.of(context)!.settings.arguments as UserDto,
+      );
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -45,7 +78,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           FeedScreen(
-            user: ModalRoute.of(context)!.settings.arguments as UserDto,
+            user: sessionController.currentUser.value!,
           ),
           const ProfileScreen(),
         ],

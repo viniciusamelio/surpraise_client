@@ -11,6 +11,17 @@ class ScientistDBService {
     required Json data,
     required String collection,
   }) async {
+    final foundData = await database
+        .collection(collection)
+        .where("_id", isEqualTo: data["_id"])
+        .getDocuments();
+    if (foundData.isNotEmpty) {
+      await database
+          .collection(collection)
+          .document(foundData[0].id)
+          .update(data);
+      return;
+    }
     await database.collection(collection).add(
           data,
         );
@@ -36,6 +47,6 @@ class ScientistDBService {
     required T equalsTo,
     required String field,
   }) async {
-    await database.collection(collection).delete();
+    await database.collection(collection).document(field).delete();
   }
 }

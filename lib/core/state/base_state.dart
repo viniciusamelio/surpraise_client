@@ -8,6 +8,8 @@ mixin BaseState<L extends Exception, R> {
   final AtomNotifier<DefaultState<L, R>> state =
       AtomNotifier(InitialState<L, R>());
 
+  BuildContext get context => navigatorKey.currentContext!;
+
   void stateFromEither(Either<L, R> either) => state.set(
         either.fold(
           (left) {
@@ -19,8 +21,6 @@ mixin BaseState<L extends Exception, R> {
 
   void setDefaultErrorHandling() async {
     state.on<ErrorState<L, R>>((left) {
-      final context = navigatorKey.currentContext!;
-
       ScaffoldMessenger.of(context).showSnackBar(
         ErrorSnack(message: left.toString()).build(
           context,

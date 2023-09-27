@@ -1,5 +1,6 @@
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
@@ -17,6 +18,9 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return BlurpleThemeData.defaultTheme(
       child: Builder(builder: (context) {
         final theme = context.theme;

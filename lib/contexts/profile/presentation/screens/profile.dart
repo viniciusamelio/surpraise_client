@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/widgets/tab/tab.dart';
 import 'package:blurple/widgets/tab/tab_item.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
 import '../../profile.dart';
@@ -19,25 +22,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final ProfileController controller;
   late final SessionController sessionController;
   late final PageController pageController;
-
+  late final StreamController<EditUserOutput> editedUserStream;
+  late final ApplicationEventBus eventBus;
   @override
   void initState() {
+    editedUserStream = StreamController.broadcast();
     pageController = PageController();
+    eventBus = injected();
     sessionController = injected();
     controller = injected();
-    controller.getCommunities(sessionController.currentUser!.id);
-    controller.getPraises(sessionController.currentUser!.id);
-    injected<ApplicationEventBus>().on<CommunityAddedEvent>(
+    controller.getCommunities(sessionController.currentUser.value!.id);
+    controller.getPraises(sessionController.currentUser.value!.id);
+    eventBus.on<CommunityAddedEvent>(
       (_) {
-        controller.getCommunities(sessionController.currentUser!.id);
+        controller.getCommunities(sessionController.currentUser.value!.id);
       },
       name: "CommunityAddedHandler",
     );
-    injected<ApplicationEventBus>().on<LeftCommunityEvent>(
+    eventBus.on<LeftCommunityEvent>(
       (event) {
-        controller.getCommunities(sessionController.currentUser!.id);
+        controller.getCommunities(sessionController.currentUser.value!.id);
       },
       name: "LeftCommunityHandler",
+    );
+    eventBus.on<AvatarRemovedEvent>(
+      (event) async {
+        sessionController.currentUser.value!.removeAvatar();
+        await sessionController.updateUser(
+          sessionController.currentUser.value!.copyWith(
+            avatarUrl: "",
+            cachedAvatar: null,
+          ),
+        );
+        final user = sessionController.currentUser.value!;
+        eventBus.add(
+          ProfileEditedEvent(
+            EditUserOutput(
+              tag: user.tag,
+              name: user.name,
+              email: user.email,
+              id: user.id,
+            ),
+          ),
+        );
+      },
+      name: "AvatarRemovedHandler",
     );
     super.initState();
   }
@@ -46,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     injected<ApplicationEventBus>().removeListener("CommunityAddedHandler");
     injected<ApplicationEventBus>().removeListener("LeftCommunityHandler");
+    injected<ApplicationEventBus>().removeListener("AvatarRemovedHandler");
     super.dispose();
   }
 
@@ -57,8 +87,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Column(
         children: [
-          ProfileHeaderOrganism(
-            user: sessionController.currentUser!,
+          MultiAtomObserver(
+            atoms: [
+              sessionController.currentUser,
+              controller.updateAvatarState,
+            ],
+            builder: (context) {
+              final user = sessionController.currentUser;
+              final updateAvatarState = controller.updateAvatarState.value;
+
+              if (updateAvatarState is LoadingState) {
+                return const LoaderMolecule();
+              }
+
+              return ProfileHeaderOrganism(
+                user: user.value!,
+                uploadAction: () {
+                  controller.updateAvatar();
+                },
+                onRemoveAvatarConfirmed: () {
+                  controller.removeAvatar();
+                },
+              );
+            },
           ),
           const SizedBox(
             height: 20,

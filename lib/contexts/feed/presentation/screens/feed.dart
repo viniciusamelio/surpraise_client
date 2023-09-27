@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +30,11 @@ class _FeedScreenState extends State<FeedScreen> {
   late final SessionController sessionController;
   late final FeedController controller;
   late final AnswerInviteController answerInviteController;
+  late final StreamController<EditUserOutput> profileEditedStream;
 
   @override
   void initState() {
+    profileEditedStream = StreamController.broadcast();
     sessionController = injected();
     controller = injected();
     answerInviteController = injected();
@@ -52,18 +56,20 @@ class _FeedScreenState extends State<FeedScreen> {
       name: "inviteAnsweredHandler",
     );
 
-    injected<ApplicationEventBus>().on<PraiseSentEvent>((event) {
-      controller.getPraises(sessionController.currentUser!.id);
-    });
+    injected<ApplicationEventBus>().on<PraiseSentEvent>(
+      (event) {
+        controller.getPraises(sessionController.currentUser.value!.id);
+      },
+      name: "praiseSentHandler",
+    );
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    sessionController.currentUser = widget.user;
     if (controller.state.value is InitialState) {
-      controller.getPraises(sessionController.currentUser!.id);
-      controller.getInvites(sessionController.currentUser!.id);
+      controller.getPraises(sessionController.currentUser.value!.id);
+      controller.getInvites(sessionController.currentUser.value!.id);
     }
     super.didChangeDependencies();
   }
@@ -71,6 +77,8 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void dispose() {
     injected<ApplicationEventBus>().removeListener("inviteAnsweredHandler");
+    injected<ApplicationEventBus>().removeListener("praiseSentHandler");
+    injected<ApplicationEventBus>().removeListener("editedProfileHandler");
     super.dispose();
   }
 
@@ -88,9 +96,7 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
             child: Column(
               children: [
-                UserDisplayer(
-                  user: sessionController.currentUser!,
-                ),
+                const UserDisplayer(),
                 SizedBox(
                   height: Spacings.lg,
                 ),
@@ -133,50 +139,62 @@ class _FeedScreenState extends State<FeedScreen> {
                     );
                   },
                 ),
-                AtomObserver<DefaultState>(
+                PolymorphicAtomObserver<
+                    DefaultState<Exception, List<PraiseDto>>>(
                   atom: controller.state,
-                  builder: (context, state) {
-                    if (state is LoadingState || state is InitialState) {
-                      return const CircularProgressIndicator();
-                    } else if (state is ErrorState) {
-                      return const ErrorWidgetMolecule(
-                        message: "Deu ruim ao recuperar seu feed",
-                      );
-                    }
+                  types: [
+                    TypedAtomHandler(
+                      type: ErrorState<Exception, List<PraiseDto>>,
+                      builder: (context, state) {
+                        return const ErrorWidgetMolecule(
+                          message: "Deu ruim ao recuperar seu feed",
+                        );
+                      },
+                    ),
+                    TypedAtomHandler(
+                      type: SuccessState<Exception, List<PraiseDto>>,
+                      builder: (context, state) {
+                        final List<PraiseDto> data =
+                            (state as SuccessState).data;
 
-                    final List<PraiseDto> data = (state as SuccessState).data;
-
-                    if (data.isEmpty) {
-                      return Column(
-                        children: [
-                          LottieBuilder.asset(
-                            "assets/animations/empty-state.json",
-                            height: 280,
-                          ),
-                          Text(
-                            "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
-                            style: context.theme.fontScheme.p2.copyWith(
-                              fontSize: 18,
-                              color: context.theme.colorScheme.foregroundColor,
+                        if (data.isEmpty) {
+                          return Column(
+                            children: [
+                              LottieBuilder.asset(
+                                "assets/animations/empty-state.json",
+                                height: 280,
+                              ),
+                              Text(
+                                "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
+                                style: context.theme.fontScheme.p2.copyWith(
+                                  fontSize: 18,
+                                  color:
+                                      context.theme.colorScheme.foregroundColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          );
+                        }
+                        return SizedBox(
+                          height: (300 * data.length).toDouble(),
+                          child: ListView.separated(
+                            itemCount: data.length,
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 20,
                             ),
-                            textAlign: TextAlign.center,
+                            itemBuilder: (context, index) =>
+                                PraiseCardMolecule(praise: data[index]),
                           ),
-                        ],
-                      );
-                    }
-                    return SizedBox(
-                      height: (300 * data.length).toDouble(),
-                      child: ListView.separated(
-                        itemCount: data.length,
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 20,
-                        ),
-                        itemBuilder: (context, index) =>
-                            PraiseCardMolecule(praise: data[index]),
-                      ),
-                    );
+                        );
+                      },
+                    ),
+                  ],
+                  defaultBuilder: (state) {
+                    return const LoaderMolecule();
                   },
                 ),
               ],

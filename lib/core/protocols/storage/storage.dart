@@ -17,6 +17,10 @@ class StorageImageDto {
 
 abstract class StorageService {
   AsyncAction<String> uploadImage(StorageImageDto imageDto);
+  AsyncAction<void> deleteImage({
+    required String bucketId,
+    required String fileId,
+  });
   AsyncAction<String> getImage({
     required String bucketId,
     required String fileId,

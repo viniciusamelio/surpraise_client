@@ -80,7 +80,8 @@ class _CardHeader extends StatelessWidget {
     final theme = context.theme;
     final SessionController sessionController = injected();
 
-    final UserDto praised = praise.praised ?? sessionController.currentUser!;
+    final UserDto praised =
+        praise.praised ?? sessionController.currentUser.value!;
     return Row(
       children: [
         SizedBox.square(
@@ -101,7 +102,7 @@ class _CardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                mode.isFeed() ? praised.name : praise.praiser.name,
+                mode.isFeed() ? praised.tag : praise.praiser.tag,
                 style: theme.fontScheme.p2.copyWith(
                   color: theme.colorScheme.accentColor,
                   fontWeight: FontWeight.bold,

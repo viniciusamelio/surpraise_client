@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../shared/presentation/molecules/loader.dart';
 import '../controllers/intro.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -22,12 +23,6 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(
-          color: context.theme.colorScheme.accentColor,
-        ),
-      ),
-    );
+    return const Scaffold(body: LoaderMolecule());
   }
 }

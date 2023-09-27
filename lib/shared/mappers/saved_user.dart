@@ -9,16 +9,18 @@ abstract class SavedUserMapper {
       "name": user.name,
       "id": user.id,
       "password": user.password,
+      "avatarUrl": user.avatarUrl
     };
   }
 
-  static UserDto fromMap(Json json) {
+  static UserDto fromMap(Map json) {
     return UserDto(
       tag: json["tag"],
       name: json["name"],
       email: json["email"],
       id: json["id"],
       password: json["password"],
+      avatarUrl: json["avatarUrl"],
     );
   }
 }
