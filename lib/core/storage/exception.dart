@@ -19,3 +19,10 @@ class GetFileException implements Exception {
   });
   final String message;
 }
+
+class RemoveFileException implements Exception {
+  const RemoveFileException({
+    this.message = "Something went wrong removing your file",
+  });
+  final String message;
+}

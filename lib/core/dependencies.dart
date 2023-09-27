@@ -54,6 +54,7 @@ Future<void> _coreDependencies() async {
   inject<ImageController>(
     DefaultImageController(
       imageUploader: injected(),
+      imageManager: injected(),
     ),
   );
   inject<ApplicationEventBus>(

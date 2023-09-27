@@ -29,6 +29,21 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
         ),
       );
     });
+    injected<ApplicationEventBus>().on<AvatarRemovedEvent>((event) {
+      sessionController.updateUser(
+        sessionController.currentUser.value!.copyWith(
+          avatarUrl: "",
+        ),
+      );
+    });
+    injected<ApplicationEventBus>().on<AvatarUpdatedEvent>((event) {
+      sessionController.updateUser(
+        sessionController.currentUser.value!.copyWith(
+          avatarUrl: getAvatarFromId(sessionController.currentUser.value!.id),
+          avatar: event.data,
+        ),
+      );
+    });
     super.initState();
   }
 

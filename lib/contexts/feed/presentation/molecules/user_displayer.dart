@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/presentation/controllers/session.dart';
+import '../../../../shared/presentation/organisms/avatar.dart';
 
 class UserDisplayer extends StatelessWidget {
   const UserDisplayer({
@@ -38,13 +39,10 @@ class UserDisplayer extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox.square(
-                dimension: 66,
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    state?.avatarUrl ?? "",
-                  ),
-                ),
+              AvatarMolecule(
+                size: 66,
+                imageUrl: state!.avatarUrl,
+                image: state.avatar,
               )
             ],
           );

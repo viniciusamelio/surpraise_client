@@ -41,4 +41,20 @@ class SupabaseStorageService implements StorageService {
       return Left(const UploadFailedException());
     }
   }
+
+  @override
+  AsyncAction<void> deleteImage({
+    required String bucketId,
+    required String fileId,
+  }) async {
+    try {
+      await _supabase.deleteImage(
+        bucketId: bucketId,
+        fileId: fileId,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(const UploadFailedException());
+    }
+  }
 }

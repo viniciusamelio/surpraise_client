@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import '../../../contexts/auth/auth.dart';
 import '../../../core/core.dart';
 
@@ -18,12 +17,7 @@ class DefaultSessionController implements SessionController {
   DefaultSessionController({
     required this.authService,
     required this.authPersistanceService,
-  }) {
-    injected<Box>().listenable(keys: ["user"]).addListener(() async {
-      final user = await authPersistanceService.getAuthenticatedUser();
-      currentUser.set(user);
-    });
-  }
+  });
 
   final AuthService authService;
   final AuthPersistanceService authPersistanceService;
