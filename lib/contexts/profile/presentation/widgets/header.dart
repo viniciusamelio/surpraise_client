@@ -84,15 +84,15 @@ class ProfileHeaderOrganism extends StatelessWidget {
                                   ),
                                   onPressed: () async {
                                     ConfirmSnack(
-                                            leadingIcon: Icon(
-                                              HeroiconsMini.camera,
-                                              color: context.theme.colorScheme
-                                                  .inputForegroundColor,
-                                            ),
-                                            message:
-                                                "Tem certeza que quer remover o avatar?",
-                                            onConfirm: onRemoveAvatarConfirmed)
-                                        .show(
+                                      leadingIcon: Icon(
+                                        HeroiconsMini.camera,
+                                        color: context.theme.colorScheme
+                                            .inputForegroundColor,
+                                      ),
+                                      message:
+                                          "Tem certeza que quer remover o avatar?",
+                                      onConfirm: onRemoveAvatarConfirmed,
+                                    ).show(
                                       context: context,
                                     );
                                   },

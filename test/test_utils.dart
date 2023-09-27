@@ -11,7 +11,7 @@ Widget testWidgetTemplate({
         if (contextCallback != null) {
           contextCallback(context);
         }
-        return sut;
+        return Scaffold(body: sut);
       }),
     ),
   );
