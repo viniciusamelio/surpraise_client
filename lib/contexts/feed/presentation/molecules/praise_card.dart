@@ -102,7 +102,7 @@ class _CardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                mode.isFeed() ? praised.name : praise.praiser.name,
+                mode.isFeed() ? praised.tag : praise.praiser.tag,
                 style: theme.fontScheme.p2.copyWith(
                   color: theme.colorScheme.accentColor,
                   fontWeight: FontWeight.bold,
