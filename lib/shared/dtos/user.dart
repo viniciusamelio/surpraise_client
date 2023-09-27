@@ -10,22 +10,22 @@ class UserDto extends GetUserOutput {
     required super.id,
     this.password,
     this.avatarUrl,
-    this.avatar,
+    this.cachedAvatar,
   });
 
   String? avatarUrl;
   final String? password;
-  File? avatar;
+  File? cachedAvatar;
 
   void removeAvatar() {
     avatarUrl = null;
-    avatar = null;
+    cachedAvatar = null;
   }
 
   UserDto copyWith({
     String? avatarUrl,
     String? name,
-    File? avatar,
+    File? cachedAvatar,
   }) {
     return UserDto(
       tag: tag,
@@ -34,7 +34,7 @@ class UserDto extends GetUserOutput {
       email: email,
       id: id,
       avatarUrl: avatarUrl ?? this.avatarUrl,
-      avatar: avatar ?? this.avatar,
+      cachedAvatar: cachedAvatar ?? this.cachedAvatar,
     );
   }
 }

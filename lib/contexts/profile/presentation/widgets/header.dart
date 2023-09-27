@@ -45,7 +45,7 @@ class ProfileHeaderOrganism extends StatelessWidget {
                       AvatarMolecule(
                         size: 180,
                         iconSize: 66,
-                        image: user.avatar,
+                        image: user.cachedAvatar,
                         imageUrl: user.avatarUrl,
                       ),
                       Positioned(

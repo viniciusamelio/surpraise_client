@@ -40,7 +40,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       sessionController.updateUser(
         sessionController.currentUser.value!.copyWith(
           avatarUrl: getAvatarFromId(sessionController.currentUser.value!.id),
-          avatar: event.data,
+          cachedAvatar: event.data,
         ),
       );
     });

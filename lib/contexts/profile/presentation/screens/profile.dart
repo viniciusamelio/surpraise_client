@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await sessionController.updateUser(
           sessionController.currentUser.value!.copyWith(
             avatarUrl: "",
-            avatar: null,
+            cachedAvatar: null,
           ),
         );
         final user = sessionController.currentUser.value!;

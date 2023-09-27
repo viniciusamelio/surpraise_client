@@ -42,7 +42,7 @@ class UserDisplayer extends StatelessWidget {
               AvatarMolecule(
                 size: 66,
                 imageUrl: state!.avatarUrl,
-                image: state.avatar,
+                image: state.cachedAvatar,
               )
             ],
           );
