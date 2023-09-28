@@ -9,6 +9,7 @@ import 'package:surpraise_client/core/di/di.dart';
 import 'package:surpraise_client/core/external_dependencies.dart';
 import 'package:surpraise_client/core/protocols/protocols.dart';
 import 'package:surpraise_client/shared/presentation/controllers/controllers.dart';
+import 'package:surpraise_client/shared/presentation/molecules/error_widget.dart';
 import 'package:surpraise_client/shared/presentation/molecules/loader.dart';
 
 import '../../../../mocks.dart';
@@ -119,6 +120,26 @@ void main() {
         expect(find.byType(Switch), findsOneWidget);
         final switchWidget = tester.widget<Switch>(find.byType(Switch));
         expect(switchWidget.value, isTrue);
+      },
+    );
+
+    testWidgets(
+      "sut should show error screen when get request fails",
+      (tester) async {
+        when(() => settingsRepository.get(userId: any(named: "userId")))
+            .thenAnswer((_) async => Left(Exception()));
+
+        await tester.pumpWidget(
+          testWidgetTemplate(
+            sut: const SettingsScreen(),
+          ),
+        );
+        await tester.pump(
+          const Duration(seconds: 1),
+        );
+
+        expect(find.byType(Switch), findsNothing);
+        expect(find.byType(ErrorWidgetMolecule), findsOneWidget);
       },
     );
 

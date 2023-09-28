@@ -9,6 +9,7 @@ import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../core/state/default_state.dart';
+import '../../../../shared/presentation/molecules/error_widget.dart';
 import '../../../../shared/presentation/molecules/loader.dart';
 import '../../settings.dart';
 
@@ -119,6 +120,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     type: LoadingState<Exception, GetSettingsOutput>,
                     builder: (context, state) {
                       return const LoaderMolecule();
+                    },
+                  ),
+                  TypedAtomHandler(
+                    type: ErrorState<Exception, GetSettingsOutput>,
+                    builder: (context, state) {
+                      return const ErrorWidgetMolecule(
+                        message: "Deu ruim ao carregar suas configurações",
+                      );
                     },
                   ),
                 ],
