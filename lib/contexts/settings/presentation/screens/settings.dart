@@ -8,9 +8,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../core/state/default_state.dart';
-import '../../../../shared/presentation/molecules/error_widget.dart';
-import '../../../../shared/presentation/molecules/loader.dart';
+import '../../../../core/state/state.dart';
+import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../settings.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -27,6 +26,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     controller = injected();
     controller.getSettings();
+    controller.updateState.listenState(
+      onError: (left) {
+        if (mounted) {
+          const ErrorSnack(
+            message: "Deu ruim ao salvar suas configurações",
+          ).show(
+            context: context,
+          );
+        }
+      },
+    );
+
     super.initState();
   }
 

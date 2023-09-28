@@ -8,7 +8,7 @@ abstract class SettingsController
     extends BaseStateController<GetSettingsOutput> {
   AtomNotifier<SettingsDto> get settings;
 
-  AtomNotifier<DefaultState> get updateState;
+  AtomNotifier<DefaultState<Exception, SettingsDto>> get updateState;
   Future<void> updateSettings();
 
   Future<void> getSettings();
@@ -55,15 +55,28 @@ class DefaultSettingsController
   }
 
   @override
-  Future<void> updateSettings() {
-    // TODO: implement updateSettings
-    throw UnimplementedError();
+  Future<void> updateSettings() async {
+    final updatedSettingsOrError = await _settingsRepository.save(
+      input: SaveSettingsInput(
+        pushNotificationsEnabled: settings.value.notificationEnabled,
+        userId: _sessionController.currentUser.value!.id,
+      ),
+    );
+    updateState.set(
+      updatedSettingsOrError.fold(
+        (left) => ErrorState(left),
+        (right) => SuccessState(
+          SettingsDto(
+            notificationEnabled: right.pushNotificationsEnabled,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
-  // TODO: implement updateState
-  AtomNotifier<DefaultState<Exception, dynamic>> get updateState =>
-      throw UnimplementedError();
+  final AtomNotifier<DefaultState<Exception, SettingsDto>> updateState =
+      AtomNotifier(InitialState());
 
   @override
   final AtomNotifier<SettingsDto> settings = AtomNotifier(
