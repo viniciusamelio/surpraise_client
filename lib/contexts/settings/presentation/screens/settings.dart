@@ -5,7 +5,9 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
+import '../../settings.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,6 +17,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  late final SettingsController controller;
+
+  @override
+  void initState() {
+    controller = injected();
+    super.initState();
+  }
+
   BlurpleThemeData get theme => context.theme;
 
   @override
@@ -63,7 +73,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Row(
               children: [
                 BorderedIconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    controller.openLink(
+                      "https://github.com/viniciusamelio/surpraise_client",
+                    );
+                  },
                   text: "Me pague um café",
                   preffixIcon: const Icon(
                     Icons.coffee,
@@ -76,7 +90,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   width: Spacings.md,
                 ),
                 BorderedIconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    controller.openLink(
+                      "https://linkedin.com/in/vinicius-amelio-jesus/",
+                    );
+                  },
                   text: "Linkedin",
                   preffixIcon: const Icon(
                     FontAwesomeIcons.linkedin,

@@ -39,3 +39,5 @@ class MockAnswerInviteController extends Mock
     implements AnswerInviteController {}
 
 class MockFeedRepository extends Mock implements FeedRepository {}
+
+class MockLinkHandler extends Mock implements LinkHandler {}

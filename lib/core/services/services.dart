@@ -8,3 +8,5 @@ export './image_manager/image_picker.dart';
 export "./image_uploader/image_uploader.dart";
 
 export "./translation/translation.dart";
+
+export "./link/link.dart";
