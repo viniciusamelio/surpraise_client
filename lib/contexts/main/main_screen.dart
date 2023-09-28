@@ -81,6 +81,9 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
             user: sessionController.currentUser.value!,
           ),
           const ProfileScreen(),
+          Container(
+            color: context.theme.colorScheme.accentColor,
+          ),
         ],
       ),
     );

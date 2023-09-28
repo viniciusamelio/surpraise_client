@@ -1,0 +1,125 @@
+import 'package:blurple/sizes/spacings.dart';
+import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/tokens/color_tokens.dart';
+import 'package:blurple/widgets/buttons/buttons.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../../core/extensions/theme.dart';
+
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  BlurpleThemeData get theme => context.theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenPadding = EdgeInsets.symmetric(
+      horizontal: Spacings.xxl,
+    );
+    const buttonColor = Color(0xFF343336);
+    return Scaffold(
+      body: Padding(
+        padding: screenPadding,
+        child: Column(
+          children: [
+            Text(
+              "Quer apoiar o projeto?",
+              style: theme.fontScheme.h3.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: Spacings.md,
+            ),
+            Text.rich(
+              TextSpan(
+                text:
+                    "Você pode contribuir diretamente com o desenvolvimento do",
+                children: [
+                  TextSpan(
+                    text: " Sur#praise",
+                    style: theme.fontScheme.p2.copyWith(
+                      color: theme.colorScheme.accentColor,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: " através dos links abaixo",
+                  ),
+                ],
+              ),
+              style: theme.fontScheme.p2.copyWith(
+                color: ColorTokens.greyLighter,
+              ),
+            ),
+            SizedBox(
+              height: Spacings.xxl,
+            ),
+            Row(
+              children: [
+                BorderedIconButton(
+                  onPressed: () {},
+                  text: "Me pague um café",
+                  preffixIcon: const Icon(
+                    Icons.coffee,
+                    size: 20,
+                  ),
+                  foregroundColor: theme.colorScheme.warningColor,
+                  backgroundColor: buttonColor,
+                ),
+                SizedBox(
+                  width: Spacings.md,
+                ),
+                BorderedIconButton(
+                  onPressed: () {},
+                  text: "Linkedin",
+                  preffixIcon: const Icon(
+                    FontAwesomeIcons.linkedin,
+                    size: 20,
+                  ),
+                  foregroundColor: theme.colorScheme.infoColor,
+                  backgroundColor: buttonColor,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: Spacings.xxl * 2,
+            ),
+            Text(
+              "Suas configurações",
+              style: theme.fontScheme.h3.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: Spacings.xxl,
+            ),
+            Row(
+              children: [
+                Text(
+                  "Receeber notifações push? ",
+                  style: theme.fontScheme.p2,
+                ),
+                SizedBox(
+                  width: Spacings.md,
+                ),
+                Switch(
+                  value: false,
+                  activeColor: theme.colorScheme.accentColor,
+                  inactiveThumbColor: ColorTokens.concrete,
+                  activeTrackColor: ColorTokens.concrete,
+                  onChanged: (value) {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
