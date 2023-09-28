@@ -7,6 +7,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
+import '../../../../core/external_dependencies.dart';
+import '../../../../core/state/default_state.dart';
+import '../../../../shared/presentation/molecules/loader.dart';
 import '../../settings.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     controller = injected();
+    controller.getSettings();
     super.initState();
   }
 
@@ -108,33 +112,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(
               height: Spacings.xxl * 2,
             ),
-            Text(
-              "Suas configurações",
-              style: theme.fontScheme.h3.copyWith(
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(
-              height: Spacings.xxl,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Receeber notifações push? ",
-                  style: theme.fontScheme.p2,
-                ),
-                SizedBox(
-                  width: Spacings.md,
-                ),
-                Switch(
-                  value: false,
-                  activeColor: theme.colorScheme.accentColor,
-                  inactiveThumbColor: ColorTokens.concrete,
-                  activeTrackColor: ColorTokens.concrete,
-                  onChanged: (value) {},
-                ),
-              ],
-            ),
+            PolymorphicAtomObserver(
+                atom: controller.state,
+                types: [
+                  TypedAtomHandler(
+                    type: LoadingState<Exception, GetSettingsOutput>,
+                    builder: (context, state) {
+                      return const LoaderMolecule();
+                    },
+                  ),
+                ],
+                defaultBuilder: (state) {
+                  return Column(
+                    children: [
+                      Text(
+                        "Suas configurações",
+                        style: theme.fontScheme.h3.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: Spacings.xxl,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Receber notifações push? ",
+                            style: theme.fontScheme.p2,
+                          ),
+                          SizedBox(
+                            width: Spacings.md,
+                          ),
+                          AtomObserver(
+                              atom: controller.settings,
+                              builder: (context, state) {
+                                return Switch(
+                                  value: state.notificationEnabled,
+                                  activeColor: theme.colorScheme.accentColor,
+                                  inactiveThumbColor: ColorTokens.concrete,
+                                  activeTrackColor: ColorTokens.concrete,
+                                  onChanged: (value) async {
+                                    controller.settings.set(
+                                      state.copyWith(
+                                        notificationEnabled: value,
+                                      ),
+                                    );
+                                    await controller.updateSettings();
+                                  },
+                                );
+                              }),
+                        ],
+                      ),
+                    ],
+                  );
+                }),
           ],
         ),
       ),

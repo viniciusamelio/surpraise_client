@@ -4,4 +4,12 @@ class SettingsDto {
   const SettingsDto({
     required this.notificationEnabled,
   });
+
+  SettingsDto copyWith({
+    bool? notificationEnabled,
+  }) {
+    return SettingsDto(
+      notificationEnabled: notificationEnabled ?? this.notificationEnabled,
+    );
+  }
 }
