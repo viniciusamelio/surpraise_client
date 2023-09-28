@@ -1,13 +1,16 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/tokens/color_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../core/state/state.dart';
+import '../../../../shared/presentation/controllers/controllers.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../settings.dart';
-import '../widgets/organisms/organisms.dart';
+import '../widgets/widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -48,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: screenPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +64,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               SettingsSectionOrganism(
                 controller: controller,
+              ),
+              SizedBox(
+                height: Spacings.xl * 2,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: SettingsButton(
+                  onPressed: () {
+                    injected<SessionController>().logout();
+                  },
+                  label: "Sair",
+                  icon: const Icon(HeroiconsOutline.arrowLeftOnRectangle),
+                  foregroundColor: ColorTokens.greyDarker,
+                ),
               ),
             ],
           ),

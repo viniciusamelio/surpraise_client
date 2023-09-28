@@ -1,13 +1,13 @@
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
 import 'package:blurple/tokens/color_tokens.dart';
-import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../core/core.dart';
 import '../../../links.dart';
 import '../../../settings.dart';
+import '../widgets.dart';
 
 class ProjectSupportSection extends StatelessWidget {
   const ProjectSupportSection({
@@ -21,10 +21,6 @@ class ProjectSupportSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final BlurpleThemeData theme = context.theme;
 
-    final buttonPadding = EdgeInsets.symmetric(
-      horizontal: Spacings.xl,
-      vertical: Spacings.md,
-    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,50 +57,34 @@ class ProjectSupportSection extends StatelessWidget {
         ),
         Row(
           children: [
-            BorderedIconButton(
+            SettingsButton(
               onPressed: () async {
                 controller.openLink(
                   coffeeLink,
                 );
               },
-              text: "Me pague um café",
-              preffixIcon: const Icon(
+              label: "Me pague um café",
+              icon: const Icon(
                 Icons.coffee,
                 size: 20,
               ),
-              padding: buttonPadding,
               foregroundColor: theme.colorScheme.warningColor,
-              borderRadius: 4,
-              backgroundColor:
-                  theme.colorScheme.elevatedWidgetsColor.withOpacity(.8),
-              borderSide: BorderSide(
-                width: .15,
-                color: theme.colorScheme.borderColor,
-              ),
             ),
             SizedBox(
               width: Spacings.md,
             ),
-            BorderedIconButton(
+            SettingsButton(
               onPressed: () async {
                 controller.openLink(
                   linkedinUrl,
                 );
               },
-              text: "Linkedin",
-              padding: buttonPadding,
-              preffixIcon: const Icon(
+              label: "Linkedin",
+              icon: const Icon(
                 FontAwesomeIcons.linkedin,
                 size: 20,
               ),
-              borderSide: BorderSide(
-                width: .15,
-                color: theme.colorScheme.borderColor,
-              ),
-              borderRadius: 4,
               foregroundColor: theme.colorScheme.infoColor,
-              backgroundColor:
-                  theme.colorScheme.elevatedWidgetsColor.withOpacity(.8),
             ),
           ],
         ),

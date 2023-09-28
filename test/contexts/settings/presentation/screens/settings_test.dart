@@ -207,5 +207,34 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      "sut should run logout when tapping exit button",
+      (tester) async {
+        when(() => injected<SessionController>().logout())
+            .thenAnswer((_) async {});
+        when(() => settingsRepository.get(userId: any(named: "userId")))
+            .thenAnswer(
+          (_) async {
+            return Right(
+              const GetSettingsOutput(
+                pushNotificationsEnabled: false,
+              ),
+            );
+          },
+        );
+        await tester.pumpWidget(
+          testWidgetTemplate(
+            sut: const SettingsScreen(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(HeroiconsOutline.arrowLeftOnRectangle));
+
+        verify(
+          () => injected<SessionController>().logout(),
+        ).called(1);
+      },
+    );
   });
 }
