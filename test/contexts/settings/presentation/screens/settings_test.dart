@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:surpraise_client/contexts/settings/links.dart';
 import 'package:surpraise_client/contexts/settings/settings.dart';
 import 'package:surpraise_client/core/di/di.dart';
 import 'package:surpraise_client/core/external_dependencies.dart';
@@ -77,7 +78,7 @@ void main() {
 
         verify(
           () => linkHandler.openLink(
-            link: "https://github.com/viniciusamelio/surpraise_client",
+            link: coffeeLink,
           ),
         ).called(1);
 
@@ -88,7 +89,7 @@ void main() {
 
         verify(
           () => linkHandler.openLink(
-            link: "https://linkedin.com/in/vinicius-amelio-jesus/",
+            link: linkedinUrl,
           ),
         ).called(1);
 

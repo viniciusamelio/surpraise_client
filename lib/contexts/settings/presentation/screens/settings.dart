@@ -10,6 +10,7 @@ import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../core/state/state.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
+import '../../links.dart';
 import '../../settings.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -96,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   BorderedIconButton(
                     onPressed: () async {
                       controller.openLink(
-                        "https://github.com/viniciusamelio/surpraise_client",
+                        coffeeLink,
                       );
                     },
                     text: "Me pague um café",
@@ -120,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   BorderedIconButton(
                     onPressed: () async {
                       controller.openLink(
-                        "https://linkedin.com/in/vinicius-amelio-jesus/",
+                        linkedinUrl,
                       );
                     },
                     text: "Linkedin",
