@@ -29,6 +29,7 @@ class DefaultSessionController implements SessionController {
   Future<void> logout() async {
     await authService.logout();
     await authPersistanceService.deleteAuthenticatedUserData();
+    currentUser.set(null);
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
       LoginScreen.routeName,
     );
