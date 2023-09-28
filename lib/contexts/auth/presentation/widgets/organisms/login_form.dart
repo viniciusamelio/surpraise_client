@@ -1,8 +1,8 @@
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../../../core/extensions/theme.dart';
+import '../../../../../core/external_dependencies.dart';
 
 class LoginFormOrganism extends StatelessWidget {
   const LoginFormOrganism({
@@ -18,6 +18,8 @@ class LoginFormOrganism extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AtomNotifier<bool> showPassword = AtomNotifier(false);
+
     return Form(
       key: formKey,
       child: Column(
@@ -26,6 +28,7 @@ class LoginFormOrganism extends StatelessWidget {
           BaseInput(
             onSaved: onSaveEmail,
             label: "E-mail",
+            type: TextInputType.emailAddress,
             preffixIcon: const Icon(
               HeroiconsSolid.envelope,
             ),
@@ -33,15 +36,27 @@ class LoginFormOrganism extends StatelessWidget {
           SizedBox(
             height: context.theme.spacingScheme.verticalSpacing,
           ),
-          BaseInput(
-            onSaved: onSavePassword,
-            label: "Password",
-            maxLines: 1,
-            preffixIcon: const Icon(
-              HeroiconsSolid.lockClosed,
-            ),
-            obscureText: true,
-          ),
+          AtomObserver(
+              atom: showPassword,
+              builder: (context, show) {
+                return BaseInput(
+                  onSaved: onSavePassword,
+                  label: "Password",
+                  maxLines: 1,
+                  preffixIcon: const Icon(
+                    HeroiconsSolid.lockClosed,
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      showPassword.set(!show);
+                    },
+                    child: Icon(
+                      show ? HeroiconsSolid.eye : HeroiconsMini.eyeSlash,
+                    ),
+                  ),
+                  obscureText: !show,
+                );
+              }),
         ],
       ),
     );
