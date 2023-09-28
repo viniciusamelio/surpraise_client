@@ -34,7 +34,7 @@ class SettingsButton extends StatelessWidget {
       borderRadius: 4,
       backgroundColor: theme.colorScheme.elevatedWidgetsColor.withOpacity(.8),
       borderSide: const BorderSide(
-        width: .15,
+        width: 1,
         color: Color(0xFF343336),
       ),
     );
