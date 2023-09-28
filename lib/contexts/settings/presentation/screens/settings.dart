@@ -52,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: screenPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
