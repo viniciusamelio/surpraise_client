@@ -4,6 +4,7 @@ import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../feed/feed.dart';
 import '../profile/profile.dart';
+import '../settings/settings.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -84,6 +85,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
           Container(
             color: context.theme.colorScheme.accentColor,
           ),
+          const SettingsScreen(),
         ],
       ),
     );

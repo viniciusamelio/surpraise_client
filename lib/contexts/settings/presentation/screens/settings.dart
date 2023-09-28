@@ -45,148 +45,172 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenPadding = EdgeInsets.symmetric(
-      horizontal: Spacings.xxl,
+    final screenPadding = EdgeInsets.all(
+      Spacings.lg,
     );
-    const buttonColor = Color(0xFF343336);
+    final buttonPadding = EdgeInsets.symmetric(
+      horizontal: Spacings.xl,
+      vertical: Spacings.md,
+    );
     return Scaffold(
-      body: Padding(
-        padding: screenPadding,
-        child: Column(
-          children: [
-            Text(
-              "Quer apoiar o projeto?",
-              style: theme.fontScheme.h3.copyWith(
-                color: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: screenPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Quer apoiar o projeto?",
+                style: theme.fontScheme.h3.copyWith(
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SizedBox(
-              height: Spacings.md,
-            ),
-            Text.rich(
-              TextSpan(
-                text:
-                    "Você pode contribuir diretamente com o desenvolvimento do",
-                children: [
-                  TextSpan(
-                    text: " Sur#praise",
-                    style: theme.fontScheme.p2.copyWith(
-                      color: theme.colorScheme.accentColor,
+              SizedBox(
+                height: Spacings.md,
+              ),
+              Text.rich(
+                TextSpan(
+                  text:
+                      "Você pode contribuir diretamente com o desenvolvimento do",
+                  children: [
+                    TextSpan(
+                      text: " Sur#praise",
+                      style: theme.fontScheme.p2.copyWith(
+                        color: theme.colorScheme.accentColor,
+                      ),
                     ),
-                  ),
-                  const TextSpan(
-                    text: " através dos links abaixo",
-                  ),
-                ],
+                    const TextSpan(
+                      text: " através dos links abaixo",
+                    ),
+                  ],
+                ),
+                style: theme.fontScheme.p2.copyWith(
+                  color: ColorTokens.greyLighter,
+                ),
               ),
-              style: theme.fontScheme.p2.copyWith(
-                color: ColorTokens.greyLighter,
+              SizedBox(
+                height: Spacings.xxl,
               ),
-            ),
-            SizedBox(
-              height: Spacings.xxl,
-            ),
-            Row(
-              children: [
-                BorderedIconButton(
-                  onPressed: () async {
-                    controller.openLink(
-                      "https://github.com/viniciusamelio/surpraise_client",
-                    );
-                  },
-                  text: "Me pague um café",
-                  preffixIcon: const Icon(
-                    Icons.coffee,
-                    size: 20,
-                  ),
-                  foregroundColor: theme.colorScheme.warningColor,
-                  backgroundColor: buttonColor,
-                ),
-                SizedBox(
-                  width: Spacings.md,
-                ),
-                BorderedIconButton(
-                  onPressed: () async {
-                    controller.openLink(
-                      "https://linkedin.com/in/vinicius-amelio-jesus/",
-                    );
-                  },
-                  text: "Linkedin",
-                  preffixIcon: const Icon(
-                    FontAwesomeIcons.linkedin,
-                    size: 20,
-                  ),
-                  foregroundColor: theme.colorScheme.infoColor,
-                  backgroundColor: buttonColor,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: Spacings.xxl * 2,
-            ),
-            PolymorphicAtomObserver(
-                atom: controller.state,
-                types: [
-                  TypedAtomHandler(
-                    type: LoadingState<Exception, GetSettingsOutput>,
-                    builder: (context, state) {
-                      return const LoaderMolecule();
-                    },
-                  ),
-                  TypedAtomHandler(
-                    type: ErrorState<Exception, GetSettingsOutput>,
-                    builder: (context, state) {
-                      return const ErrorWidgetMolecule(
-                        message: "Deu ruim ao carregar suas configurações",
+              Row(
+                children: [
+                  BorderedIconButton(
+                    onPressed: () async {
+                      controller.openLink(
+                        "https://github.com/viniciusamelio/surpraise_client",
                       );
                     },
+                    text: "Me pague um café",
+                    preffixIcon: const Icon(
+                      Icons.coffee,
+                      size: 20,
+                    ),
+                    padding: buttonPadding,
+                    foregroundColor: theme.colorScheme.warningColor,
+                    borderRadius: 4,
+                    backgroundColor:
+                        theme.colorScheme.elevatedWidgetsColor.withOpacity(.8),
+                    borderSide: BorderSide(
+                      width: .15,
+                      color: theme.colorScheme.borderColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: Spacings.md,
+                  ),
+                  BorderedIconButton(
+                    onPressed: () async {
+                      controller.openLink(
+                        "https://linkedin.com/in/vinicius-amelio-jesus/",
+                      );
+                    },
+                    text: "Linkedin",
+                    padding: buttonPadding,
+                    preffixIcon: const Icon(
+                      FontAwesomeIcons.linkedin,
+                      size: 20,
+                    ),
+                    borderSide: BorderSide(
+                      width: .15,
+                      color: theme.colorScheme.borderColor,
+                    ),
+                    borderRadius: 4,
+                    foregroundColor: theme.colorScheme.infoColor,
+                    backgroundColor:
+                        theme.colorScheme.elevatedWidgetsColor.withOpacity(.8),
                   ),
                 ],
-                defaultBuilder: (state) {
-                  return Column(
-                    children: [
-                      Text(
-                        "Suas configurações",
-                        style: theme.fontScheme.h3.copyWith(
-                          color: Colors.white,
+              ),
+              SizedBox(
+                height: Spacings.xxl * 2,
+              ),
+              PolymorphicAtomObserver(
+                  atom: controller.state,
+                  types: [
+                    TypedAtomHandler(
+                      type: LoadingState<Exception, GetSettingsOutput>,
+                      builder: (context, state) {
+                        return const LoaderMolecule();
+                      },
+                    ),
+                    TypedAtomHandler(
+                      type: ErrorState<Exception, GetSettingsOutput>,
+                      builder: (context, state) {
+                        return const ErrorWidgetMolecule(
+                          message: "Deu ruim ao carregar suas configurações",
+                        );
+                      },
+                    ),
+                  ],
+                  defaultBuilder: (state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Suas configurações",
+                          style: theme.fontScheme.h3.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: Spacings.xxl,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Receber notifações push? ",
-                            style: theme.fontScheme.p2,
-                          ),
-                          SizedBox(
-                            width: Spacings.md,
-                          ),
-                          AtomObserver(
-                              atom: controller.settings,
-                              builder: (context, state) {
-                                return Switch(
-                                  value: state.notificationEnabled,
-                                  activeColor: theme.colorScheme.accentColor,
-                                  inactiveThumbColor: ColorTokens.concrete,
-                                  activeTrackColor: ColorTokens.concrete,
-                                  onChanged: (value) async {
-                                    controller.settings.set(
-                                      state.copyWith(
-                                        notificationEnabled: value,
-                                      ),
-                                    );
-                                    await controller.updateSettings();
-                                  },
-                                );
-                              }),
-                        ],
-                      ),
-                    ],
-                  );
-                }),
-          ],
+                        SizedBox(
+                          height: Spacings.xxl,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Receber notificações push ?",
+                              style: theme.fontScheme.p2.copyWith(
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(
+                              width: Spacings.md,
+                            ),
+                            AtomObserver(
+                                atom: controller.settings,
+                                builder: (context, state) {
+                                  return Switch(
+                                    value: state.notificationEnabled,
+                                    activeColor: theme.colorScheme.accentColor,
+                                    inactiveThumbColor:
+                                        ColorTokens.concreteDarker,
+                                    activeTrackColor: ColorTokens.concrete,
+                                    onChanged: (value) async {
+                                      controller.settings.set(
+                                        state.copyWith(
+                                          notificationEnabled: value,
+                                        ),
+                                      );
+                                      await controller.updateSettings();
+                                    },
+                                  );
+                                }),
+                          ],
+                        ),
+                      ],
+                    );
+                  }),
+            ],
+          ),
         ),
       ),
     );

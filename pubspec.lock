@@ -1221,7 +1221,7 @@ packages:
     description:
       path: "."
       ref: "feat/supabase-migration"
-      resolved-ref: "065790efaebe320d9885929fc2a5bde23dba97c9"
+      resolved-ref: "1380d5a3ddaa5246ae4be6df09d12259d03c8414"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
