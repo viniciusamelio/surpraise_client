@@ -86,6 +86,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: adicionar atualização em real-time para convites de comunidade e novos praises
     return SafeArea(
       child: Stack(
         children: [
