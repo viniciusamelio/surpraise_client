@@ -24,6 +24,7 @@ class InvitesSectionOrganism extends StatelessWidget {
     final theme = context.theme;
     return Container(
       height: 64,
+      margin: EdgeInsets.only(bottom: Spacings.md),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: ColorTokens.concrete,

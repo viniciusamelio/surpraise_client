@@ -166,10 +166,10 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: "2fb815080e44a09b85e0f2ca8a820b15053982b2e714b59267719e8a9ff17097"
+      sha256: "595a29b55ce82d53398e1bcc2cba525d7bd7c59faeb2d2540e9d42c390cfeeeb"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.3"
+    version: "1.6.4"
   cross_file:
     dependency: transitive
     description:
@@ -713,6 +713,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  onesignal_flutter:
+    dependency: "direct main"
+    description:
+      name: onesignal_flutter
+      sha256: "79add7f791dbb6939a014006d314ea97b281df1ecd484351bce83c00c942246c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   package_config:
     dependency: transitive
     description:
@@ -1229,7 +1237,7 @@ packages:
     description:
       path: "."
       ref: "feat/supabase-migration"
-      resolved-ref: "0529814e91c917fa334b87457c0a5b1d3e0e1cf9"
+      resolved-ref: "659d337f924257d2815f39ecf1a4721ac3bd30c4"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
@@ -1453,10 +1461,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter
-      sha256: "5fde460534f252704feb9f787ab5501d333028a10f66e3132ae306ef09257321"
+      sha256: c1ab9b81090705c6069197d9fdc1625e587b52b8d70cdde2339d177ad0dbb98e
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "4.4.1"
   webview_flutter_android:
     dependency: transitive
     description:

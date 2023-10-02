@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../core/core.dart';
 import '../../shared/shared.dart';
@@ -54,6 +55,14 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       sessionController.currentUser.set(
         ModalRoute.of(context)!.settings.arguments as UserDto,
       );
+      OneSignal.User.addEmail(
+        injected<SessionController>().currentUser.value!.email,
+      );
+      OneSignal.User.addAlias(
+        injected<SessionController>().currentUser.value!.tag,
+        injected<SessionController>().currentUser.value!.id,
+      );
+      OneSignal.User.addTags({"segment": "active users"});
     }
     super.didChangeDependencies();
   }
