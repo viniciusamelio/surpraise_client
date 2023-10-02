@@ -23,8 +23,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   late final NotificationsController controller;
 
   @override
-  void initState() async {
+  void initState() {
     controller = injected();
+    controller.getNotifications();
     super.initState();
   }
 
@@ -56,16 +57,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
         defaultBuilder: (value) {
           final Notifications data = (value as SuccessState).data;
-          return ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) => _NotificationTileMolecule(
-              notification: data[index],
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 80,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) => NotificationTileMolecule(
+                notification: data[index],
+              ),
+              separatorBuilder: (_, __) => SizedBox(
+                height: Spacings.md,
+              ),
+              itemCount: data.length,
             ),
-            separatorBuilder: (_, __) => SizedBox(
-              height: Spacings.md,
-            ),
-            itemCount: data.length,
           );
         },
       ),
@@ -73,8 +78,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 }
 
-class _NotificationTileMolecule extends StatelessWidget {
-  const _NotificationTileMolecule({required this.notification});
+class NotificationTileMolecule extends StatelessWidget {
+  const NotificationTileMolecule({super.key, required this.notification});
 
   final NotificationDto notification;
   @override
@@ -105,15 +110,19 @@ class _NotificationTileMolecule extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                notification.topic,
-                style: theme.fontScheme.p1,
-              ),
-              Text(
-                DateFormat.yMd("pt-BR").format(
-                  notification.sentAt,
+              Expanded(
+                child: Text(
+                  notification.topic,
+                  style: theme.fontScheme.p1,
                 ),
-                style: theme.fontScheme.p1,
+              ),
+              Expanded(
+                child: Text(
+                  DateFormat.yMd("pt-BR").format(
+                    notification.sentAt,
+                  ),
+                  style: theme.fontScheme.p1,
+                ),
               ),
             ],
           )

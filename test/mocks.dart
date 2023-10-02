@@ -43,3 +43,6 @@ class MockFeedRepository extends Mock implements FeedRepository {}
 class MockLinkHandler extends Mock implements LinkHandler {}
 
 class MockSettingsRepository extends Mock implements SettingsRepository {}
+
+class MockGetNotificationsRepository extends Mock
+    implements GetNotificationsRepository {}
