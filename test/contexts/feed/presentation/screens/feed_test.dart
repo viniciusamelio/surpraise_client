@@ -63,6 +63,7 @@ void main() {
         when(
           () => feedRepository.get(
             userId: any(named: "userId"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Left(
@@ -87,6 +88,7 @@ void main() {
         when(
           () => feedRepository.get(
             userId: any(named: "userId"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Right([
@@ -129,6 +131,7 @@ void main() {
         when(
           () => feedRepository.get(
             userId: any(named: "userId"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Right([]),
