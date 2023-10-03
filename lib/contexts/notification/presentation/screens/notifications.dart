@@ -100,12 +100,16 @@ class NotificationTileMolecule extends StatelessWidget {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            notification.message,
+            "${notification.message} 😁",
             style: theme.fontScheme.p1.copyWith(
               color: Colors.white,
             ),
+          ),
+          SizedBox(
+            height: Spacings.xs,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +117,10 @@ class NotificationTileMolecule extends StatelessWidget {
               Expanded(
                 child: Text(
                   notification.topic,
-                  style: theme.fontScheme.p1,
+                  style: theme.fontScheme.p1.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Expanded(
@@ -122,6 +129,7 @@ class NotificationTileMolecule extends StatelessWidget {
                     notification.sentAt,
                   ),
                   style: theme.fontScheme.p1,
+                  textAlign: TextAlign.end,
                 ),
               ),
             ],

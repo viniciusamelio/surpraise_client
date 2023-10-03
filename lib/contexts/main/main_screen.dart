@@ -4,6 +4,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../feed/feed.dart';
+import '../notification/notification.dart';
 import '../profile/profile.dart';
 import '../settings/settings.dart';
 
@@ -55,6 +56,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       sessionController.currentUser.set(
         ModalRoute.of(context)!.settings.arguments as UserDto,
       );
+      injected<NotificationsController>().getNotifications();
       OneSignal.login(injected<SessionController>().currentUser.value!.tag);
       OneSignal.User.addEmail(
         injected<SessionController>().currentUser.value!.email,
@@ -91,9 +93,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
             user: sessionController.currentUser.value!,
           ),
           const ProfileScreen(),
-          Container(
-            color: context.theme.colorScheme.accentColor,
-          ),
+          const NotificationsScreen(),
           const SettingsScreen(),
         ],
       ),

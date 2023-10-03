@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:hive/hive.dart';
 
+import '../contexts/notification/notification.dart';
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
@@ -89,4 +90,5 @@ Future<void> setupDependencies() async {
   await praiseDependencies();
   await profileDependencies();
   await settingsDependencies();
+  await notificationDependencies();
 }
