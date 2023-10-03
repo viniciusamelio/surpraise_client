@@ -10,6 +10,9 @@ abstract class FeedController extends BaseStateController<List<PraiseDto>> {
 
   AtomNotifier<DefaultState<Exception, List<InviteDto>>> get invitesState;
   Future<void> getInvites(String userId);
+
+  AtomNotifier<int> get offset;
+  AtomNotifier<List<PraiseDto>> get loadedPraises;
 }
 
 class DefaultFeedController
@@ -24,8 +27,20 @@ class DefaultFeedController
   @override
   Future<void> getPraises(String userId) async {
     state.set(LoadingState());
-    final praisesOrError = await repository.get(userId: userId);
+    final praisesOrError = await repository.get(
+      userId: userId,
+      offset: offset.value,
+    );
     stateFromEither(praisesOrError);
+    praisesOrError.fold(
+      (left) => null,
+      (right) => loadedPraises.set(
+        loadedPraises.value
+          ..addAll(
+            right,
+          ),
+      ),
+    );
   }
 
   @override
@@ -43,4 +58,10 @@ class DefaultFeedController
   @override
   final AtomNotifier<DefaultState<Exception, List<InviteDto>>> invitesState =
       AtomNotifier(InitialState());
+
+  @override
+  AtomNotifier<int> offset = AtomNotifier(0);
+
+  @override
+  AtomNotifier<List<PraiseDto>> loadedPraises = AtomNotifier([]);
 }

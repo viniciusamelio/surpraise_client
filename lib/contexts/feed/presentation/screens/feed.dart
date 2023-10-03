@@ -13,6 +13,7 @@ import '../../../../core/core.dart';
 
 import '../../../../shared/shared.dart';
 import '../organisms/organisms.dart';
+import 'feed_scroll_controller.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({
@@ -31,10 +32,12 @@ class _FeedScreenState extends State<FeedScreen> {
   late final FeedController controller;
   late final AnswerInviteController answerInviteController;
   late final StreamController<EditUserOutput> profileEditedStream;
+  late final FeedScrollController scrollController;
 
   @override
   void initState() {
     profileEditedStream = StreamController.broadcast();
+    scrollController = FeedScrollController();
     sessionController = injected();
     controller = injected();
     answerInviteController = injected();
@@ -62,6 +65,25 @@ class _FeedScreenState extends State<FeedScreen> {
       },
       name: "praiseSentHandler",
     );
+
+    controller.state.listenState(
+      onSuccess: (right) {
+        scrollController.restore();
+      },
+    );
+
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        bool isTop = scrollController.position.pixels == 0;
+        if (!isTop &&
+            controller.state.value is SuccessState &&
+            (controller.state.value as SuccessState).data.length == 10) {
+          scrollController.saveCurrentPosition();
+          controller.offset.set(controller.offset.value + 10);
+          controller.getPraises(sessionController.currentUser.value!.id);
+        }
+      }
+    });
     super.initState();
   }
 
@@ -92,6 +114,7 @@ class _FeedScreenState extends State<FeedScreen> {
         children: [
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
+            controller: scrollController,
             padding: EdgeInsets.all(
               Spacings.lg,
             ),
@@ -156,7 +179,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       type: SuccessState<Exception, List<PraiseDto>>,
                       builder: (context, state) {
                         final List<PraiseDto> data =
-                            (state as SuccessState).data;
+                            controller.loadedPraises.value;
 
                         if (data.isEmpty) {
                           return Column(
@@ -178,7 +201,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           );
                         }
                         return SizedBox(
-                          height: (300 * data.length).toDouble(),
+                          height: (160 * data.length).toDouble(),
                           child: ListView.separated(
                             itemCount: data.length,
                             shrinkWrap: true,
@@ -187,8 +210,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                 const SizedBox(
                               height: 20,
                             ),
-                            itemBuilder: (context, index) =>
-                                PraiseCardMolecule(praise: data[index]),
+                            itemBuilder: (context, index) => PraiseCardMolecule(
+                              praise: data[index],
+                            ),
                           ),
                         );
                       },

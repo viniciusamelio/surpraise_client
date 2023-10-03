@@ -18,12 +18,16 @@ class DefaultFeedRepository implements FeedRepository {
   @override
   AsyncAction<List<PraiseDto>> get({
     required String userId,
+    int max = 10,
+    int offset = 0,
   }) async {
     try {
       final feed = await _httpClient.post(
         "${Env.sbUrl}/functions/v1/feed",
         data: {
           "userId": userId,
+          "max": max,
+          "offset": offset,
         },
       );
       if (feed.statusCode != 200) {
