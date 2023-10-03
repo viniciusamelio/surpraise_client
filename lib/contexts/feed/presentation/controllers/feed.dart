@@ -13,6 +13,8 @@ abstract class FeedController extends BaseStateController<List<PraiseDto>> {
 
   AtomNotifier<int> get offset;
   AtomNotifier<List<PraiseDto>> get loadedPraises;
+
+  int get max;
 }
 
 class DefaultFeedController
@@ -64,4 +66,7 @@ class DefaultFeedController
 
   @override
   AtomNotifier<List<PraiseDto>> loadedPraises = AtomNotifier([]);
+
+  @override
+  int get max => 10;
 }

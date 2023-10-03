@@ -77,9 +77,10 @@ class _FeedScreenState extends State<FeedScreen> {
         bool isTop = scrollController.position.pixels == 0;
         if (!isTop &&
             controller.state.value is SuccessState &&
-            (controller.state.value as SuccessState).data.length == 10) {
+            (controller.state.value as SuccessState).data.length ==
+                controller.max) {
           scrollController.saveCurrentPosition();
-          controller.offset.set(controller.offset.value + 10);
+          controller.offset.set(controller.offset.value + controller.max);
           controller.getPraises(sessionController.currentUser.value!.id);
         }
       }
