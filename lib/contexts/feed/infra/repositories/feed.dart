@@ -106,6 +106,9 @@ class DefaultFeedRepository implements FeedRepository {
         value: userId,
         fieldName: "praised_id",
         select: select,
+        orderBy: const OrderFilter(
+          field: "created_at",
+        ),
       ),
     );
   }
