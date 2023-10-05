@@ -56,7 +56,9 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       sessionController.currentUser.set(
         ModalRoute.of(context)!.settings.arguments as UserDto,
       );
-      injected<NotificationsController>().getNotifications();
+      injected<NotificationsController>()
+        ..getNotifications()
+        ..listen();
       OneSignal.login(injected<SessionController>().currentUser.value!.tag);
       OneSignal.User.addEmail(
         injected<SessionController>().currentUser.value!.email,

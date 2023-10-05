@@ -13,6 +13,8 @@ abstract class NotificationsController
     int offset = 0,
   });
 
+  Future<void> listen();
+
   Future<void> readNotifications();
 }
 
@@ -70,4 +72,20 @@ class DefaultNotificationsController
 
   @override
   final AtomNotifier<int> unreadNotifications = AtomNotifier(0);
+
+  @override
+  Future<void> listen() async {
+    Supabase.instance.client
+        .from("notification")
+        .stream(
+          primaryKey: ["id"],
+        )
+        .eq(
+          "user_id",
+          injected<SessionController>().currentUser.value!.id,
+        )
+        .listen(
+          (_) => getNotifications(),
+        );
+  }
 }
