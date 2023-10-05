@@ -5,6 +5,8 @@ import '../../dtos/dtos.dart';
 abstract class FeedRepository {
   AsyncAction<List<PraiseDto>> get({
     required String userId,
+    int max,
+    int offset,
   });
 
   AsyncAction<List<PraiseDto>> getByUser({

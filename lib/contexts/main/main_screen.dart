@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../feed/feed.dart';
+import '../notification/notification.dart';
 import '../profile/profile.dart';
+import '../settings/settings.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -44,6 +47,19 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
         ),
       );
     });
+    injected<ApplicationEventBus>().on<ReadNotificationsEvent>(
+      (event) {
+        final unreadNotifications =
+            injected<NotificationsController>().unreadNotifications;
+
+        if (unreadNotifications.value > 20) {
+          injected<NotificationsController>().unreadNotifications.set(
+                unreadNotifications.value - 20,
+              );
+        }
+        injected<NotificationsController>().unreadNotifications.set(0);
+      },
+    );
     super.initState();
   }
 
@@ -52,6 +68,17 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
     if (sessionController.currentUser.value == null) {
       sessionController.currentUser.set(
         ModalRoute.of(context)!.settings.arguments as UserDto,
+      );
+      injected<NotificationsController>()
+        ..getNotifications()
+        ..listen();
+      OneSignal.login(injected<SessionController>().currentUser.value!.tag);
+      OneSignal.User.addEmail(
+        injected<SessionController>().currentUser.value!.email,
+      );
+      OneSignal.User.addTagWithKey(
+        "user_tag",
+        injected<SessionController>().currentUser.value!.tag,
       );
     }
     super.didChangeDependencies();
@@ -81,6 +108,8 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
             user: sessionController.currentUser.value!,
           ),
           const ProfileScreen(),
+          const NotificationsScreen(),
+          const SettingsScreen(),
         ],
       ),
     );

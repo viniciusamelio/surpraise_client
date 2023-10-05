@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../../../contexts/auth/auth.dart';
 import '../../../core/core.dart';
 
@@ -29,9 +30,11 @@ class DefaultSessionController implements SessionController {
   Future<void> logout() async {
     await authService.logout();
     await authPersistanceService.deleteAuthenticatedUserData();
+    currentUser.set(null);
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
       LoginScreen.routeName,
     );
+    OneSignal.logout();
   }
 
   @override

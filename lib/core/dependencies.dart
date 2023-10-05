@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:hive/hive.dart';
 
+import '../contexts/notification/notification.dart';
 import '../contexts/praise/praise.dart';
 import '../contexts/auth/auth.dart';
 import '../contexts/community/community.dart';
 import '../contexts/feed/feed.dart';
 import '../contexts/intro/intro.dart';
 import '../contexts/profile/dependencies.dart';
+import '../contexts/settings/settings.dart';
 import '../env.dart';
 import 'core.dart';
 import 'external_dependencies.dart';
@@ -66,6 +68,14 @@ Future<void> _coreDependencies() async {
   );
   final box = await Hive.openBox("user");
   inject<Box>(box);
+  inject<LinkHandler>(
+    LinkService(),
+  );
+  inject<RealtimeQuery>(
+    SupabaseRealtimeQuery(
+      supabaseClient: Supabase.instance.client,
+    ),
+  );
 
   await injected<TranslationService>().init(supportedLocales: [
     const Locale("pt"),
@@ -84,4 +94,6 @@ Future<void> setupDependencies() async {
   await communityDependencies();
   await praiseDependencies();
   await profileDependencies();
+  await settingsDependencies();
+  await notificationDependencies();
 }

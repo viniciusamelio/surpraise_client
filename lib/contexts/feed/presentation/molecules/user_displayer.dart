@@ -23,7 +23,7 @@ class UserDisplayer extends StatelessWidget {
                     maxWidth: MediaQuery.of(context).size.width - 100),
                 child: Text.rich(
                   TextSpan(
-                    text: "Bem vindo,\n",
+                    text: "Boas vindas,\n",
                     style: context.theme.fontScheme.h2.copyWith(
                       color: context.theme.colorScheme.foregroundColor,
                       fontWeight: FontWeight.w300,

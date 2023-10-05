@@ -1,6 +1,8 @@
 import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
@@ -18,6 +20,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Intl.defaultLocale = 'pt_BR';
+    initializeDateFormatting("pt_BR");
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -29,6 +33,7 @@ class App extends StatelessWidget {
           child: MaterialApp(
             title: '#surpraise',
             debugShowCheckedModeBanner: false,
+            locale: const Locale('pt', 'BR'),
             theme: ThemeData(
               useMaterial3: false,
               scaffoldBackgroundColor: theme.colorScheme.backgroundColor,
