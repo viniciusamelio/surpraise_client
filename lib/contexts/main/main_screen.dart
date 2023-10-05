@@ -47,6 +47,19 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
         ),
       );
     });
+    injected<ApplicationEventBus>().on<ReadNotificationsEvent>(
+      (event) {
+        final unreadNotifications =
+            injected<NotificationsController>().unreadNotifications;
+
+        if (unreadNotifications.value > 20) {
+          injected<NotificationsController>().unreadNotifications.set(
+                unreadNotifications.value - 20,
+              );
+        }
+        injected<NotificationsController>().unreadNotifications.set(0);
+      },
+    );
     super.initState();
   }
 

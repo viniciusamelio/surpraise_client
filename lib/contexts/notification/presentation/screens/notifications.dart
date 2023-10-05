@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../core/state/default_state.dart';
+import '../../../../core/state/state.dart';
 import '../../../../shared/presentation/molecules/error_widget.dart';
 import '../../../../shared/presentation/molecules/loader.dart';
 import '../../dtos.dart';
@@ -26,6 +26,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void initState() {
     controller = injected();
     controller.getNotifications();
+
+    controller.state.listenState(
+      onSuccess: (right) {
+        controller.readNotifications();
+      },
+    );
+
     super.initState();
   }
 

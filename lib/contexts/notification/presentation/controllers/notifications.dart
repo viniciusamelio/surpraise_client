@@ -1,8 +1,8 @@
-import '../../../../core/di/di.dart';
+import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../core/state/state.dart';
 import '../../../../shared/presentation/controllers/controllers.dart';
 import '../../dtos.dart';
+import '../../notification.dart';
 
 abstract class NotificationsController
     extends BaseStateController<Notifications> {
@@ -23,7 +23,9 @@ class DefaultNotificationsController
     implements NotificationsController {
   DefaultNotificationsController({
     required GetNotificationsRepository getNotificationsRepository,
-  }) : _getNotificationsRepository = getNotificationsRepository {
+    required ReadNotificationsRepository readNotificationsRepository,
+  })  : _getNotificationsRepository = getNotificationsRepository,
+        _readNotificationsRepository = readNotificationsRepository {
     state.on<SuccessState<Exception, Notifications>>(
       (value) {
         unreadNotifications
@@ -31,7 +33,7 @@ class DefaultNotificationsController
       },
     );
   }
-
+  final ReadNotificationsRepository _readNotificationsRepository;
   final GetNotificationsRepository _getNotificationsRepository;
   @override
   Future<void> getNotifications({
@@ -67,7 +69,14 @@ class DefaultNotificationsController
 
   @override
   Future<void> readNotifications() async {
-    // TODO: implement readNotifications
+    await _readNotificationsRepository.read(
+      injected<SessionController>().currentUser.value!.id,
+    );
+    injected<ApplicationEventBus>().add(
+      const ReadNotificationsEvent(
+        null,
+      ),
+    );
   }
 
   @override

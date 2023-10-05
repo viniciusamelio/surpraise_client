@@ -46,3 +46,6 @@ class MockSettingsRepository extends Mock implements SettingsRepository {}
 
 class MockGetNotificationsRepository extends Mock
     implements GetNotificationsRepository {}
+
+class MockReadNotificationsRepository extends Mock
+    implements ReadNotificationsRepository {}

@@ -8,9 +8,15 @@ Future<void> notificationDependencies() async {
       databaseDatasource: injected(),
     ),
   );
+  inject<ReadNotificationsRepository>(
+    DefaultReadNotificationsRepository(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<NotificationsController>(
     DefaultNotificationsController(
       getNotificationsRepository: injected(),
+      readNotificationsRepository: injected(),
     ),
     singleton: true,
   );

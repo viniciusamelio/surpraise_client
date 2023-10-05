@@ -14,14 +14,17 @@ import '../../../../test_utils.dart';
 void main() {
   group("Notifications Screen: ", () {
     late GetNotificationsRepository getNotificationsRepository;
+    late ReadNotificationsRepository readNotificationsRepository;
     late NotificationsScreen sut;
 
     setUpAll(() {
       getNotificationsRepository = MockGetNotificationsRepository();
+      readNotificationsRepository = MockReadNotificationsRepository();
       inject<SessionController>(MockSessionController());
       inject<NotificationsController>(
         DefaultNotificationsController(
           getNotificationsRepository: getNotificationsRepository,
+          readNotificationsRepository: readNotificationsRepository,
         ),
       );
       sut = const NotificationsScreen();
