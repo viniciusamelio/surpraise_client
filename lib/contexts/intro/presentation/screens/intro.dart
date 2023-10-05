@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/presentation/molecules/loader.dart';
+import '../../../../core/external_dependencies.dart';
 import '../controllers/intro.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -23,6 +23,13 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: LoaderMolecule());
+    return Scaffold(
+      body: Center(
+        child: Lottie.asset(
+          "assets/animations/hashtag.json",
+          width: 300,
+        ),
+      ),
+    );
   }
 }
