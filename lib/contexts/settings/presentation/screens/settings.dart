@@ -48,7 +48,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final screenPadding = EdgeInsets.all(
       Spacings.lg,
     );
-    //TODO: Implementar na function de notificação uma verificação referente a configuração do recebimento de push notifications
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
