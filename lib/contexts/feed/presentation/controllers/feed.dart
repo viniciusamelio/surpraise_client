@@ -11,6 +11,9 @@ abstract class FeedController extends BaseStateController<List<PraiseDto>> {
   AtomNotifier<DefaultState<Exception, List<InviteDto>>> get invitesState;
   Future<void> getInvites(String userId);
 
+  Future<void> listenToInvites(String userId);
+  Future<void> listenToPraises(String userId);
+
   AtomNotifier<int> get offset;
   AtomNotifier<List<PraiseDto>> get loadedPraises;
 
@@ -69,4 +72,39 @@ class DefaultFeedController
 
   @override
   int get max => 10;
+
+  @override
+  Future<void> listenToInvites(String userId) async {
+    Supabase.instance.client
+        .from(invitesCollection)
+        .stream(
+          primaryKey: ["id"],
+        )
+        .eq(
+          "member_id",
+          userId,
+        )
+        .listen(
+          (_) => getInvites(userId),
+        );
+  }
+
+  @override
+  Future<void> listenToPraises(String userId) async {
+    Supabase.instance.client
+        .from(praisesCollection)
+        .stream(
+          primaryKey: ["id"],
+        )
+        .eq(
+          "praised_id",
+          userId,
+        )
+        .listen(
+          (_) {
+            loadedPraises.value.clear();
+            getPraises(userId);
+          },
+        );
+  }
 }

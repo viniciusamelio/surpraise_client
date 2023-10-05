@@ -111,6 +111,7 @@ class _InviteMemberSheetState extends State<InviteMemberSheet> {
                   return GestureDetector(
                     onTap: searchUser,
                     child: BaseSearchableDropdown<Role>(
+                      direction: AxisDirection.up,
                       controller: roleFieldController
                         ..text = role?.display ?? "",
                       hint: "Cargo do membro",

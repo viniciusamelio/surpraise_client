@@ -91,8 +91,11 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   void didChangeDependencies() {
     if (controller.state.value is InitialState) {
-      controller.getPraises(sessionController.currentUser.value!.id);
-      controller.getInvites(sessionController.currentUser.value!.id);
+      final userId = sessionController.currentUser.value!.id;
+      controller.getPraises(userId);
+      controller.getInvites(userId);
+      controller.listenToInvites(userId);
+      controller.listenToPraises(userId);
     }
     super.didChangeDependencies();
   }
@@ -109,7 +112,6 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: adicionar atualização em real-time para convites de comunidade e novos praises
     return SafeArea(
       child: Stack(
         children: [
