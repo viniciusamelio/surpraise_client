@@ -53,7 +53,6 @@ dependencies:
   permission_handler: ^10.4.3
   popover: ^0.2.8+2
   pressable: ^0.5.0
-  scientisst_db: ^0.1.2
   smooth_page_indicator: ^1.1.0
   string_validator: ^0.3.0
   supabase_flutter: ^1.10.7
@@ -118,3 +117,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

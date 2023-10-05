@@ -15,8 +15,6 @@ export "./state/state.dart";
 export "./navigator.dart";
 export "./extensions/theme.dart";
 
-export "./database/scientist_db_service.dart";
-
 export "./storage/storage.dart";
 
 export "./supabase/exception.dart";
