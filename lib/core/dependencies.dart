@@ -71,6 +71,11 @@ Future<void> _coreDependencies() async {
   inject<LinkHandler>(
     LinkService(),
   );
+  inject<RealtimeQuery>(
+    SupabaseRealtimeQuery(
+      supabaseClient: Supabase.instance.client,
+    ),
+  );
 
   await injected<TranslationService>().init(supportedLocales: [
     const Locale("pt"),

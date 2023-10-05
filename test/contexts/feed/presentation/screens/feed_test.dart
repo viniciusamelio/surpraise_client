@@ -21,22 +21,39 @@ void main() {
     late AnswerInviteController answerInviteController;
 
     late FeedRepository feedRepository;
-
+    late RealtimeQuery realtimeQueryClient;
     late Widget sut;
 
     setUp(() {
       feedRepository = MockFeedRepository();
-
+      realtimeQueryClient = MockSupabaseClient();
       sessionController = MockSessionController();
       answerInviteController = MockAnswerInviteController();
       controller = DefaultFeedController(
         feedRepository: feedRepository,
+        realtimeQueryClient: realtimeQueryClient,
       );
 
       inject<SessionController>(sessionController);
       inject<AnswerInviteController>(answerInviteController);
       inject<FeedController>(controller);
       inject<ApplicationEventBus>(DefaultBus());
+
+      registerFallbackValue(
+        const ListenableField(
+          value: "value",
+          fieldName: "fieldName",
+        ),
+      );
+
+      when(
+        () => realtimeQueryClient.run(
+          primaryKeyName: any(named: "primaryKeyName"),
+          source: any(named: "source"),
+          where: any(named: "where"),
+          callback: any(named: "callback"),
+        ),
+      ).thenReturn(null);
 
       when(
         () => feedRepository.getInvites(userId: any(named: "userId")),

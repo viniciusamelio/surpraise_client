@@ -49,3 +49,5 @@ class MockGetNotificationsRepository extends Mock
 
 class MockReadNotificationsRepository extends Mock
     implements ReadNotificationsRepository {}
+
+class MockSupabaseClient extends Mock implements RealtimeQuery {}

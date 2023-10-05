@@ -25,14 +25,17 @@ class DefaultFeedController
     implements FeedController {
   DefaultFeedController({
     required FeedRepository feedRepository,
-  }) : repository = feedRepository {
+    required RealtimeQuery realtimeQueryClient,
+  })  : _repository = feedRepository,
+        _queryClient = realtimeQueryClient {
     setDefaultErrorHandling();
   }
-  final FeedRepository repository;
+  final RealtimeQuery _queryClient;
+  final FeedRepository _repository;
   @override
   Future<void> getPraises(String userId) async {
     state.set(LoadingState());
-    final praisesOrError = await repository.get(
+    final praisesOrError = await _repository.get(
       userId: userId,
       offset: offset.value,
     );
@@ -51,7 +54,7 @@ class DefaultFeedController
   @override
   Future<void> getInvites(String userId) async {
     invitesState.set(LoadingState());
-    final invitesOrError = await repository.getInvites(userId: userId);
+    final invitesOrError = await _repository.getInvites(userId: userId);
     invitesState.set(
       invitesOrError.fold(
         (left) => ErrorState(left),
@@ -75,36 +78,30 @@ class DefaultFeedController
 
   @override
   Future<void> listenToInvites(String userId) async {
-    Supabase.instance.client
-        .from(invitesCollection)
-        .stream(
-          primaryKey: ["id"],
-        )
-        .eq(
-          "member_id",
-          userId,
-        )
-        .listen(
-          (_) => getInvites(userId),
-        );
+    _queryClient.run(
+      primaryKeyName: "id",
+      source: invitesCollection,
+      where: ListenableField(
+        fieldName: "member_id",
+        value: userId,
+      ),
+      callback: () => getInvites(userId),
+    );
   }
 
   @override
   Future<void> listenToPraises(String userId) async {
-    Supabase.instance.client
-        .from(praisesCollection)
-        .stream(
-          primaryKey: ["id"],
-        )
-        .eq(
-          "praised_id",
-          userId,
-        )
-        .listen(
-          (_) {
-            loadedPraises.value.clear();
-            getPraises(userId);
-          },
-        );
+    _queryClient.run(
+      primaryKeyName: "id",
+      source: praisesCollection,
+      where: ListenableField(
+        fieldName: "praised_id",
+        value: userId,
+      ),
+      callback: () {
+        loadedPraises.value.clear();
+        getPraises(userId);
+      },
+    );
   }
 }

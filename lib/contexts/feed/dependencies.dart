@@ -11,6 +11,7 @@ Future<void> feedDependencies() async {
   inject<FeedController>(
     DefaultFeedController(
       feedRepository: injected(),
+      realtimeQueryClient: injected(),
     ),
   );
 }

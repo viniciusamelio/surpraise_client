@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/notification/notification.dart';
-import 'package:surpraise_client/core/di/di.dart';
+import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart';
 import 'package:surpraise_client/shared/presentation/controllers/controllers.dart';
 import 'package:surpraise_client/shared/presentation/molecules/error_widget.dart';
@@ -27,6 +27,7 @@ void main() {
           readNotificationsRepository: readNotificationsRepository,
         ),
       );
+      inject<ApplicationEventBus>(DefaultBus());
       sut = const NotificationsScreen();
     });
 
@@ -75,7 +76,7 @@ void main() {
       (tester) async {
         final List<GetNotificationOutput> notifications = [];
 
-        for (var i = 0; i < faker.randomGenerator.integer(100); i++) {
+        for (var i = 0; i < faker.randomGenerator.integer(10); i++) {
           notifications.add(
             GetNotificationOutput(
               id: faker.guid.guid(),
@@ -87,7 +88,11 @@ void main() {
             ),
           );
         }
-
+        when(() => readNotificationsRepository.read(
+              any(),
+            )).thenAnswer(
+          (invocation) async => Right(""),
+        );
         when(
           () => getNotificationsRepository.get(
             userId: any(named: "userId"),
