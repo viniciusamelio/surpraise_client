@@ -67,11 +67,13 @@ class DefaultFeedRepository implements FeedRepository {
   @override
   AsyncAction<List<PraiseDto>> getByUser({
     required String userId,
+    int offset = 0,
     bool? asPraiser,
   }) async {
     try {
       final praisesOrError = await _getFeedByUser(
         userId: userId,
+        offset: offset,
       );
       if (praisesOrError.failure) {
         return Left(Exception("Something went wrong getting your feeed"));
@@ -100,6 +102,7 @@ class DefaultFeedRepository implements FeedRepository {
 
   Future<QueryResult> _getFeedByUser({
     required String userId,
+    required int offset,
   }) async {
     const String select =
         "*, $communitiesCollection(title), $profilesCollection!praise_praiser_id_fkey(name, tag, id, email)";
@@ -113,6 +116,8 @@ class DefaultFeedRepository implements FeedRepository {
         orderBy: const OrderFilter(
           field: "created_at",
         ),
+        offset: offset,
+        limit: 10,
       ),
     );
   }
