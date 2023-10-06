@@ -73,8 +73,8 @@ class _FeedScreenState extends State<FeedScreen> {
     );
 
     scrollController.addListener(() async {
-      await Future.delayed(const Duration(milliseconds: 400));
-      if (scrollController.position.atEdge) {
+      if (scrollController.positions.isNotEmpty &&
+          scrollController.position.atEdge) {
         bool isTop = scrollController.position.pixels == 0;
         if (!isTop &&
             controller.state.value is SuccessState &&
