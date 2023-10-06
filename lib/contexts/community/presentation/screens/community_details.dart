@@ -40,7 +40,9 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
     updatedCommunity = StreamController.broadcast();
     controller.leaveState.on<SuccessState>((_) {
       injected<ApplicationEventBus>().add(const LeftCommunityEvent());
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     });
     injected<ApplicationEventBus>().on<CommunitySavedEvent>(
       (event) {

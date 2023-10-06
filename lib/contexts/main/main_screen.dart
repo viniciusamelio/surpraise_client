@@ -17,49 +17,17 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
   late final PageController pageController;
+  late final ApplicationEventBus eventBus;
 
   @override
   void initState() {
     checkSession();
+    eventBus = injected<ApplicationEventBus>();
     pageController = PageController(
       initialPage: 0,
     );
-    injected<ApplicationEventBus>().on<ProfileEditedEvent>((event) {
-      sessionController.updateUser(
-        sessionController.currentUser.value!.copyWith(
-          name: event.data.name,
-          avatarUrl: sessionController.currentUser.value!.avatarUrl,
-        ),
-      );
-    });
-    injected<ApplicationEventBus>().on<AvatarRemovedEvent>((event) {
-      sessionController.updateUser(
-        sessionController.currentUser.value!.copyWith(
-          avatarUrl: "",
-        ),
-      );
-    });
-    injected<ApplicationEventBus>().on<AvatarUpdatedEvent>((event) {
-      sessionController.updateUser(
-        sessionController.currentUser.value!.copyWith(
-          avatarUrl: getAvatarFromId(sessionController.currentUser.value!.id),
-          cachedAvatar: event.data,
-        ),
-      );
-    });
-    injected<ApplicationEventBus>().on<ReadNotificationsEvent>(
-      (event) {
-        final unreadNotifications =
-            injected<NotificationsController>().unreadNotifications;
+    setupListeners();
 
-        if (unreadNotifications.value > 20) {
-          injected<NotificationsController>().unreadNotifications.set(
-                unreadNotifications.value - 20,
-              );
-        }
-        injected<NotificationsController>().unreadNotifications.set(0);
-      },
-    );
     super.initState();
   }
 
@@ -82,6 +50,16 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
       );
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    final bus = eventBus;
+    bus.removeListener("ProfileEditedHandler");
+    bus.removeListener("AvatarRemovedHandler");
+    bus.removeListener("AvatarUpdatedHandler");
+    bus.removeListener("ReadNotificationsHandler");
+    super.dispose();
   }
 
   @override
@@ -112,6 +90,55 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
           const SettingsScreen(),
         ],
       ),
+    );
+  }
+
+  void setupListeners() {
+    eventBus.on<ProfileEditedEvent>(
+      (event) {
+        sessionController.updateUser(
+          sessionController.currentUser.value!.copyWith(
+            name: event.data.name,
+            avatarUrl: sessionController.currentUser.value!.avatarUrl,
+          ),
+        );
+      },
+      name: "ProfileEditedHandler",
+    );
+    eventBus.on<AvatarRemovedEvent>(
+      (event) {
+        sessionController.updateUser(
+          sessionController.currentUser.value!.copyWith(
+            avatarUrl: "",
+          ),
+        );
+      },
+      name: "AvatarRemovedHandler",
+    );
+    eventBus.on<AvatarUpdatedEvent>(
+      (event) {
+        sessionController.updateUser(
+          sessionController.currentUser.value!.copyWith(
+            avatarUrl: getAvatarFromId(sessionController.currentUser.value!.id),
+            cachedAvatar: event.data,
+          ),
+        );
+      },
+      name: "AvatarUpdatedHandler",
+    );
+    eventBus.on<ReadNotificationsEvent>(
+      (event) {
+        final unreadNotifications =
+            injected<NotificationsController>().unreadNotifications;
+
+        if (unreadNotifications.value > 20) {
+          injected<NotificationsController>().unreadNotifications.set(
+                unreadNotifications.value - 20,
+              );
+        }
+        injected<NotificationsController>().unreadNotifications.set(0);
+      },
+      name: "ReadNotificationsHandler",
     );
   }
 }
