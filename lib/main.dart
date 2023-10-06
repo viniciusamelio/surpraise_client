@@ -1,3 +1,4 @@
+import 'package:embrace/embrace.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -18,5 +19,5 @@ void main() async {
   OneSignal.initialize(Env.oneSignalAppId);
   OneSignal.Notifications.requestPermission(true);
 
-  runApp(const App());
+  await Embrace.instance.start(() => runApp(const App()));
 }

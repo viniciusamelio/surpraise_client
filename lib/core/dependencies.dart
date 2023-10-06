@@ -26,11 +26,6 @@ Future<void> _coreDependencies() async {
       ),
     ),
   );
-  inject<ScientistDBService>(
-    ScientistDBService(
-      database: ScientISSTdb.instance,
-    ),
-  );
   inject<DatabaseDatasource>(
     SupabaseDatasource(
       supabase: Supabase.instance.client,

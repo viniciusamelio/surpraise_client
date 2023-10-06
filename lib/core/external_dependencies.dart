@@ -28,7 +28,5 @@ export "package:lottie/lottie.dart";
 
 export "package:dio/dio.dart" hide Headers, ResponseType;
 
-export "package:scientisst_db/scientisst_db.dart" hide Query;
-
 export "package:string_validator/string_validator.dart"
     hide toDouble, toBoolean, toInt;

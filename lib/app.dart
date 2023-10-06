@@ -1,8 +1,12 @@
 import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/tokens/color_tokens.dart';
+import 'package:blurple/widgets/buttons/buttons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:restart_app/restart_app.dart';
 
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
@@ -14,6 +18,7 @@ import 'contexts/main/main_screen.dart';
 import 'contexts/profile/presentation/presentation.dart';
 import 'core/core.dart';
 import 'shared/dtos/dtos.dart';
+import 'shared/presentation/molecules/error_widget.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -57,6 +62,45 @@ class App extends StatelessWidget {
                     community: ModalRoute.of(context)?.settings.arguments
                         as CommunityOutput,
                   ),
+            },
+            builder: (context, child) {
+              ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+                return Scaffold(
+                  body: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ErrorWidgetMolecule(
+                          message: kDebugMode
+                              ? errorDetails.exceptionAsString()
+                              : "Algo estranho aconteceu com o app",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      BorderedButton(
+                        text: "Reiniciar o app",
+                        borderSide: BorderSide(
+                          width: 2,
+                          color: ColorTokens.red,
+                        ),
+                        foregroundColor: ColorTokens.red,
+                        onPressed: () {
+                          Restart.restartApp(
+                            webOrigin: LoginScreen.routeName,
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                    ],
+                  ),
+                );
+              };
+
+              return child!;
             },
           ),
         );
