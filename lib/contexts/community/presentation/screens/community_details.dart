@@ -48,6 +48,7 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
           updatedCommunity.add(
             event.data,
           );
+          Navigator.pop(context);
         }
       },
       name: "UpdatedCommunityHandler",
@@ -70,30 +71,31 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
         child: Column(
           children: [
             StreamBuilder<CreateCommunityOutput>(
-                stream: updatedCommunity.stream,
-                initialData: CreateCommunityOutput(
-                  id: widget.community.id,
-                  description: widget.community.description,
-                  title: widget.community.title,
-                  members: [
-                    {},
-                  ],
-                  ownerId: widget.community.ownerId,
-                ),
-                builder: (context, snapshot) {
-                  return _HeaderOrganism(
-                    theme: theme,
-                    community: CommunityOutput(
-                      id: snapshot.data!.id,
-                      ownerId: snapshot.data!.ownerId,
-                      description: snapshot.data!.description,
-                      title: snapshot.data!.title,
-                      image:
-                          "${widget.community.image}?when=${DateTime.now().microsecondsSinceEpoch}",
-                      role: role,
-                    ),
-                  );
-                }),
+              stream: updatedCommunity.stream,
+              initialData: CreateCommunityOutput(
+                id: widget.community.id,
+                description: widget.community.description,
+                title: widget.community.title,
+                members: [
+                  {},
+                ],
+                ownerId: widget.community.ownerId,
+              ),
+              builder: (context, snapshot) {
+                return _HeaderOrganism(
+                  theme: theme,
+                  community: CommunityOutput(
+                    id: snapshot.data!.id,
+                    ownerId: snapshot.data!.ownerId,
+                    description: snapshot.data!.description,
+                    title: snapshot.data!.title,
+                    image:
+                        "${widget.community.image}?when=${DateTime.now().microsecondsSinceEpoch}",
+                    role: role,
+                  ),
+                );
+              },
+            ),
             PolymorphicAtomObserver<
                 DefaultState<Exception, List<FindCommunityMemberOutput>>>(
               atom: controller.state,
