@@ -7,6 +7,7 @@ import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/badge/base_badge.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:pressable/pressable.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
@@ -168,13 +169,37 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            SizedBox.square(
-                                              dimension: 50,
-                                              child: CircleAvatar(
-                                                backgroundImage:
-                                                    CachedNetworkImageProvider(
-                                                  getAvatarFromId(
-                                                    members[index].id,
+                                            Pressable.scale(
+                                              onPressed: () {
+                                                // TODO: implementar regra de hierarquia para exclusão de membros
+                                                if ([Role.moderator, Role.admin]
+                                                    .contains(role)) {
+                                                  if (role == Role.moderator &&
+                                                      [
+                                                        Role.moderator,
+                                                        Role.admin
+                                                      ].contains(
+                                                          Role.fromString(
+                                                              members[index]
+                                                                  .role))) {
+                                                    return;
+                                                  }
+                                                  showCustomModalBottomSheet(
+                                                    context: context,
+                                                    child: RemoveMemberSheet(
+                                                      member: members[index],
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: SizedBox.square(
+                                                dimension: 50,
+                                                child: CircleAvatar(
+                                                  backgroundImage:
+                                                      CachedNetworkImageProvider(
+                                                    getAvatarFromId(
+                                                      members[index].id,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
