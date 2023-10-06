@@ -41,7 +41,7 @@ class LoginFormOrganism extends StatelessWidget {
               builder: (context, show) {
                 return BaseInput(
                   onSaved: onSavePassword,
-                  label: "Password",
+                  label: "Senha",
                   maxLines: 1,
                   preffixIcon: const Icon(
                     HeroiconsSolid.lockClosed,

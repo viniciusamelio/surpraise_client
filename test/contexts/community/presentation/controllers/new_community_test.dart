@@ -57,7 +57,7 @@ void main() {
           DefaultBus(),
           singleton: true,
         );
-        injected<ApplicationEventBus>().on<CommunityAddedEvent>((event) {
+        injected<ApplicationEventBus>().on<CommunitySavedEvent>((event) {
           receivedEvent = true;
         });
       });

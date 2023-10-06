@@ -62,8 +62,10 @@ class SupabaseCloudClient {
     try {
       final newId = "$fileId.png";
       final result = await supabase.storage.from(bucketId).upload(
-          newId, fileToSave,
-          fileOptions: const FileOptions(upsert: true));
+            newId,
+            fileToSave,
+            fileOptions: const FileOptions(upsert: true),
+          );
       if (bucketId == Env.avatarBucket) {
         await supabase.auth.updateUser(UserAttributes(
           data: {

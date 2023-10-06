@@ -1,10 +1,10 @@
 import '../../../core/core.dart';
 
-class CommunityAddedEvent implements ApplicationEvent<void> {
-  const CommunityAddedEvent([this.data]);
+class CommunitySavedEvent implements ApplicationEvent<CreateCommunityOutput> {
+  const CommunitySavedEvent(this.data);
 
   @override
-  final void data;
+  final CreateCommunityOutput data;
 }
 
 class LeftCommunityEvent implements ApplicationEvent<void> {

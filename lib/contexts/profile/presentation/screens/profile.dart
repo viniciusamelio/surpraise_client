@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     controller.getCommunities(sessionController.currentUser.value!.id);
     controller.getPraises(sessionController.currentUser.value!.id);
     scrollController = FeedScrollController();
-    eventBus.on<CommunityAddedEvent>(
+    eventBus.on<CommunitySavedEvent>(
       (_) {
         controller.getCommunities(sessionController.currentUser.value!.id);
       },

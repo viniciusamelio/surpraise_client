@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../../../env.dart';
 import '../../../../shared/presentation/controllers/session.dart';
 import '../../application/application.dart';
@@ -12,8 +13,11 @@ abstract class NewCommunityController
   ValueNotifier<String> get name;
   ValueNotifier<String> get description;
   ValueNotifier<String> get imagePath;
+  ValueNotifier<String?> get id;
 
-  Future<void> save();
+  Future<void> save({
+    bool newCommunity = true,
+  });
   Future<void> pickImage();
 
   void dispose();
@@ -48,10 +52,15 @@ class DefaultNewCommunityController
   final ValueNotifier<String> name = ValueNotifier("");
 
   @override
-  Future<void> save() async {
+  final ValueNotifier<String?> id = ValueNotifier(null);
+
+  @override
+  Future<void> save({
+    newCommunity = true,
+  }) async {
     state.set(LoadingState());
-    String? imageUrl;
-    if (imagePath.value.isNotEmpty) {
+    String? imageUrl = imagePath.value;
+    if (imagePath.value.isNotEmpty && !isURL(imagePath.value)) {
       final id = DateTime.now().microsecond;
       final uploadedFileOrError = await _imageController.upload(
         UploadImageDto(
@@ -70,23 +79,49 @@ class DefaultNewCommunityController
         return;
       }
 
-      imageUrl = uploadedFileOrError.fold((left) => null, (right) => right);
+      imageUrl = uploadedFileOrError.fold((left) => "", (right) => right);
     }
-    final outputOrError = await _communityRepository.createCommunity(
-      CreateCommunityInput(
-        description: description.value,
-        ownerId: _sessionController.currentUser.value!.id,
-        title: name.value,
-        imageUrl: imageUrl!,
-      ),
+    final outputOrError = await _saveCommunity(
+      newCommunity: newCommunity,
+      imageUrl: imageUrl,
     );
     state.set(
       outputOrError.fold(
         (left) => ErrorState(left),
         (right) {
-          injected<ApplicationEventBus>().add(const CommunityAddedEvent());
+          injected<ApplicationEventBus>().add(
+            CommunitySavedEvent(
+              right,
+            ),
+          );
           return SuccessState(right);
         },
+      ),
+    );
+  }
+
+  Future<Either<Exception, CreateCommunityOutput>> _saveCommunity({
+    bool newCommunity = true,
+    String? imageUrl,
+  }) async {
+    if (newCommunity) {
+      return await _communityRepository.createCommunity(
+        CreateCommunityInput(
+          description: description.value,
+          ownerId: _sessionController.currentUser.value!.id,
+          title: name.value,
+          imageUrl: imageUrl!,
+        ),
+      );
+    }
+
+    return await _communityRepository.updateCommunity(
+      CreateCommunityInput(
+        description: description.value,
+        ownerId: _sessionController.currentUser.value!.id,
+        title: name.value,
+        imageUrl: imageUrl!,
+        id: id.value,
       ),
     );
   }
@@ -101,6 +136,7 @@ class DefaultNewCommunityController
 
   @override
   void dispose() {
+    state.removeListeners();
     state.set(InitialState());
     description.value = "";
     imagePath.value = "";

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blurple/sizes/radius.dart';
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../shared/presentation/controllers/session.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../community.dart';
 import '../../dtos/dtos.dart';
@@ -28,24 +29,36 @@ class CommunityDetailsScreen extends StatefulWidget {
 class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
   BlurpleThemeData get theme => context.theme;
   late final CommunityDetailsController controller;
-  late bool owner;
+  late final StreamController<CreateCommunityOutput> updatedCommunity;
+  late Role role;
 
   @override
   void initState() {
     controller = injected();
     controller.getMembers(id: widget.community.id);
-    owner = injected<SessionController>().currentUser.value?.id ==
-        widget.community.ownerId;
+    role = widget.community.role;
+    updatedCommunity = StreamController.broadcast();
     controller.leaveState.on<SuccessState>((_) {
       injected<ApplicationEventBus>().add(const LeftCommunityEvent());
       Navigator.pop(context);
     });
+    injected<ApplicationEventBus>().on<CommunitySavedEvent>(
+      (event) {
+        if (mounted) {
+          updatedCommunity.add(
+            event.data,
+          );
+        }
+      },
+      name: "UpdatedCommunityHandler",
+    );
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
+    injected<ApplicationEventBus>().removeListener("UpdatedCommunityHandler");
     super.dispose();
   }
 
@@ -56,10 +69,31 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            _HeaderOrganism(
-              theme: theme,
-              community: widget.community,
-            ),
+            StreamBuilder<CreateCommunityOutput>(
+                stream: updatedCommunity.stream,
+                initialData: CreateCommunityOutput(
+                  id: widget.community.id,
+                  description: widget.community.description,
+                  title: widget.community.title,
+                  members: [
+                    {},
+                  ],
+                  ownerId: widget.community.ownerId,
+                ),
+                builder: (context, snapshot) {
+                  return _HeaderOrganism(
+                    theme: theme,
+                    community: CommunityOutput(
+                      id: snapshot.data!.id,
+                      ownerId: snapshot.data!.ownerId,
+                      description: snapshot.data!.description,
+                      title: snapshot.data!.title,
+                      image:
+                          "${widget.community.image}?when=${DateTime.now().microsecondsSinceEpoch}",
+                      role: role,
+                    ),
+                  );
+                }),
             PolymorphicAtomObserver<
                 DefaultState<Exception, List<FindCommunityMemberOutput>>>(
               atom: controller.state,
@@ -287,10 +321,11 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
               ),
             ),
             SizedBox(
-              width: owner ? Spacings.sm : 0,
+              width:
+                  [Role.admin, Role.moderator].contains(role) ? Spacings.sm : 0,
             ),
             Visibility(
-              visible: owner,
+              visible: [Role.admin, Role.moderator].contains(role),
               child: SizedBox.square(
                 dimension: 36,
                 child: BorderedIconButton(
@@ -336,6 +371,7 @@ class _HeaderOrganism extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * .4,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: ColorTokens.concrete,
         borderRadius: const BorderRadius.vertical(
@@ -362,17 +398,41 @@ class _HeaderOrganism extends StatelessWidget {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(
-                            community.image,
-                          ),
+                          image: CachedNetworkImageProvider(community.image),
                         ),
                         border: Border.all(
-                          width: 1,
+                          width: 2,
                           color: theme.colorScheme.accentColor,
                         ),
                       ),
                     ),
                   ],
+                ),
+                Visibility(
+                  visible: community.role == Role.admin,
+                  child: Positioned(
+                    bottom: 0,
+                    right: (MediaQuery.of(context).size.width / 2) - 28,
+                    child: SizedBox.square(
+                      dimension: 36,
+                      child: BorderedIconButton(
+                        padding: const EdgeInsets.all(2),
+                        preffixIcon: Icon(
+                          HeroiconsSolid.pencilSquare,
+                          color: context.theme.colorScheme.accentColor,
+                          size: 24,
+                        ),
+                        onPressed: () {
+                          showCustomModalBottomSheet(
+                            context: context,
+                            child: SaveCommunitySheet(
+                              community: community,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
                 Positioned(
                   right: 40,
@@ -400,6 +460,7 @@ class _HeaderOrganism extends StatelessWidget {
             Text(
               community.title,
               style: theme.fontScheme.p2.copyWith(color: Colors.white),
+              textAlign: TextAlign.center,
             ),
             SizedBox(
               height: Spacings.xs,
@@ -407,6 +468,7 @@ class _HeaderOrganism extends StatelessWidget {
             Text(
               community.description,
               style: theme.fontScheme.p1,
+              textAlign: TextAlign.center,
             )
           ],
         ),
