@@ -28,9 +28,9 @@ class _RemoveMemberSheetState extends State<RemoveMemberSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text.rich(
-            TextSpan(text: "Remover ${member.name} ", children: [
+            TextSpan(text: "Remover ", children: [
               TextSpan(
-                  text: "(${member.tag})",
+                  text: member.tag,
                   style: theme.fontScheme.h3
                       .copyWith(color: theme.colorScheme.accentColor)),
               const TextSpan(text: " da comunidade?"),

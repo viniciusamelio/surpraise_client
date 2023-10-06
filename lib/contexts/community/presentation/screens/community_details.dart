@@ -12,6 +12,7 @@ import 'package:pressable/pressable.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
+import '../../../../shared/shared.dart';
 import '../../community.dart';
 import '../../dtos/dtos.dart';
 
@@ -171,19 +172,24 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                           children: [
                                             Pressable.scale(
                                               onPressed: () {
-                                                // TODO: implementar regra de hierarquia para exclusão de membros
-                                                if ([Role.moderator, Role.admin]
-                                                    .contains(role)) {
-                                                  if (role == Role.moderator &&
-                                                      [
-                                                        Role.moderator,
-                                                        Role.admin
-                                                      ].contains(
-                                                          Role.fromString(
-                                                              members[index]
-                                                                  .role))) {
-                                                    return;
-                                                  }
+                                                // TODO: Refactor this, extracting this logic to a domain component
+                                                final bool canEdit = [
+                                                  Role.moderator,
+                                                  Role.admin
+                                                ].contains(role);
+                                                final memberRole =
+                                                    Role.fromString(
+                                                  members[index].role,
+                                                );
+                                                if (canEdit &&
+                                                        role.level >
+                                                            memberRole.level ||
+                                                    widget.community.ownerId ==
+                                                        injected<
+                                                                SessionController>()
+                                                            .currentUser
+                                                            .value!
+                                                            .id) {
                                                   showCustomModalBottomSheet(
                                                     context: context,
                                                     child: RemoveMemberSheet(
