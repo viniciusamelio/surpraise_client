@@ -159,18 +159,24 @@ class _NewPraiseUserSelectionStepState
                           const SizedBox(
                             height: 12,
                           ),
-                          _reasonRow(state),
+                          Visibility(
+                            visible: state == 2,
+                            child: _reasonRow(state),
+                          ),
                           const SizedBox(
                             height: 12,
                           ),
-                          BaseInput.large(
-                            hintText: "Solta a matraca e elogie com vontade!",
-                            validator: (value) => message(value ?? ""),
-                            onSaved: (value) =>
-                                widget.controller.formData.message = value!,
-                            minLines: 3,
-                            hintStyle: context.theme.fontScheme.input,
-                            enabled: state == 2,
+                          Visibility(
+                            visible: state == 2,
+                            child: BaseInput.large(
+                              hintText: "Solta a matraca e elogie com vontade!",
+                              validator: (value) => message(value ?? ""),
+                              onSaved: (value) =>
+                                  widget.controller.formData.message = value!,
+                              minLines: 3,
+                              hintStyle: context.theme.fontScheme.input,
+                              enabled: state == 2,
+                            ),
                           ),
                           const SizedBox(
                             height: 16,
@@ -237,6 +243,7 @@ class _NewPraiseUserSelectionStepState
             absorbing: state != 2,
             child: BaseSearchableDropdown<TopicValues>(
               hint: "Motivo do #praise",
+              direction: AxisDirection.up,
               controller: topicController,
               enabled: state == 2,
               itemBuilder: (context, value) => ListTile(

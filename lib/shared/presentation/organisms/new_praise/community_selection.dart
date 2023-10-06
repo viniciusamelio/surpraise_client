@@ -44,6 +44,7 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
                       .contains(pattern.toLowerCase()),
                 );
               },
+              direction: AxisDirection.up,
               hint: "Comunidade de quem vai receber o praise",
               itemBuilder: (context, item) {
                 return ListTile(
