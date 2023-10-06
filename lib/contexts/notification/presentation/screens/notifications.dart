@@ -64,6 +64,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
         defaultBuilder: (value) {
           final Notifications data = (value as SuccessState).data;
+          if (data.isEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height - 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LottieBuilder.asset("assets/animations/empty-state.json"),
+                  Text(
+                    "Ainda não há nada aqui",
+                    style: context.theme.fontScheme.p2.copyWith(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
           return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 80,
