@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../praise/praise.dart';
@@ -68,7 +69,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
     controller.state.listenState(
       onSuccess: (right) {
-        scrollController.restore();
+        if (scrollController.positions.isNotEmpty) scrollController.restore();
       },
     );
 
@@ -174,8 +175,24 @@ class _FeedScreenState extends State<FeedScreen> {
                     TypedAtomHandler(
                       type: ErrorState<Exception, List<PraiseDto>>,
                       builder: (context, state) {
-                        return const ErrorWidgetMolecule(
-                          message: "Deu ruim ao recuperar seu feed",
+                        return Column(
+                          children: [
+                            const ErrorWidgetMolecule(
+                              message: "Deu ruim ao recuperar seu feed",
+                            ),
+                            SizedBox(
+                              height: Spacings.md,
+                            ),
+                            BorderedButton(
+                              onPressed: () {
+                                controller.getPraises(
+                                  sessionController.currentUser.value!.id,
+                                );
+                              },
+                              foregroundColor: theme.colorScheme.dangerColor,
+                              text: "Tentar novamente",
+                            ),
+                          ],
                         );
                       },
                     ),
