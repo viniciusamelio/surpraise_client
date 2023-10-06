@@ -6,7 +6,6 @@ import 'package:blurple/themes/theme_data.dart';
 import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/badge/base_badge.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
-import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
@@ -146,54 +145,8 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                     members: members,
                                     context: context,
                                   ),
-                                  AtomObserver(
-                                    atom: controller.showSearchbar,
-                                    builder: (context, state) {
-                                      return AnimatedSize(
-                                        curve: Curves.bounceInOut,
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        child: Visibility(
-                                          visible: state,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8),
-                                            child: BaseInput(
-                                              hintText: "Pesquisar @ do membro",
-                                              hintStyle: theme.fontScheme.input,
-                                              onChanged: (value) {
-                                                controller.memberFilter
-                                                    .set(value);
-                                              },
-                                              suffixIcon: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                child: SizedBox.square(
-                                                  dimension: 24,
-                                                  child: BorderedIconButton(
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    onPressed: () {
-                                                      controller.memberFilter
-                                                          .set("");
-                                                      controller.showSearchbar
-                                                          .set(
-                                                        false,
-                                                      );
-                                                    },
-                                                    borderSide: BorderSide.none,
-                                                    preffixIcon: const Icon(
-                                                      HeroiconsMini.xMark,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                  MemberSearchBarOrganism(
+                                    controller: controller,
                                   ),
                                   SizedBox(
                                     height: Spacings.xl,
