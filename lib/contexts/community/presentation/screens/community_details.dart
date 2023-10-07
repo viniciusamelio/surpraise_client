@@ -11,7 +11,6 @@ import 'package:pressable/pressable.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../../../shared/shared.dart';
 import '../../community.dart';
 import '../../dtos/dtos.dart';
@@ -172,24 +171,10 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                           children: [
                                             Pressable.scale(
                                               onPressed: () {
-                                                // TODO: Refactor this, extracting this logic to a domain component
-                                                final bool canEdit = [
-                                                  Role.moderator,
-                                                  Role.admin
-                                                ].contains(role);
-                                                final memberRole =
-                                                    Role.fromString(
-                                                  members[index].role,
-                                                );
-                                                if (canEdit &&
-                                                        role.level >
-                                                            memberRole.level ||
-                                                    widget.community.ownerId ==
-                                                        injected<
-                                                                SessionController>()
-                                                            .currentUser
-                                                            .value!
-                                                            .id) {
+                                                if (currentUserCanRemoveThisMember(
+                                                  community: widget.community,
+                                                  member: members[index],
+                                                )) {
                                                   showCustomModalBottomSheet(
                                                     context: context,
                                                     child: RemoveMemberSheet(
