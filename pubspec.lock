@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: "06a96f1249f38a00435b3b0c9a3246d934d7dbc8183fc7c9e56989860edb99d4"
+      sha256: ca12e6c9ac022f33fd89128e7007fb5e97ab6e814d4fa05dd8d4f2db1e3c69cb
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.4"
+    version: "3.4.5"
   args:
     dependency: transitive
     description:
@@ -853,10 +853,10 @@ packages:
     dependency: "direct main"
     description:
       name: onesignal_flutter
-      sha256: "79add7f791dbb6939a014006d314ea97b281df1ecd484351bce83c00c942246c"
+      sha256: cbb201463fd82ddca823516e48d3c3dfbccd82297353e95a417fb990771c38ec
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "5.0.3"
   package_config:
     dependency: transitive
     description:
@@ -1348,7 +1348,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "64e6e771159209ac061864a1378e029a97abe0aa"
+      resolved-ref: e478309572bb77a1a1ae8b1ee1d2041bf3a1835b
       url: "https://github.com/viniciusamelio/surpraise_core"
     source: git
     version: "1.0.0"
@@ -1357,7 +1357,7 @@ packages:
     description:
       path: "."
       ref: "feat/supabase-migration"
-      resolved-ref: "7b2ed3c2ae354523235b857c483ba62ab6643eee"
+      resolved-ref: ff75c6f17f46d1ec38360bc144769e3c544e2e9e
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"

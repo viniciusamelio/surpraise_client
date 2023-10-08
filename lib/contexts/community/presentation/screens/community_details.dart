@@ -31,6 +31,7 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
   late final CommunityDetailsController controller;
   late final StreamController<CreateCommunityOutput> updatedCommunity;
   late Role role;
+  late final ApplicationEventBus eventBus;
 
   @override
   void initState() {
@@ -38,13 +39,14 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
     controller.getMembers(id: widget.community.id);
     role = widget.community.role;
     updatedCommunity = StreamController.broadcast();
+    eventBus = injected();
     controller.leaveState.on<SuccessState>((_) {
-      injected<ApplicationEventBus>().add(const LeftCommunityEvent());
+      eventBus.add(const LeftCommunityEvent());
       if (mounted) {
         Navigator.pop(context);
       }
     });
-    injected<ApplicationEventBus>().on<CommunitySavedEvent>(
+    eventBus.on<CommunitySavedEvent>(
       (event) {
         if (mounted) {
           updatedCommunity.add(
@@ -55,13 +57,28 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
       },
       name: "UpdatedCommunityHandler",
     );
+    eventBus.on<MemberRemovedEvent>(
+      (event) {
+        final data = ((controller.state.value as SuccessState).data
+            as List<FindCommunityMemberOutput>);
+        data.removeWhere((element) => element.id == event.data.id);
+        controller.state.set(
+          SuccessState(
+            data,
+          ),
+        );
+      },
+      name: "RemoveMemberHandler",
+    );
+
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
-    injected<ApplicationEventBus>().removeListener("UpdatedCommunityHandler");
+    eventBus.removeListener("UpdatedCommunityHandler");
+    eventBus.removeListener("RemoveMemberHandler");
     super.dispose();
   }
 
@@ -179,6 +196,8 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                                                     context: context,
                                                     child: RemoveMemberSheet(
                                                       member: members[index],
+                                                      community:
+                                                          widget.community,
                                                     ),
                                                   );
                                                 }
