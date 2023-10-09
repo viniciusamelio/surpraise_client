@@ -10,4 +10,6 @@ abstract interface class AuthService {
   AsyncAction<GetUserOutput> signin(SignInFormDataDto input);
 
   AsyncAction<void> logout();
+
+  AsyncAction<void> deleteAccount(String userId);
 }
