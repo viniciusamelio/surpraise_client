@@ -205,17 +205,20 @@ class _FeedScreenState extends State<FeedScreen> {
           Positioned(
             right: 0,
             bottom: MediaQuery.of(context).size.height / 2 - 160,
-            child: GestureDetector(
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.horizontal(left: Radius.circular(8)),
-                    color: context.theme.colorScheme.elevatedWidgetsColor),
-                child: Icon(
-                  Icons.filter_alt_outlined,
-                  size: 24,
-                  color: context.theme.colorScheme.accentColor.withAlpha(200),
+            child: Visibility(
+              visible: false,
+              child: GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.horizontal(
+                          left: Radius.circular(8)),
+                      color: context.theme.colorScheme.elevatedWidgetsColor),
+                  child: Icon(
+                    Icons.filter_alt_outlined,
+                    size: 24,
+                    color: context.theme.colorScheme.accentColor.withAlpha(200),
+                  ),
                 ),
               ),
             ),
