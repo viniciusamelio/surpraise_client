@@ -106,4 +106,38 @@ class DefaultAuthService implements AuthService {
       return Left(e);
     }
   }
+
+  @override
+  AsyncAction<void> confirmRecoveryCode(String code) async {
+    try {
+      await _supabase.checkResetOtp(code);
+      return Right(null);
+    } catch (_) {
+      return Left(Exception("Invalid code"));
+    }
+  }
+
+  @override
+  AsyncAction<void> confirmPasswordReset(String password) async {
+    try {
+      await _supabase.changePassword(newPassword: password);
+      return Right(null);
+    } catch (e) {
+      return Left(Exception("Something went wrong resetting your password"));
+    }
+  }
+
+  @override
+  AsyncAction<void> requestPasswordReset(String email) async {
+    try {
+      await _supabase.requestPasswordReset(email: email);
+      return Right(null);
+    } catch (e) {
+      return Left(
+        Exception(
+          "Something went wrong request your password reset",
+        ),
+      );
+    }
+  }
 }

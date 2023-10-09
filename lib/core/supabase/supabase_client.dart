@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../env.dart';
+import '../services/string/field_validations.dart';
 import 'exception.dart';
 
 class SupabaseCloudClient {
@@ -16,6 +17,31 @@ class SupabaseCloudClient {
   }
 
   final SupabaseClient supabase;
+
+  Future<void> changePassword({required String newPassword}) async {
+    try {
+      await supabase.auth
+          .updateUser(UserAttributes(password: password(newPassword)));
+    } catch (e) {
+      throw Exception("Erro ao alterar sua senha");
+    }
+  }
+
+  Future<void> checkResetOtp(String token) async {
+    try {
+      await supabase.auth.verifyOTP(token: token, type: OtpType.recovery);
+    } catch (e) {
+      throw Exception("Erro ao confirmar o código");
+    }
+  }
+
+  Future<void> requestPasswordReset({required String email}) async {
+    try {
+      await supabase.auth.resetPasswordForEmail(email);
+    } catch (e) {
+      throw Exception("Erro ao resetar a senha");
+    }
+  }
 
   Future<User> signUp({
     required String email,
