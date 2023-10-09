@@ -10,6 +10,9 @@ abstract interface class AuthService {
   AsyncAction<void> logout();
   AsyncAction<void> deleteAccount(String userId);
   AsyncAction<void> requestPasswordReset(String email);
-  AsyncAction<void> confirmRecoveryCode(String code);
+  AsyncAction<void> confirmRecoveryCode({
+    required String code,
+    required String email,
+  });
   AsyncAction<void> confirmPasswordReset(String password);
 }

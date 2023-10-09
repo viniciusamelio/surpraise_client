@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../env.dart';
-import '../services/string/field_validations.dart';
 import 'exception.dart';
 
 class SupabaseCloudClient {
@@ -20,16 +20,27 @@ class SupabaseCloudClient {
 
   Future<void> changePassword({required String newPassword}) async {
     try {
-      await supabase.auth
-          .updateUser(UserAttributes(password: password(newPassword)));
+      final response = await supabase.auth.updateUser(UserAttributes(
+        password: newPassword,
+      ));
+
+      debugPrint(response.user?.toJson().toString());
     } catch (e) {
       throw Exception("Erro ao alterar sua senha");
     }
   }
 
-  Future<void> checkResetOtp(String token) async {
+  Future<void> checkResetOtp({
+    required String token,
+    required String email,
+  }) async {
     try {
-      await supabase.auth.verifyOTP(token: token, type: OtpType.recovery);
+      final user = await supabase.auth.verifyOTP(
+        token: token,
+        type: OtpType.recovery,
+        email: email,
+      );
+      debugPrint(user.session.toString());
     } catch (e) {
       throw Exception("Erro ao confirmar o código");
     }
@@ -66,14 +77,18 @@ class SupabaseCloudClient {
     required String email,
     required String password,
   }) async {
-    final AuthResponse result = await supabase.auth.signInWithPassword(
-      password: password,
-      email: email,
-    );
-    if (result.user == null) {
-      throw const SupabaseUserSigninException();
+    try {
+      final AuthResponse result = await supabase.auth.signInWithPassword(
+        password: password,
+        email: email,
+      );
+      if (result.user == null) {
+        throw const SupabaseUserSigninException();
+      }
+      return result.user!;
+    } catch (e) {
+      rethrow;
     }
-    return result.user!;
   }
 
   Future<void> logout() async {

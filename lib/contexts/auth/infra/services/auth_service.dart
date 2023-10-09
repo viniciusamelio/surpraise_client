@@ -108,9 +108,12 @@ class DefaultAuthService implements AuthService {
   }
 
   @override
-  AsyncAction<void> confirmRecoveryCode(String code) async {
+  AsyncAction<void> confirmRecoveryCode({
+    required String code,
+    required String email,
+  }) async {
     try {
-      await _supabase.checkResetOtp(code);
+      await _supabase.checkResetOtp(token: code, email: email);
       return Right(null);
     } catch (_) {
       return Left(Exception("Invalid code"));

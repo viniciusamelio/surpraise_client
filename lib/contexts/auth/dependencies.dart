@@ -37,4 +37,9 @@ Future<void> authDependencies() async {
     ),
     singleton: true,
   );
+  inject<PasswordRecoveryController>(
+    DefaultPasswordController(
+      authService: injected(),
+    ),
+  );
 }

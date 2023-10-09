@@ -32,7 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ContentScaffoldTemplate(
+    return AuthScaffoldTemplate(
       title: "Crie sua conta",
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Builder(builder: (context) {

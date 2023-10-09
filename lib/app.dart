@@ -51,6 +51,8 @@ class App extends StatelessWidget {
             routes: {
               LoginScreen.routeName: (context) => const LoginScreen(),
               SignupScreen.routeName: (context) => const SignupScreen(),
+              PasswordRecoveryScreen.routeName: (context) =>
+                  const PasswordRecoveryScreen(),
               FeedScreen.routeName: (context) => FeedScreen(
                     user: ModalRoute.of(context)!.settings.arguments as UserDto,
                   ),
