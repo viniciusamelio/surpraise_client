@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../env.dart';
 import 'exception.dart';
@@ -16,6 +17,42 @@ class SupabaseCloudClient {
   }
 
   final SupabaseClient supabase;
+
+  Future<void> changePassword({required String newPassword}) async {
+    try {
+      final response = await supabase.auth.updateUser(UserAttributes(
+        password: newPassword,
+      ));
+
+      debugPrint(response.user?.toJson().toString());
+    } catch (e) {
+      throw Exception("Erro ao alterar sua senha");
+    }
+  }
+
+  Future<void> checkResetOtp({
+    required String token,
+    required String email,
+  }) async {
+    try {
+      final user = await supabase.auth.verifyOTP(
+        token: token,
+        type: OtpType.recovery,
+        email: email,
+      );
+      debugPrint(user.session.toString());
+    } catch (e) {
+      throw Exception("Erro ao confirmar o código");
+    }
+  }
+
+  Future<void> requestPasswordReset({required String email}) async {
+    try {
+      await supabase.auth.resetPasswordForEmail(email);
+    } catch (e) {
+      throw Exception("Erro ao resetar a senha");
+    }
+  }
 
   Future<User> signUp({
     required String email,
@@ -40,14 +77,18 @@ class SupabaseCloudClient {
     required String email,
     required String password,
   }) async {
-    final AuthResponse result = await supabase.auth.signInWithPassword(
-      password: password,
-      email: email,
-    );
-    if (result.user == null) {
-      throw const SupabaseUserSigninException();
+    try {
+      final AuthResponse result = await supabase.auth.signInWithPassword(
+        password: password,
+        email: email,
+      );
+      if (result.user == null) {
+        throw const SupabaseUserSigninException();
+      }
+      return result.user!;
+    } catch (e) {
+      rethrow;
     }
-    return result.user!;
   }
 
   Future<void> logout() async {
@@ -62,8 +103,10 @@ class SupabaseCloudClient {
     try {
       final newId = "$fileId.png";
       final result = await supabase.storage.from(bucketId).upload(
-          newId, fileToSave,
-          fileOptions: const FileOptions(upsert: true));
+            newId,
+            fileToSave,
+            fileOptions: const FileOptions(upsert: true),
+          );
       if (bucketId == Env.avatarBucket) {
         await supabase.auth.updateUser(UserAttributes(
           data: {

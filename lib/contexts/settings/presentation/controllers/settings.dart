@@ -1,8 +1,9 @@
+import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../core/protocols/protocols.dart';
-import '../../../../core/state/state.dart';
 import '../../../../shared/presentation/controllers/controllers.dart';
 import '../../dtos/dtos.dart';
+
+import '../../../auth/auth.dart';
 
 abstract class SettingsController
     extends BaseStateController<GetSettingsOutput> {
@@ -10,6 +11,8 @@ abstract class SettingsController
 
   AtomNotifier<DefaultState<Exception, SettingsDto>> get updateState;
   Future<void> updateSettings();
+  AtomNotifier<DefaultState<Exception, String>> get deleteAccountState;
+  Future<void> deleteAccount();
 
   Future<void> getSettings();
 
@@ -23,12 +26,15 @@ class DefaultSettingsController
     required LinkHandler linkHandler,
     required SettingsRepository settingsRepository,
     required SessionController sessionController,
+    required AuthService authService,
   })  : _linkHandler = linkHandler,
+        _authService = authService,
         _sessionController = sessionController,
         _settingsRepository = settingsRepository;
   final LinkHandler _linkHandler;
   final SettingsRepository _settingsRepository;
   final SessionController _sessionController;
+  final AuthService _authService;
 
   @override
   Future<void> getSettings() async {
@@ -84,4 +90,24 @@ class DefaultSettingsController
       notificationEnabled: false,
     ),
   );
+
+  @override
+  Future<void> deleteAccount() async {
+    deleteAccountState.set(LoadingState());
+    final deleteAccountOrError = await _authService.deleteAccount(
+      injected<SessionController>().currentUser.value!.id,
+    );
+    deleteAccountState.set(
+      deleteAccountOrError.fold(
+        (left) => ErrorState(left),
+        (right) => const SuccessState(
+          "Ok",
+        ),
+      ),
+    );
+  }
+
+  @override
+  final AtomNotifier<DefaultState<Exception, String>> deleteAccountState =
+      AtomNotifier(InitialState());
 }

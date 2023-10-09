@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/extensions/theme.dart';
 import '../molecules/molecules.dart';
 
-class ContentScaffoldTemplate extends StatelessWidget {
-  const ContentScaffoldTemplate({
+class AuthScaffoldTemplate extends StatelessWidget {
+  const AuthScaffoldTemplate({
     super.key,
     this.title,
     this.floatingActionButton,

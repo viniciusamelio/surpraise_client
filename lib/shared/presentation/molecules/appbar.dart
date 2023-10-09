@@ -39,7 +39,8 @@ class DefaultAppbar extends StatelessWidget {
         Text(
           title ?? "",
           style: context.theme.fontScheme.h3.copyWith(
-            color: context.theme.colorScheme.inputForegroundColor,
+            color: Colors.white,
+            fontSize: 18,
           ),
         ),
         SizedBox.square(

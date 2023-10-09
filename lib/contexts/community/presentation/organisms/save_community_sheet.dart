@@ -3,36 +3,53 @@ import 'dart:io';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
-import 'package:heroicons_flutter/heroicons_flutter.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
+import '../../dtos/dtos.dart';
 import '../controllers/controllers.dart';
 
-class NewCommunitySheet extends StatefulWidget {
-  const NewCommunitySheet({Key? key}) : super(key: key);
-
+class SaveCommunitySheet extends StatefulWidget {
+  const SaveCommunitySheet({Key? key, this.community}) : super(key: key);
+  final CommunityOutput? community;
   @override
-  State<NewCommunitySheet> createState() => _NewCommunitySheetState();
+  State<SaveCommunitySheet> createState() => _SaveCommunitySheetState();
 }
 
-class _NewCommunitySheetState extends State<NewCommunitySheet> {
+class _SaveCommunitySheetState extends State<SaveCommunitySheet> {
   late final NewCommunityController controller;
   late final GlobalKey<FormState> formKey;
+  late final TextEditingController nameFieldController;
+  late final TextEditingController descriptionFieldController;
   @override
   void initState() {
     controller = injected<NewCommunityController>();
     formKey = GlobalKey<FormState>();
+    nameFieldController = TextEditingController();
+    descriptionFieldController = TextEditingController();
     controller.state.listenState(
       onSuccess: (right) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SuccessSnack(message: "Comunidade ${right.title} criada").build(
+          SuccessSnack(
+                  message:
+                      "Comunidade ${right.title} ${widget.community == null ? 'criada' : 'editada'}")
+              .build(
             context,
           ),
         );
       },
     );
+    if (widget.community != null) {
+      final community = widget.community;
+      controller.id.value = community!.id;
+      controller.description.value = community.description;
+      controller.name.value = community.title;
+      controller.imagePath.value = community.image;
+      nameFieldController.text = community.title;
+      descriptionFieldController.text = community.description;
+    }
     super.initState();
   }
 
@@ -76,7 +93,13 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                           }
 
                           return CircleAvatar(
-                            backgroundImage: FileImage(File(value)),
+                            backgroundImage: isURL(value)
+                                ? NetworkImage(value) as ImageProvider
+                                : FileImage(
+                                    File(
+                                      value,
+                                    ),
+                                  ),
                           );
                         },
                         child: CircleAvatar(
@@ -127,6 +150,7 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                 dimension: context.theme.spacingScheme.verticalSpacing * 2,
               ),
               BaseInput(
+                controller: nameFieldController,
                 label: "Nome da comunidade",
                 onSaved: (value) {
                   controller.name.value = value ?? "";
@@ -139,6 +163,7 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                 dimension: context.theme.spacingScheme.verticalSpacing * 2,
               ),
               BaseInput.large(
+                controller: descriptionFieldController,
                 label: "Descrição da comunidade",
                 maxLines: 3,
                 onSaved: (value) => controller.description.value = value ?? "",
@@ -159,7 +184,9 @@ class _NewCommunitySheetState extends State<NewCommunitySheet> {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       formKey.currentState!.save();
-                      controller.save();
+                      controller.save(
+                        newCommunity: widget.community == null,
+                      );
                     }
                   },
                   foregroundColor: context.theme.colorScheme.accentColor,

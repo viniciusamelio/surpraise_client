@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/themes/theme_data.dart';
+import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../../community/community.dart';
 import '../../../praise/praise.dart';
 import '../../application/events/events.dart';
 import '../../dtos/dtos.dart';
@@ -33,58 +35,12 @@ class _FeedScreenState extends State<FeedScreen> {
   late final AnswerInviteController answerInviteController;
   late final StreamController<EditUserOutput> profileEditedStream;
   late final FeedScrollController scrollController;
+  late final ApplicationEventBus eventBus;
 
   @override
   void initState() {
-    profileEditedStream = StreamController.broadcast();
-    scrollController = FeedScrollController();
-    sessionController = injected();
-    controller = injected();
-    answerInviteController = injected();
-
-    injected<ApplicationEventBus>().on<InviteAnsweredEvent>(
-      (event) {
-        final List<InviteDto> invites = (controller.invitesState.value
-                as SuccessState<Exception, List<InviteDto>>)
-            .data;
-        invites.removeWhere((element) => element.id == event.data);
-        controller.invitesState.set(
-          SuccessState(invites),
-        );
-        const SuccessSnack(
-          message: "Convite respondido",
-          duration: 2,
-        ).show(context: context);
-      },
-      name: "inviteAnsweredHandler",
-    );
-
-    injected<ApplicationEventBus>().on<PraiseSentEvent>(
-      (event) {
-        controller.getPraises(sessionController.currentUser.value!.id);
-      },
-      name: "praiseSentHandler",
-    );
-
-    controller.state.listenState(
-      onSuccess: (right) {
-        scrollController.restore();
-      },
-    );
-
-    scrollController.addListener(() {
-      if (scrollController.position.atEdge) {
-        bool isTop = scrollController.position.pixels == 0;
-        if (!isTop &&
-            controller.state.value is SuccessState &&
-            (controller.state.value as SuccessState).data.length ==
-                controller.max) {
-          scrollController.saveCurrentPosition();
-          controller.offset.set(controller.offset.value + controller.max);
-          controller.getPraises(sessionController.currentUser.value!.id);
-        }
-      }
-    });
+    initDependencies();
+    setupListeners();
     super.initState();
   }
 
@@ -102,9 +58,11 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   void dispose() {
-    injected<ApplicationEventBus>().removeListener("inviteAnsweredHandler");
-    injected<ApplicationEventBus>().removeListener("praiseSentHandler");
-    injected<ApplicationEventBus>().removeListener("editedProfileHandler");
+    eventBus.removeListener("inviteAnsweredHandler");
+    eventBus.removeListener("praiseSentHandler");
+    eventBus.removeListener("editedProfileHandler");
+    eventBus.removeListener("leftCommunityHandler");
+
     super.dispose();
   }
 
@@ -173,8 +131,24 @@ class _FeedScreenState extends State<FeedScreen> {
                     TypedAtomHandler(
                       type: ErrorState<Exception, List<PraiseDto>>,
                       builder: (context, state) {
-                        return const ErrorWidgetMolecule(
-                          message: "Deu ruim ao recuperar seu feed",
+                        return Column(
+                          children: [
+                            const ErrorWidgetMolecule(
+                              message: "Deu ruim ao recuperar seu feed",
+                            ),
+                            SizedBox(
+                              height: Spacings.md,
+                            ),
+                            BorderedButton(
+                              onPressed: () {
+                                controller.getPraises(
+                                  sessionController.currentUser.value!.id,
+                                );
+                              },
+                              foregroundColor: theme.colorScheme.dangerColor,
+                              text: "Tentar novamente",
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -231,23 +205,98 @@ class _FeedScreenState extends State<FeedScreen> {
           Positioned(
             right: 0,
             bottom: MediaQuery.of(context).size.height / 2 - 160,
-            child: GestureDetector(
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.horizontal(left: Radius.circular(8)),
-                    color: context.theme.colorScheme.elevatedWidgetsColor),
-                child: Icon(
-                  Icons.filter_alt_outlined,
-                  size: 24,
-                  color: context.theme.colorScheme.accentColor.withAlpha(200),
+            child: Visibility(
+              visible: false,
+              child: GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.horizontal(
+                          left: Radius.circular(8)),
+                      color: context.theme.colorScheme.elevatedWidgetsColor),
+                  child: Icon(
+                    Icons.filter_alt_outlined,
+                    size: 24,
+                    color: context.theme.colorScheme.accentColor.withAlpha(200),
+                  ),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void initDependencies() {
+    profileEditedStream = StreamController.broadcast();
+    scrollController = FeedScrollController();
+    sessionController = injected();
+    controller = injected();
+    answerInviteController = injected();
+    eventBus = injected();
+  }
+
+  void setupListeners() {
+    eventBus.on<InviteAnsweredEvent>(
+      (event) {
+        final List<InviteDto> invites = (controller.invitesState.value
+                as SuccessState<Exception, List<InviteDto>>)
+            .data;
+        invites.removeWhere((element) => element.id == event.data);
+        controller.invitesState.set(
+          SuccessState(invites),
+        );
+        const SuccessSnack(
+          message: "Convite respondido",
+          duration: 2,
+        ).show(context: context);
+        resetFeed();
+      },
+      name: "inviteAnsweredHandler",
+    );
+
+    eventBus.on<LeftCommunityEvent>(
+      (event) {
+        resetFeed();
+      },
+      name: "leftCommunityHandler",
+    );
+
+    eventBus.on<PraiseSentEvent>(
+      (event) {
+        controller.getPraises(sessionController.currentUser.value!.id);
+      },
+      name: "praiseSentHandler",
+    );
+
+    controller.state.listenState(
+      onSuccess: (right) {
+        if (scrollController.positions.isNotEmpty) scrollController.restore();
+      },
+    );
+
+    scrollController.addListener(() async {
+      if (scrollController.positions.isNotEmpty &&
+          scrollController.position.atEdge) {
+        bool isTop = scrollController.position.pixels == 0;
+        if (!isTop &&
+            controller.state.value is SuccessState &&
+            (controller.state.value as SuccessState).data.length ==
+                controller.max) {
+          scrollController.saveCurrentPosition();
+          controller.offset.set(controller.offset.value + controller.max);
+          controller.getPraises(sessionController.currentUser.value!.id);
+        }
+      }
+    });
+  }
+
+  void resetFeed() {
+    controller.offset.set(0);
+    controller.loadedPraises.value.clear();
+    controller.getPraises(
+      sessionController.currentUser.value!.id,
     );
   }
 }

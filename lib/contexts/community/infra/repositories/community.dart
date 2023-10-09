@@ -20,16 +20,22 @@ class DefaultCommunityRepository implements CommunityRepository {
     try {
       final communities = await _datasource.get(
         GetQuery(
-            sourceName: communityMembersCollection,
-            value: userId,
-            fieldName: "member_id",
-            select: "$communitiesCollection(*)"),
+          sourceName: communityMembersCollection,
+          value: userId,
+          fieldName: "member_id",
+          select: "$communitiesCollection(*), role",
+        ),
       );
 
       return Right(
         (communities.multiData ?? [])
             .map<CommunityOutput>(
-              (e) => communityOutputFromMap(e["community"]),
+              (e) => communityOutputFromMap(
+                {
+                  ...e["community"],
+                  "role": e["role"],
+                },
+              ),
             )
             .toList(),
       );
@@ -180,5 +186,44 @@ class DefaultCommunityRepository implements CommunityRepository {
     } on Exception catch (e) {
       return Left(e);
     }
+  }
+
+  @override
+  AsyncAction<CreateCommunityOutput> updateCommunity(
+    CreateCommunityInput input,
+  ) async {
+    final updatedCommunityOrError = await _datasource.save(
+      SaveQuery(
+        sourceName: communitiesCollection,
+        value: {
+          "imageUrl": input.imageUrl,
+          "description": input.description,
+          "title": input.title,
+        },
+        id: input.id,
+      ),
+    );
+
+    if (updatedCommunityOrError.failure) {
+      return Left(
+        Exception("Something went wrong updating community"),
+      );
+    }
+
+    return Right(
+      CreateCommunityOutput(
+        id: updatedCommunityOrError.multiData![0]["id"],
+        description: updatedCommunityOrError.multiData![0]["description"],
+        title: updatedCommunityOrError.multiData![0]["title"],
+        members: [
+          {
+            "member_id": input.ownerId,
+            "community_id": input.id,
+            "role": "owner",
+          },
+        ],
+        ownerId: input.ownerId,
+      ),
+    );
   }
 }

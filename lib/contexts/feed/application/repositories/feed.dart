@@ -12,6 +12,7 @@ abstract class FeedRepository {
   AsyncAction<List<PraiseDto>> getByUser({
     required String userId,
     bool? asPraiser,
+    int offset = 0,
   });
 
   AsyncAction<List<InviteDto>> getInvites({

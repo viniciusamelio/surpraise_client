@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:surpraise_client/contexts/auth/application/application.dart';
 import 'package:surpraise_client/contexts/settings/links.dart';
 import 'package:surpraise_client/contexts/settings/settings.dart';
 import 'package:surpraise_client/core/di/di.dart';
@@ -20,9 +21,11 @@ void main() {
   group("Settings Screen: ", () {
     late final LinkHandler linkHandler;
     late final SettingsRepository settingsRepository;
+    late final AuthService authService;
     setUpAll(() {
       HttpOverrides.global = null;
       linkHandler = MockLinkHandler();
+      authService = MockAuthService();
       settingsRepository = MockSettingsRepository();
       inject<SessionController>(MockSessionController());
 
@@ -31,6 +34,7 @@ void main() {
           linkHandler: linkHandler,
           settingsRepository: settingsRepository,
           sessionController: injected(),
+          authService: authService,
         ),
       );
 
@@ -234,6 +238,72 @@ void main() {
         verify(
           () => injected<SessionController>().logout(),
         ).called(1);
+      },
+    );
+    testWidgets(
+      "sut should show error snack when account deletion fails",
+      (tester) async {
+        when(() => authService.deleteAccount(any())).thenAnswer(
+          (invocation) async => Left(
+            Exception(),
+          ),
+        );
+        when(() => settingsRepository.get(userId: any(named: "userId")))
+            .thenAnswer(
+          (_) async {
+            return Right(
+              const GetSettingsOutput(
+                pushNotificationsEnabled: false,
+              ),
+            );
+          },
+        );
+
+        await tester.pumpWidget(
+          testWidgetTemplate(
+            sut: const SettingsScreen(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text("Excluir conta"));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(HeroiconsMini.checkCircle));
+        await tester.pumpAndSettle();
+
+        expect(find.text("Deu ruim ao excluir sua conta"), findsOneWidget);
+      },
+    );
+    testWidgets(
+      "sut should call logout when confirming account deletion",
+      (tester) async {
+        when(() => authService.deleteAccount(any())).thenAnswer(
+          (invocation) async => Right(null),
+        );
+        when(() => injected<SessionController>().logout())
+            .thenAnswer((invocation) async {});
+        when(() => settingsRepository.get(userId: any(named: "userId")))
+            .thenAnswer(
+          (_) async {
+            return Right(
+              const GetSettingsOutput(
+                pushNotificationsEnabled: false,
+              ),
+            );
+          },
+        );
+
+        await tester.pumpWidget(
+          testWidgetTemplate(
+            sut: const SettingsScreen(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text("Excluir conta"));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(HeroiconsMini.checkCircle));
+        await tester.pumpAndSettle();
+
+        verify(() => injected<SessionController>().logout()).called(1);
       },
     );
   });

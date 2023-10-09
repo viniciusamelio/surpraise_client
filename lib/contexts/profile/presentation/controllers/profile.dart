@@ -19,10 +19,17 @@ abstract class ProfileController extends BaseStateController<Praises> {
   ValueNotifier<DefaultState<Exception, Communities>> get communitiesState;
   AtomNotifier<DefaultState<Exception, String>> get updateAvatarState;
 
+  AtomNotifier<int> get offset;
+  AtomNotifier<Praises> get loadedPraises;
+
+  int get max;
+
   Future<void> getCommunities(String userId);
   Future<void> getPraises(String userId);
   Future<void> removeAvatar();
   Future<void> updateAvatar();
+
+  void dispose();
 }
 
 class DefaultProfileController
@@ -61,9 +68,18 @@ class DefaultProfileController
   @override
   Future<void> getPraises(String userId) async {
     state.set(LoadingState());
-    final feedsOrError =
-        await _feedRepository.getByUser(userId: userId, asPraiser: false);
+    final feedsOrError = await _feedRepository.getByUser(
+      userId: userId,
+      asPraiser: false,
+      offset: offset.value,
+    );
     stateFromEither(feedsOrError);
+    feedsOrError.fold(
+      (left) => null,
+      (right) {
+        loadedPraises.value.addAll(right);
+      },
+    );
   }
 
   @override
@@ -117,4 +133,21 @@ class DefaultProfileController
   @override
   final AtomNotifier<DefaultState<Exception, String>> updateAvatarState =
       AtomNotifier(InitialState());
+
+  @override
+  final AtomNotifier<int> offset = AtomNotifier(0);
+
+  @override
+  final AtomNotifier<Praises> loadedPraises = AtomNotifier([]);
+
+  @override
+  int get max => 10;
+
+  @override
+  void dispose() {
+    loadedPraises.value.clear();
+    state.set(InitialState());
+    offset.set(0);
+    state.removeListeners();
+  }
 }

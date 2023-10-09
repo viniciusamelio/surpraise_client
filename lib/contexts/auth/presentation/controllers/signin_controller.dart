@@ -25,7 +25,6 @@ class DefaultSignInController
   })  : _authService = authService,
         _storageService = storageService,
         _authPersistanceService = authPersistanceService {
-    setDefaultErrorHandling();
     state.listenState(
       onSuccess: (right) async {
         final avatar = await _storageService.getImage(
@@ -48,6 +47,10 @@ class DefaultSignInController
           MainScreen.routeName,
           arguments: dto,
         );
+      },
+      onError: (left) {
+        const ErrorSnack(message: "Deu ruim ao te logar")
+            .show(context: context);
       },
     );
   }

@@ -37,11 +37,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
     );
+    controller.deleteAccountState.listenState(
+      onError: (left) {
+        if (mounted) {
+          const ErrorSnack(
+            message: "Deu ruim ao excluir sua conta",
+          ).show(context: context);
+        }
+      },
+      onSuccess: (_) {
+        injected<SessionController>().logout();
+      },
+    );
 
     super.initState();
   }
 
   BlurpleThemeData get theme => context.theme;
+
+  @override
+  void dispose() {
+    controller.deleteAccountState.removeListeners();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +86,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SizedBox(
                 height: Spacings.xl * 2,
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: SettingsButton(
-                  onPressed: () {
-                    injected<SessionController>().logout();
-                  },
-                  label: "Sair",
-                  icon: const Icon(HeroiconsOutline.arrowLeftOnRectangle),
-                  foregroundColor: ColorTokens.greyDarker,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SettingsButton(
+                    label: "Excluir conta",
+                    icon: const Icon(HeroiconsOutline.power),
+                    foregroundColor: theme.colorScheme.dangerColor,
+                    onPressed: () {
+                      ConfirmSnack(
+                        leadingIcon: Icon(
+                          HeroiconsOutline.power,
+                          color: ColorTokens.red,
+                        ),
+                        message:
+                            "Tem certeza que deseja excluir sua conta? Não será possível recuperar seu acesso após isso",
+                        onConfirm: () {
+                          controller.deleteAccount();
+                        },
+                      ).show(context: context);
+                    },
+                  ),
+                  SizedBox(
+                    width: Spacings.md,
+                  ),
+                  SettingsButton(
+                    onPressed: () {
+                      injected<SessionController>().logout();
+                    },
+                    label: "Sair",
+                    icon: const Icon(HeroiconsOutline.arrowLeftOnRectangle),
+                    foregroundColor: ColorTokens.greyDarker,
+                  ),
+                ],
               ),
             ],
           ),

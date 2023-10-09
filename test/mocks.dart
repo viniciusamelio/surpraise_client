@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:surpraise_client/contexts/auth/application/application.dart';
 import 'package:surpraise_client/contexts/community/community.dart';
 import 'package:surpraise_client/contexts/feed/feed.dart';
 import 'package:surpraise_client/core/core.dart';
@@ -51,3 +52,5 @@ class MockReadNotificationsRepository extends Mock
     implements ReadNotificationsRepository {}
 
 class MockSupabaseClient extends Mock implements RealtimeQuery {}
+
+class MockAuthService extends Mock implements AuthService {}

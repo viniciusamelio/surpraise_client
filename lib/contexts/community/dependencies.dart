@@ -1,6 +1,8 @@
 import '../../core/core.dart';
+import '../../core/external_dependencies.dart' as core show CommunityRepository;
 import '../feed/feed.dart';
 import 'community.dart';
+import 'presentation/controllers/remove_member.dart';
 
 Future<void> communityDependencies() async {
   inject<CommunityRepository>(
@@ -44,6 +46,22 @@ Future<void> communityDependencies() async {
     DefaultAnswerInviteController(
       inviteRepository: injected(),
       sessionController: injected(),
+    ),
+  );
+  inject<core.CommunityRepository>(
+    core.CommunityRepository(
+      databaseDatasource: injected(),
+    ),
+  );
+  inject<RemoveMembersUsecase>(
+    DbRemoveMembersUsecase(
+      removeMembersRepository: injected<core.CommunityRepository>(),
+      findCommunityRepository: injected<core.CommunityRepository>(),
+    ),
+  );
+  inject<RemoveMemberController>(
+    DefaultRemoveMemberController(
+      removeMembersUsecase: injected(),
     ),
   );
 }

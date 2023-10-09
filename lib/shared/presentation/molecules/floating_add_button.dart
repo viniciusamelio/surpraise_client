@@ -43,7 +43,7 @@ class FloatingAddButton extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        builder: (context) => const NewCommunitySheet(),
+                        builder: (context) => const SaveCommunitySheet(),
                       );
                     },
                   ),

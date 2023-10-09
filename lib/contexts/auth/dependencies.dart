@@ -8,6 +8,7 @@ Future<void> authDependencies() async {
     DefaultAuthService(
       supabaseClient: injected(),
       databaseDatasource: injected(),
+      httpClient: injected(),
     ),
   );
   inject<AuthPersistanceService>(
@@ -35,5 +36,10 @@ Future<void> authDependencies() async {
       authPersistanceService: injected(),
     ),
     singleton: true,
+  );
+  inject<PasswordRecoveryController>(
+    DefaultPasswordController(
+      authService: injected(),
+    ),
   );
 }

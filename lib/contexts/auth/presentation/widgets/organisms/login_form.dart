@@ -1,8 +1,11 @@
+import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
+import 'package:pressable/pressable.dart';
 
 import '../../../../../core/extensions/theme.dart';
 import '../../../../../core/external_dependencies.dart';
+import '../../../auth.dart';
 
 class LoginFormOrganism extends StatelessWidget {
   const LoginFormOrganism({
@@ -41,7 +44,7 @@ class LoginFormOrganism extends StatelessWidget {
               builder: (context, show) {
                 return BaseInput(
                   onSaved: onSavePassword,
-                  label: "Password",
+                  label: "Senha",
                   maxLines: 1,
                   preffixIcon: const Icon(
                     HeroiconsSolid.lockClosed,
@@ -57,6 +60,25 @@ class LoginFormOrganism extends StatelessWidget {
                   obscureText: !show,
                 );
               }),
+          SizedBox(
+            height: context.theme.spacingScheme.verticalSpacing,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Pressable.scale(
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  PasswordRecoveryScreen.routeName,
+                );
+              },
+              child: Text(
+                "Esqueci minha senha",
+                style: TextStyle(
+                  color: ColorTokens.grey,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

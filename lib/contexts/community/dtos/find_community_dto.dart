@@ -7,6 +7,7 @@ class CommunityOutput {
     required this.description,
     required this.title,
     required this.image,
+    required this.role,
   });
 
   final String id;
@@ -14,6 +15,7 @@ class CommunityOutput {
   final String description;
   final String title;
   final String image;
+  final Role role;
 }
 
 CommunityOutput communityOutputFromMap(Json json) => CommunityOutput(
@@ -22,4 +24,5 @@ CommunityOutput communityOutputFromMap(Json json) => CommunityOutput(
       description: json["description"],
       title: json["title"],
       image: json["imageUrl"],
+      role: Role.fromString(json["role"]),
     );

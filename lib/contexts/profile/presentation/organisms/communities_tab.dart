@@ -113,11 +113,8 @@ class _CommunityTileMolecule extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: injected<SessionController>()
-                                .currentUser
-                                .value
-                                ?.id ==
-                            item.ownerId,
+                        visible:
+                            [Role.admin, Role.moderator].contains(item.role),
                         child: Padding(
                           padding: EdgeInsets.only(
                             bottom: Spacings.sm,
@@ -125,9 +122,10 @@ class _CommunityTileMolecule extends StatelessWidget {
                           child: Transform.scale(
                             scale: .8,
                             child: BaseBadge.text(
-                              label: "Admin",
-                              accentColor:
-                                  context.theme.colorScheme.successColor,
+                              label: item.role.display,
+                              accentColor: item.role == Role.admin
+                                  ? context.theme.colorScheme.successColor
+                                  : context.theme.colorScheme.infoColor,
                               child: Container(),
                             ),
                           ),

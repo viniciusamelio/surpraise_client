@@ -7,6 +7,7 @@ import 'package:pressable/pressable.dart';
 import 'package:surpraise_client/contexts/community/dtos/dtos.dart';
 import 'package:surpraise_client/contexts/profile/presentation/organisms/organisms.dart';
 import 'package:surpraise_client/core/di/di.dart';
+import 'package:surpraise_client/core/enums/enums.dart';
 import 'package:surpraise_client/core/state/default_state.dart';
 import 'package:surpraise_client/shared/presentation/controllers/session.dart';
 import 'package:surpraise_client/shared/presentation/molecules/molecules.dart';
@@ -75,6 +76,7 @@ void main() {
                         description: faker.lorem.words(3).join(","),
                         title: faker.lorem.word(),
                         image: faker.internet.httpsUrl(),
+                        role: faker.randomGenerator.element(Role.values),
                       ),
                       CommunityOutput(
                         id: faker.guid.guid(),
@@ -82,6 +84,7 @@ void main() {
                         description: faker.lorem.words(3).join(","),
                         title: faker.lorem.word(),
                         image: faker.internet.httpsUrl(),
+                        role: faker.randomGenerator.element(Role.values),
                       ),
                     ],
                   ),

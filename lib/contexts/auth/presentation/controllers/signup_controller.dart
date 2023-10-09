@@ -23,7 +23,12 @@ class DefaultSignupController
     required this.authPersistanceService,
     required this.storageService,
   }) {
-    setDefaultErrorHandling();
+    state.listenState(
+      onError: (left) {
+        const ErrorSnack(message: "Deu ruim ao criar sua conta")
+            .show(context: context);
+      },
+    );
   }
 
   final AuthService authService;

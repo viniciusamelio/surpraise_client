@@ -13,6 +13,7 @@ Future<void> settingsDependencies() async {
       linkHandler: injected(),
       settingsRepository: injected(),
       sessionController: injected(),
+      authService: injected(),
     ),
   );
 }

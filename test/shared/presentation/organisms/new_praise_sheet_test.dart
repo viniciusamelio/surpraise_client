@@ -60,6 +60,7 @@ void main() {
               description: faker.lorem.word(),
               title: "Mocked Community",
               image: faker.internet.httpsUrl(),
+              role: faker.randomGenerator.element(Role.values),
             )
           ],
         ),

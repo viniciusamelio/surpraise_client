@@ -8,6 +8,7 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
+import '../../../feed/presentation/screens/feed_scroll_controller.dart';
 import '../../profile.dart';
 import '../organisms/organisms.dart';
 
@@ -24,6 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final PageController pageController;
   late final StreamController<EditUserOutput> editedUserStream;
   late final ApplicationEventBus eventBus;
+  late final FeedScrollController scrollController;
+
   @override
   void initState() {
     editedUserStream = StreamController.broadcast();
@@ -33,7 +36,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     controller = injected();
     controller.getCommunities(sessionController.currentUser.value!.id);
     controller.getPraises(sessionController.currentUser.value!.id);
-    eventBus.on<CommunityAddedEvent>(
+    scrollController = FeedScrollController();
+    eventBus.on<CommunitySavedEvent>(
       (_) {
         controller.getCommunities(sessionController.currentUser.value!.id);
       },
@@ -72,10 +76,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    scrollController.addListener(
+      scrollListener,
+    );
+    controller.state.listenState(
+      onSuccess: (_) async {
+        await Future.delayed(
+          const Duration(milliseconds: 200),
+        );
+        if (scrollController.positions.isNotEmpty) scrollController.restore();
+      },
+    );
+    super.didChangeDependencies();
+  }
+
+  void scrollListener() async {
+    if (scrollController.positions.isNotEmpty &&
+        scrollController.position.atEdge) {
+      bool isTop = scrollController.position.pixels == 0;
+      if (!isTop &&
+          controller.state.value is SuccessState &&
+          (controller.state.value as SuccessState).data.length ==
+              controller.max) {
+        scrollController.saveCurrentPosition();
+        controller.offset.set(controller.offset.value + controller.max);
+        controller.getPraises(
+          injected<SessionController>().currentUser.value!.id,
+        );
+      }
+    }
+  }
+
+  @override
   void dispose() {
     injected<ApplicationEventBus>().removeListener("CommunityAddedHandler");
     injected<ApplicationEventBus>().removeListener("LeftCommunityHandler");
     injected<ApplicationEventBus>().removeListener("AvatarRemovedHandler");
+    scrollController.removeListener(scrollListener);
+    scrollController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -154,7 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   ReceivedPraisesTabOrganism(
+                    scrollController: scrollController,
                     state: controller.state,
+                    loadedPraises: controller.loadedPraises.value,
                   ),
                   CommunitiesTabOrganism(
                     state: controller.communitiesState,
