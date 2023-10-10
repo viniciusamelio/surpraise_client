@@ -27,9 +27,6 @@ class DefaultPraiseController
   })  : _usecase = praiseUsecase,
         _communityRepository = communityRepository {
     setDefaultErrorHandling();
-    state.on<SuccessState>((value) {
-      injected<ApplicationEventBus>().add(const PraiseSentEvent(null));
-    });
   }
 
   final PraiseUsecase _usecase;
@@ -50,6 +47,12 @@ class DefaultPraiseController
     );
     final result = await _usecase(input);
     stateFromEither(result);
+    result.fold(
+      (left) => null,
+      (right) {
+        injected<ApplicationEventBus>().add(const PraiseSentEvent(null));
+      },
+    );
   }
 
   @override
