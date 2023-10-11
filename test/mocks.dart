@@ -57,3 +57,5 @@ class MockAuthService extends Mock implements AuthService {}
 
 class MockCommunitiesByUserQuery extends Mock
     implements GetCommunitiesByUserQuery {}
+
+class MockGetUserByTagQuery extends Mock implements GetUserByTagQuery {}

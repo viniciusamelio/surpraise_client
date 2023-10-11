@@ -22,14 +22,14 @@ class DefaultInviteController
     implements InviteController {
   DefaultInviteController({
     required InviteRepository inviteRepository,
-    required CommunityRepository communityRepository,
+    required GetUserByTagQuery getUserByTagQuery,
   })  : _inviteRepository = inviteRepository,
-        _communityRepository = communityRepository {
+        _userByTagQuery = getUserByTagQuery {
     setDefaultErrorHandling();
   }
 
   final InviteRepository _inviteRepository;
-  final CommunityRepository _communityRepository;
+  final GetUserByTagQuery _userByTagQuery;
 
   @override
   Future<void> invite({
@@ -49,11 +49,20 @@ class DefaultInviteController
   @override
   Future<void> getUserFromTag(String tag) async {
     userSearchState.set(LoadingState());
-    final usersOrError = await _communityRepository.getUserByTag("@$tag");
+    final usersOrError = await _userByTagQuery(
+      GetUserByTagQueryInput(
+        tag: "@$tag",
+      ),
+    );
     userSearchState.set(usersOrError.fold(
       (left) => ErrorState(left),
       (right) => SuccessState(
-        right!,
+        GetUserOutput(
+          tag: tag,
+          name: right.value.name,
+          email: right.value.email,
+          id: right.value.id,
+        ),
       ),
     ));
   }

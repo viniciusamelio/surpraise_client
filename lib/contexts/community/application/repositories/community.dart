@@ -4,7 +4,6 @@ import '../../../../core/core.dart';
 
 abstract class CommunityRepository {
   AsyncAction<List<FindCommunityMemberOutput>> getCommunityMembers(String id);
-  AsyncAction<GetUserOutput?> getUserByTag(String tag);
   AsyncAction<CreateCommunityOutput> createCommunity(
     CreateCommunityInput input,
   );

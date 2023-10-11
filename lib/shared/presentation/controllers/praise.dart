@@ -1,4 +1,3 @@
-import '../../../contexts/community/community.dart';
 import '../../../contexts/praise/praise.dart';
 import '../../../core/core.dart';
 import '../../../core/external_dependencies.dart' hide CommunityRepository;
@@ -23,14 +22,14 @@ class DefaultPraiseController
     implements PraiseController {
   DefaultPraiseController({
     required PraiseUsecase praiseUsecase,
-    required CommunityRepository communityRepository,
+    required GetUserByTagQuery getUserByTagQuery,
   })  : _usecase = praiseUsecase,
-        _communityRepository = communityRepository {
+        _userByTagQuery = getUserByTagQuery {
     setDefaultErrorHandling();
   }
 
   final PraiseUsecase _usecase;
-  final CommunityRepository _communityRepository;
+  final GetUserByTagQuery _userByTagQuery;
 
   @override
   final PraiseFormDataDto formData = PraiseFormDataDto();
@@ -61,21 +60,19 @@ class DefaultPraiseController
   @override
   Future<void> getUserFromTag(String tag) async {
     userState.set(LoadingState());
-    final result = await _communityRepository.getUserByTag(tag);
+    final result = await _userByTagQuery(
+      GetUserByTagQueryInput(tag: tag),
+    );
     result.fold(
       (left) => userState.set(ErrorState(left)),
       (right) {
-        if (right == null) {
-          userState.set(ErrorState(Exception("User not found")));
-          return;
-        }
         userState.set(
           SuccessState(
             UserDto(
-              tag: right.tag,
-              name: right.name,
-              email: right.email,
-              id: right.id,
+              tag: right.value.tag,
+              name: right.value.name,
+              email: right.value.email,
+              id: right.value.id,
               password: null,
             ),
           ),

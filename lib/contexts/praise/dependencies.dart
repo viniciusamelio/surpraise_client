@@ -19,7 +19,7 @@ Future<void> praiseDependencies() async {
   inject<PraiseController>(
     DefaultPraiseController(
       praiseUsecase: injected(),
-      communityRepository: injected(),
+      getUserByTagQuery: injected(),
     ),
   );
 }

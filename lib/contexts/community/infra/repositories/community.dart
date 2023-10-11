@@ -2,7 +2,6 @@ import 'package:ez_either/ez_either.dart';
 import 'package:surpraise_infra/surpraise_infra.dart' hide CommunityRepository;
 
 import '../../../../core/core.dart';
-import '../../../../shared/dtos/user.dart';
 import '../../community.dart';
 
 class DefaultCommunityRepository implements CommunityRepository {
@@ -11,35 +10,6 @@ class DefaultCommunityRepository implements CommunityRepository {
   }) : _datasource = databaseDatasource;
 
   final DatabaseDatasource _datasource;
-
-  @override
-  AsyncAction<UserDto?> getUserByTag(String tag) async {
-    try {
-      final user = await _datasource.get(
-        GetQuery(
-          sourceName: profilesCollection,
-          value: tag,
-          fieldName: "tag",
-        ),
-      );
-
-      if (user.multiData == null || user.multiData!.isEmpty) {
-        return Left(Exception("User not found"));
-      }
-
-      return Right(
-        UserDto(
-          tag: tag,
-          name: user.multiData![0]["name"],
-          email: user.multiData![0]["email"],
-          id: user.multiData![0]["id"],
-          password: null,
-        ),
-      );
-    } on Exception catch (e) {
-      return Left(e);
-    }
-  }
 
   @override
   AsyncAction<CreateCommunityOutput> createCommunity(

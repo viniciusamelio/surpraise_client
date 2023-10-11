@@ -21,7 +21,11 @@ Future<void> communityDependencies() async {
       databaseDatasource: injected(),
     ),
   );
-
+  inject<GetUserByTagQuery>(
+    GetUserByTagQuery(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<GetCommunitiesController>(
     DefaultGetCommunitiesController(
       getCommunitiesByUserQuery: injected(),
@@ -45,7 +49,7 @@ Future<void> communityDependencies() async {
   inject<InviteController>(
     DefaultInviteController(
       inviteRepository: injected(),
-      communityRepository: injected(),
+      getUserByTagQuery: injected(),
     ),
     singleton: false,
   );

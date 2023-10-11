@@ -22,11 +22,11 @@ void main() {
     late PraiseUsecase praiseUsecase;
 
     late GetCommunitiesByUserQuery communitiesByUserQuery;
-    late CommunityRepository communityRepository;
+    late GetUserByTagQuery getUserByTagQuery;
     setUp(() async {
       communitiesByUserQuery = MockCommunitiesByUserQuery();
       sessionController = MockSessionController();
-      communityRepository = MockCommunityRepository();
+      getUserByTagQuery = MockGetUserByTagQuery();
       communitiesController = DefaultGetCommunitiesController(
         getCommunitiesByUserQuery: communitiesByUserQuery,
       );
@@ -34,7 +34,7 @@ void main() {
       praiseUsecase = MockPraiseUsecase();
 
       controller = DefaultPraiseController(
-        communityRepository: communityRepository,
+        getUserByTagQuery: getUserByTagQuery,
         praiseUsecase: praiseUsecase,
       );
 
@@ -83,21 +83,31 @@ void main() {
         ),
       );
       when(
-        () => communityRepository.getUserByTag("@none"),
+        () => getUserByTagQuery(
+          GetUserByTagQueryInput(
+            tag: "@none",
+          ),
+        ),
       ).thenAnswer(
         (invocation) async => Left(
-          ApplicationException(message: "User not found"),
+          QueryError("User not found"),
         ),
       );
       when(
-        () => communityRepository.getUserByTag("@vini"),
+        () => getUserByTagQuery(
+          GetUserByTagQueryInput(
+            tag: "@vini",
+          ),
+        ),
       ).thenAnswer(
         (invocation) async => Right(
-          GetUserOutput(
-            tag: "@vini",
-            name: "Vinicius",
-            email: "vini@surpraise.com",
-            id: faker.guid.guid(),
+          GetUserQueryOutput(
+            value: GetUserDto(
+              tag: "@vini",
+              name: "Vinicius",
+              email: "vini@surpraise.com",
+              id: faker.guid.guid(),
+            ),
           ),
         ),
       );
