@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
-import '../../dtos/dtos.dart';
 import '../controllers/controllers.dart';
 
 class SaveCommunitySheet extends StatefulWidget {

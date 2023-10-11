@@ -13,7 +13,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../community.dart';
-import '../../dtos/dtos.dart';
 
 class CommunityDetailsScreen extends StatefulWidget {
   const CommunityDetailsScreen({

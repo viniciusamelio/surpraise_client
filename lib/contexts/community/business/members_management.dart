@@ -1,6 +1,6 @@
 import '../../../core/core.dart';
+import '../../../core/external_dependencies.dart';
 import '../../../shared/shared.dart';
-import '../dtos/dtos.dart';
 
 bool currentUserCanManageMembers({
   required CommunityOutput community,

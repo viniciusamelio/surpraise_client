@@ -1,7 +1,6 @@
 import 'package:blurple/widgets/input/base_dropdown.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../contexts/community/dtos/dtos.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 

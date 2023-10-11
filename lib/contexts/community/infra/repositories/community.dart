@@ -4,7 +4,6 @@ import 'package:surpraise_infra/surpraise_infra.dart' hide CommunityRepository;
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/user.dart';
 import '../../community.dart';
-import '../../dtos/dtos.dart';
 
 class DefaultCommunityRepository implements CommunityRepository {
   const DefaultCommunityRepository({
@@ -12,37 +11,6 @@ class DefaultCommunityRepository implements CommunityRepository {
   }) : _datasource = databaseDatasource;
 
   final DatabaseDatasource _datasource;
-
-  @override
-  AsyncAction<List<CommunityOutput>> getCommunities(
-    String userId,
-  ) async {
-    try {
-      final communities = await _datasource.get(
-        GetQuery(
-          sourceName: communityMembersCollection,
-          value: userId,
-          fieldName: "member_id",
-          select: "$communitiesCollection(*), role",
-        ),
-      );
-
-      return Right(
-        (communities.multiData ?? [])
-            .map<CommunityOutput>(
-              (e) => communityOutputFromMap(
-                {
-                  ...e["community"],
-                  "role": e["role"],
-                },
-              ),
-            )
-            .toList(),
-      );
-    } on Exception catch (e) {
-      return Left(e);
-    }
-  }
 
   @override
   AsyncAction<UserDto?> getUserByTag(String tag) async {

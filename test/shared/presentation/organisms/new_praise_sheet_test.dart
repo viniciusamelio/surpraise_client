@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/community/community.dart';
-import 'package:surpraise_client/contexts/community/dtos/dtos.dart';
 import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart'
     hide CommunityRepository, equals;
@@ -22,13 +21,14 @@ void main() {
     late GetCommunitiesController communitiesController;
     late PraiseUsecase praiseUsecase;
 
+    late GetCommunitiesByUserQuery communitiesByUserQuery;
     late CommunityRepository communityRepository;
     setUp(() async {
-      communityRepository = MockCommunityRepository();
+      communitiesByUserQuery = MockCommunitiesByUserQuery();
       sessionController = MockSessionController();
-
+      communityRepository = MockCommunityRepository();
       communitiesController = DefaultGetCommunitiesController(
-        communityRepository: communityRepository,
+        getCommunitiesByUserQuery: communitiesByUserQuery,
       );
 
       praiseUsecase = MockPraiseUsecase();
@@ -50,19 +50,36 @@ void main() {
         ],
       );
       await translationService.load(const Locale("pt"));
+      registerFallbackValue(
+        PraiseInput(
+          commmunityId: faker.guid.guid(),
+          message: faker.lorem.words(4).join(" "),
+          praisedId: faker.guid.guid(),
+          praiserId: faker.guid.guid(),
+          topic: "#kindness",
+        ),
+      );
 
-      when(() => communityRepository.getCommunities(any())).thenAnswer(
+      registerFallbackValue(
+        GetCommunitiesByUserInput(
+          id: faker.guid.guid(),
+        ),
+      );
+
+      when(() => communitiesByUserQuery.call(any())).thenAnswer(
         (invocation) async => Right(
-          [
-            CommunityOutput(
-              id: faker.guid.guid(),
-              ownerId: faker.guid.guid(),
-              description: faker.lorem.word(),
-              title: "Mocked Community",
-              image: faker.internet.httpsUrl(),
-              role: faker.randomGenerator.element(Role.values),
-            )
-          ],
+          GetCommunitiesByUserOutput(
+            value: [
+              CommunityOutput(
+                id: faker.guid.guid(),
+                ownerId: faker.guid.guid(),
+                description: faker.lorem.word(),
+                title: "Mocked Community",
+                image: faker.internet.httpsUrl(),
+                role: faker.randomGenerator.element(Role.values),
+              )
+            ],
+          ),
         ),
       );
       when(
@@ -82,16 +99,6 @@ void main() {
             email: "vini@surpraise.com",
             id: faker.guid.guid(),
           ),
-        ),
-      );
-
-      registerFallbackValue(
-        PraiseInput(
-          commmunityId: faker.guid.guid(),
-          message: faker.lorem.words(4).join(" "),
-          praisedId: faker.guid.guid(),
-          praiserId: faker.guid.guid(),
-          topic: "#kindness",
         ),
       );
 

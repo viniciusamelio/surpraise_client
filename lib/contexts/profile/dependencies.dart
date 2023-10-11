@@ -14,6 +14,7 @@ Future<void> profileDependencies() async {
       feedRepository: injected(),
       imageController: injected(),
       storageService: injected(),
+      communitiesByUserQuery: injected(),
     ),
   );
 

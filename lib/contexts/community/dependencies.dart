@@ -1,5 +1,6 @@
 import '../../core/core.dart';
 import '../../core/external_dependencies.dart' as core show CommunityRepository;
+import '../../core/external_dependencies.dart' hide CommunityRepository;
 import '../feed/feed.dart';
 import 'community.dart';
 import 'presentation/controllers/remove_member.dart';
@@ -15,9 +16,15 @@ Future<void> communityDependencies() async {
       databaseDatasource: injected(),
     ),
   );
+  inject<GetCommunitiesByUserQuery>(
+    GetCommunitiesByUserQuery(
+      databaseDatasource: injected(),
+    ),
+  );
+
   inject<GetCommunitiesController>(
     DefaultGetCommunitiesController(
-      communityRepository: injected(),
+      getCommunitiesByUserQuery: injected(),
     ),
   );
   inject<NewCommunityController>(

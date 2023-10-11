@@ -2,7 +2,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../../../shared/shared.dart';
 import '../../application/application.dart';
-import '../../dtos/dtos.dart';
 
 abstract class CommunityDetailsController
     extends BaseStateController<List<FindCommunityMemberOutput>> {

@@ -1,4 +1,4 @@
-import '../../../core/core.dart';
+import '../../../core/external_dependencies.dart';
 
 class InviteDto {
   const InviteDto({
@@ -14,7 +14,7 @@ class InviteDto {
   final String id;
 }
 
-InviteDto inviteFromMap(Json map) => InviteDto(
+InviteDto inviteFromMap(Map<String, dynamic> map) => InviteDto(
       id: map["id"],
       communityTitle: map["community"]["title"],
       communityId: map["community_id"],

@@ -8,7 +8,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
-import '../../../community/dtos/dtos.dart';
 
 class CommunitiesTabOrganism extends StatelessWidget {
   const CommunitiesTabOrganism({

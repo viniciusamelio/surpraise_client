@@ -1,4 +1,5 @@
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 
 abstract class InviteRepository {
   AsyncAction<void> inviteMember({
