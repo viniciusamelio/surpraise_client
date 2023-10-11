@@ -10,8 +10,4 @@ abstract class CommunityRepository {
   AsyncAction<CreateCommunityOutput> updateCommunity(
     CreateCommunityInput input,
   );
-  AsyncAction<void> leaveCommunity({
-    required String communityId,
-    required String memberId,
-  });
 }

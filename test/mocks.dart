@@ -59,3 +59,5 @@ class MockCommunitiesByUserQuery extends Mock
     implements GetCommunitiesByUserQuery {}
 
 class MockGetUserByTagQuery extends Mock implements GetUserByTagQuery {}
+
+class MockLeaveCommunityUsecase extends Mock implements LeaveCommunityUsecase {}

@@ -40,12 +40,7 @@ Future<void> communityDependencies() async {
     ),
     singleton: false,
   );
-  inject<CommunityDetailsController>(
-    DefaultCommunityDetailsController(
-      communityRepository: injected(),
-      sessionController: injected(),
-    ),
-  );
+
   inject<InviteController>(
     DefaultInviteController(
       inviteRepository: injected(),
@@ -73,6 +68,15 @@ Future<void> communityDependencies() async {
   inject<RemoveMemberController>(
     DefaultRemoveMemberController(
       removeMembersUsecase: injected(),
+    ),
+  );
+  inject<CommunityDetailsController>(
+    DefaultCommunityDetailsController(
+      communityRepository: injected(),
+      sessionController: injected(),
+      leaveCommunityUsecase: DbLeaveCommunityUsecase(
+        leaveCommunityRepository: injected<core.CommunityRepository>(),
+      ),
     ),
   );
 }

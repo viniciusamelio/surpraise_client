@@ -15,13 +15,26 @@ void main() {
     late CommunityDetailsController sut;
     late SessionController sessionController;
     late CommunityRepository communityRepository;
+    late MockLeaveCommunityUsecase leaveCommunityUsecase;
+
+    setUpAll(() {
+      registerFallbackValue(
+        LeaveCommunityInput(
+          memberId: faker.guid.guid(),
+          communityId: faker.guid.guid(),
+          memberRole: "member",
+        ),
+      );
+    });
 
     setUp(() {
       communityRepository = MockCommunityRepository();
       sessionController = MockSessionController();
+      leaveCommunityUsecase = MockLeaveCommunityUsecase();
       sut = DefaultCommunityDetailsController(
         sessionController: sessionController,
         communityRepository: communityRepository,
+        leaveCommunityUsecase: leaveCommunityUsecase,
       );
       WidgetsFlutterBinding.ensureInitialized();
     });
@@ -83,20 +96,24 @@ void main() {
       "sut.leave() should set state as loading when action starts",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
-          return Right(null);
+          return Right(const LeaveCommunityOutput(""));
         });
 
-        sut.leave(communityId: faker.guid.guid());
+        sut.leave(
+          communityId: faker.guid.guid(),
+          role: Role.member,
+        );
 
         expect(sut.leaveState.value, isA<LoadingState>());
-        verify(() => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"))).called(1);
+        verify(
+          () => leaveCommunityUsecase(
+            any(),
+          ),
+        ).called(1);
       },
     );
 
@@ -104,21 +121,22 @@ void main() {
       "sut.leave() should set state as success when repo returns right",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
-          return Right(null);
+          return Right(const LeaveCommunityOutput(""));
         });
 
-        await sut.leave(communityId: faker.guid.guid());
+        await sut.leave(
+          communityId: faker.guid.guid(),
+          role: Role.moderator,
+        );
 
         expect(sut.leaveState.value, isA<SuccessState<Exception, void>>());
         verify(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).called(1);
       },
@@ -128,21 +146,19 @@ void main() {
       "sut.leave() should set state as error when repo returns left",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
           return Left(Exception());
         });
 
-        await sut.leave(communityId: faker.guid.guid());
+        await sut.leave(communityId: faker.guid.guid(), role: Role.member);
 
         expect(sut.leaveState.value, isA<ErrorState>());
         verify(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).called(1);
       },

@@ -11,6 +11,7 @@ abstract class CommunityDetailsController
   AtomNotifier<DefaultState<Exception, void>> get leaveState;
   Future<void> leave({
     required String communityId,
+    required Role role,
   });
 
   AtomNotifier<bool> get showSearchbar;
@@ -24,12 +25,15 @@ class DefaultCommunityDetailsController
   DefaultCommunityDetailsController({
     required CommunityRepository communityRepository,
     required SessionController sessionController,
+    required LeaveCommunityUsecase leaveCommunityUsecase,
   })  : _communityRepository = communityRepository,
+        _leaveCommunityUsecase = leaveCommunityUsecase,
         _sessionController = sessionController {
     setDefaultErrorHandling();
   }
   final CommunityRepository _communityRepository;
   final SessionController _sessionController;
+  final LeaveCommunityUsecase _leaveCommunityUsecase;
 
   @override
   Future<void> getMembers({required String id}) async {
@@ -39,11 +43,17 @@ class DefaultCommunityDetailsController
   }
 
   @override
-  Future<void> leave({required String communityId}) async {
+  Future<void> leave({
+    required String communityId,
+    required Role role,
+  }) async {
     leaveState.set(LoadingState());
-    final leaveResponseOrError = await _communityRepository.leaveCommunity(
-      communityId: communityId,
-      memberId: _sessionController.currentUser.value!.id,
+    final leaveResponseOrError = await _leaveCommunityUsecase(
+      LeaveCommunityInput(
+        communityId: communityId,
+        memberId: _sessionController.currentUser.value!.id,
+        memberRole: role.value,
+      ),
     );
     leaveState.set(
       leaveResponseOrError.fold(

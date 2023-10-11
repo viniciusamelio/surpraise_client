@@ -2,5 +2,6 @@
     "Praised user not found" : "Membro não encontrado",
     "Praiser user not found" : "Sua conta não foi encontrada",
     "Community not found" : "Comunidade não encontrada",
-    "You cannot praise yourself" : "Você não pode enviar praise para si mesmo"
+    "You cannot praise yourself" : "Você não pode enviar praise para si mesmo",
+    "This member need to be the last one to leave this community" : "Você é o dono da comunidade e precisa ser o último membro a sair"
 }
