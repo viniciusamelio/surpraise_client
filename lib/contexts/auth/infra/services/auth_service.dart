@@ -6,14 +6,17 @@ import '../../auth.dart';
 class DefaultAuthService implements AuthService {
   const DefaultAuthService({
     required SupabaseCloudClient supabaseClient,
-    required DatabaseDatasource databaseDatasource,
     required HttpClient httpClient,
+    required CreateUserRepository createUserRepository,
+    required GetUserQuery getUserQuery,
   })  : _supabase = supabaseClient,
         _httpClient = httpClient,
-        _datasource = databaseDatasource;
+        _userQuery = getUserQuery,
+        _createUserRepository = createUserRepository;
 
   final SupabaseCloudClient _supabase;
-  final DatabaseDatasource _datasource;
+  final CreateUserRepository _createUserRepository;
+  final GetUserQuery _userQuery;
   final HttpClient _httpClient;
 
   @override
@@ -23,23 +26,25 @@ class DefaultAuthService implements AuthService {
         email: input.username,
         password: input.password,
       );
-      final result = await _datasource.get(
-        GetQuery(
-          sourceName: "profile",
-          operator: FilterOperator.equalsTo,
-          value: user.id,
-          fieldName: "id",
+      final userOrError = await _userQuery(
+        GetUserQueryInput(
+          id: user.id,
         ),
       );
-      if (result.failure) {
+
+      if (userOrError.isLeft()) {
         return Left(InvalidCredentialsException());
       }
-      final data = result.multiData![0];
+
+      final response = userOrError.fold(
+        (left) => null,
+        (right) => right.value,
+      )!;
       return Right(
         GetUserOutput(
-          tag: data["tag"],
-          name: data["name"],
-          email: data["email"],
+          tag: response.tag,
+          name: response.name,
+          email: response.email,
           id: user.id,
         ),
       );
@@ -64,27 +69,29 @@ class DefaultAuthService implements AuthService {
         password: input.password,
       );
 
-      final result = await _datasource.save(
-        SaveQuery(
-          sourceName: "profile",
-          value: {
-            "name": input.name,
-            "email": input.email,
-            "tag": input.tag,
-            "id": user.id,
-          },
+      final response = await _createUserRepository.create(
+        CreateUserInput(
+          tag: input.tag,
+          name: input.name,
+          email: input.email,
+          id: user.id,
         ),
       );
-      if (result.failure) {
+      if (response.isLeft()) {
         return Left(Exception("Something went wrong signing you up"));
       }
 
+      final createdUser = response.fold(
+        (left) => null,
+        (right) => right,
+      )!;
+
       return Right(
-        UserMapper.createUserOutputFromMap(
-          {
-            ...result.multiData!.first,
-            "id": user.id,
-          },
+        CreateUserOutput(
+          tag: createdUser.tag,
+          name: createdUser.name,
+          email: createdUser.email,
+          id: createdUser.id,
         ),
       );
     } on Exception catch (e) {
