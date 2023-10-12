@@ -1,8 +1,9 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart' hide CommunityRepository;
-import '../../application/application.dart';
+import '../../../../shared/presentation/controllers/controllers.dart';
 
-abstract class InviteController extends BaseStateController<void> {
+abstract class InviteController
+    extends BaseStateController<InviteMemberOutput> {
   Future<void> invite({
     required String memberId,
     required Role role,
@@ -18,17 +19,15 @@ abstract class InviteController extends BaseStateController<void> {
 }
 
 class DefaultInviteController
-    with BaseState<Exception, void>
+    with BaseState<Exception, InviteMemberOutput>
     implements InviteController {
   DefaultInviteController({
-    required InviteRepository inviteRepository,
+    required InviteMemberUsecase inviteMemberUsecase,
     required GetUserByTagQuery getUserByTagQuery,
-  })  : _inviteRepository = inviteRepository,
-        _userByTagQuery = getUserByTagQuery {
-    setDefaultErrorHandling();
-  }
+  })  : _inviteMemberUsecase = inviteMemberUsecase,
+        _userByTagQuery = getUserByTagQuery;
 
-  final InviteRepository _inviteRepository;
+  final InviteMemberUsecase _inviteMemberUsecase;
   final GetUserByTagQuery _userByTagQuery;
 
   @override
@@ -38,10 +37,13 @@ class DefaultInviteController
     required String communityId,
   }) async {
     state.set(LoadingState());
-    final invitedMemberResultOrError = await _inviteRepository.inviteMember(
-      memberId: memberId,
-      communityId: communityId,
-      role: role,
+    final invitedMemberResultOrError = await _inviteMemberUsecase(
+      InviteMemberInput(
+        communityId: communityId,
+        memberId: memberId,
+        role: role.value,
+        inviterId: injected<SessionController>().currentUser.value!.id,
+      ),
     );
     stateFromEither(invitedMemberResultOrError);
   }

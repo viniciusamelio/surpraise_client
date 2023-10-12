@@ -3,5 +3,8 @@
     "Praiser user not found" : "Sua conta não foi encontrada",
     "Community not found" : "Comunidade não encontrada",
     "You cannot praise yourself" : "Você não pode enviar praise para si mesmo",
-    "This member need to be the last one to leave this community" : "Você é o dono da comunidade e precisa ser o último membro a sair"
+    "This member need to be the last one to leave this community" : "Você é o dono da comunidade e precisa ser o último membro a sair",
+    "This member is already a community member and has this same role" : "Esse membro já está nessa comunidade com esse mesmo cargo",
+    "Member was already invited" : "Membro já convidado",
+    "You do not have the needed permission to invite this member" : "Você não tem a permissão necessária para convidar alguém com o cargo selecionado"
 }

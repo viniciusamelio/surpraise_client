@@ -40,11 +40,27 @@ class _InviteMemberSheetState extends State<InviteMemberSheet> {
       }
     });
 
-    controller.state.on<SuccessState<Exception, void>>((value) async {
+    controller.state
+        .on<SuccessState<Exception, InviteMemberOutput>>((value) async {
       if (mounted) {
         final message =
             "Convite enviado para ${(controller.userSearchState.value as SuccessState).data.tag}";
         SuccessSnack(
+          message: message,
+        ).show(context: context);
+        Navigator.of(context).pop();
+      }
+    });
+
+    controller.state
+        .on<ErrorState<Exception, InviteMemberOutput>>((error) async {
+      if (mounted) {
+        String message = "Deu ruim ao convidar ${userFieldController.text}";
+        if (error.exception is DomainException) {
+          message = injected<TranslationService>()
+              .get((error.exception as DomainException).message);
+        }
+        ErrorSnack(
           message: message,
         ).show(context: context);
         Navigator.of(context).pop();

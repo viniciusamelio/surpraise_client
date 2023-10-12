@@ -1,4 +1,4 @@
-import '../../../../core/core.dart';
+import '../../../../core/core.dart' hide InviteRepository;
 import '../../../../shared/shared.dart';
 import '../../../community/community.dart';
 import '../../application/events/events.dart';

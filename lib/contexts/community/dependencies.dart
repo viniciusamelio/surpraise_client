@@ -1,7 +1,9 @@
 import '../../core/core.dart';
-import '../../core/external_dependencies.dart';
+import '../../core/external_dependencies.dart' hide InviteRepository;
+import '../../core/external_dependencies.dart' as core show InviteRepository;
 import '../feed/feed.dart';
 import 'community.dart';
+import 'community.dart' as community show InviteRepository;
 import 'presentation/controllers/remove_member.dart';
 
 Future<void> communityDependencies() async {
@@ -21,9 +23,21 @@ Future<void> communityDependencies() async {
       updateCommunityRepository: injected<CommunityRepository>(),
     ),
   );
-  inject<InviteRepository>(
+  inject<community.InviteRepository>(
     DefaultInviteRepository(
       databaseDatasource: injected(),
+    ),
+  );
+  inject<core.InviteRepository>(
+    InvitationRepository(
+      databaseDatasource: injected(),
+    ),
+  );
+  inject<InviteMemberUsecase>(
+    DbInviteMemberUsecase(
+      inviteMemberRepository: injected<core.InviteRepository>(),
+      findCommunityRepository: injected<CommunityRepository>(),
+      idService: injected(),
     ),
   );
   inject<GetMembersQuery>(
@@ -59,7 +73,7 @@ Future<void> communityDependencies() async {
 
   inject<InviteController>(
     DefaultInviteController(
-      inviteRepository: injected(),
+      inviteMemberUsecase: injected(),
       getUserByTagQuery: injected(),
     ),
     singleton: false,
