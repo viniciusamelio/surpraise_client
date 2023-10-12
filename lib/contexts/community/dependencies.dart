@@ -16,6 +16,11 @@ Future<void> communityDependencies() async {
       databaseDatasource: injected(),
     ),
   );
+  inject<GetMembersQuery>(
+    GetMembersQuery(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<GetCommunitiesByUserQuery>(
     GetCommunitiesByUserQuery(
       databaseDatasource: injected(),
@@ -72,7 +77,7 @@ Future<void> communityDependencies() async {
   );
   inject<CommunityDetailsController>(
     DefaultCommunityDetailsController(
-      communityRepository: injected(),
+      getMembersQuery: injected(),
       sessionController: injected(),
       leaveCommunityUsecase: DbLeaveCommunityUsecase(
         leaveCommunityRepository: injected<core.CommunityRepository>(),

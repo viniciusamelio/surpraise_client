@@ -16,6 +16,7 @@ void main() {
     late SessionController sessionController;
     late CommunityRepository communityRepository;
     late MockLeaveCommunityUsecase leaveCommunityUsecase;
+    late MockGetMembersQuery getMembersQuery;
 
     setUpAll(() {
       registerFallbackValue(
@@ -25,15 +26,19 @@ void main() {
           memberRole: "member",
         ),
       );
+      registerFallbackValue(
+        GetMembersInput(communityId: faker.guid.guid()),
+      );
     });
 
     setUp(() {
       communityRepository = MockCommunityRepository();
       sessionController = MockSessionController();
       leaveCommunityUsecase = MockLeaveCommunityUsecase();
+      getMembersQuery = MockGetMembersQuery();
       sut = DefaultCommunityDetailsController(
         sessionController: sessionController,
-        communityRepository: communityRepository,
+        getMembersQuery: getMembersQuery,
         leaveCommunityUsecase: leaveCommunityUsecase,
       );
       WidgetsFlutterBinding.ensureInitialized();
@@ -48,15 +53,15 @@ void main() {
       "sut.getMembers() should set state as loading when action starts",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Right([]);
+          return Right(const GetMembersOutput(value: []));
         });
 
         sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<LoadingState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 
@@ -64,15 +69,15 @@ void main() {
       "sut.getMembers() should set state as success when repo returns right",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Right([]);
+          return Right(const GetMembersOutput(value: []));
         });
 
         await sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<SuccessState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 
@@ -80,15 +85,15 @@ void main() {
       "sut.getMembers() should set state as error when repo returns left",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Left(Exception());
+          return Left(QueryError("some error"));
         });
 
         await sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<ErrorState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 

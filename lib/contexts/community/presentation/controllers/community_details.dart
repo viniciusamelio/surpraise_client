@@ -1,7 +1,6 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../../../shared/shared.dart';
-import '../../application/application.dart';
 
 abstract class CommunityDetailsController
     extends BaseStateController<List<FindCommunityMemberOutput>> {
@@ -23,23 +22,32 @@ class DefaultCommunityDetailsController
     with BaseState<Exception, List<FindCommunityMemberOutput>>
     implements CommunityDetailsController {
   DefaultCommunityDetailsController({
-    required CommunityRepository communityRepository,
     required SessionController sessionController,
     required LeaveCommunityUsecase leaveCommunityUsecase,
-  })  : _communityRepository = communityRepository,
+    required GetMembersQuery getMembersQuery,
+  })  : _getMembersQuery = getMembersQuery,
         _leaveCommunityUsecase = leaveCommunityUsecase,
         _sessionController = sessionController {
     setDefaultErrorHandling();
   }
-  final CommunityRepository _communityRepository;
   final SessionController _sessionController;
   final LeaveCommunityUsecase _leaveCommunityUsecase;
+  final GetMembersQuery _getMembersQuery;
 
   @override
   Future<void> getMembers({required String id}) async {
     state.set(LoadingState());
-    final membersOrError = await _communityRepository.getCommunityMembers(id);
-    stateFromEither(membersOrError);
+    final membersOrError = await _getMembersQuery(
+      GetMembersInput(
+        communityId: id,
+      ),
+    );
+    state.set(membersOrError.fold(
+      (left) => ErrorState(left),
+      (right) => SuccessState(
+        right.value,
+      ),
+    ));
   }
 
   @override
