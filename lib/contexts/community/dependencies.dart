@@ -1,25 +1,24 @@
 import '../../core/core.dart';
-import '../../core/external_dependencies.dart' as core show CommunityRepository;
-import '../../core/external_dependencies.dart' hide CommunityRepository;
+import '../../core/external_dependencies.dart';
 import '../feed/feed.dart';
 import 'community.dart';
 import 'presentation/controllers/remove_member.dart';
 
 Future<void> communityDependencies() async {
-  inject<core.CommunityRepository>(
-    core.CommunityRepository(
-      databaseDatasource: injected(),
-    ),
-  );
   inject<CommunityRepository>(
-    DefaultCommunityRepository(
+    CommunityRepository(
       databaseDatasource: injected(),
     ),
   );
   inject<CreateCommunityUsecase>(
     DbCreateCommunityUsecase(
-      createCommunityRepository: injected<core.CommunityRepository>(),
+      createCommunityRepository: injected<CommunityRepository>(),
       idService: injected(),
+    ),
+  );
+  inject<UpdateCommunityUsecase>(
+    DbUpdateCommunityUsecase(
+      updateCommunityRepository: injected<CommunityRepository>(),
     ),
   );
   inject<InviteRepository>(
@@ -49,11 +48,11 @@ Future<void> communityDependencies() async {
   );
   inject<NewCommunityController>(
     DefaultNewCommunityController(
-      communityRepository: injected(),
       sessionController: injected(),
       imageManager: injected(),
       imageController: injected(),
       createCommunityUsecase: injected(),
+      updateCommunityUsecase: injected(),
     ),
     singleton: false,
   );
@@ -74,8 +73,8 @@ Future<void> communityDependencies() async {
 
   inject<RemoveMembersUsecase>(
     DbRemoveMembersUsecase(
-      removeMembersRepository: injected<core.CommunityRepository>(),
-      findCommunityRepository: injected<core.CommunityRepository>(),
+      removeMembersRepository: injected<CommunityRepository>(),
+      findCommunityRepository: injected<CommunityRepository>(),
     ),
   );
   inject<RemoveMemberController>(
@@ -88,7 +87,7 @@ Future<void> communityDependencies() async {
       getMembersQuery: injected(),
       sessionController: injected(),
       leaveCommunityUsecase: DbLeaveCommunityUsecase(
-        leaveCommunityRepository: injected<core.CommunityRepository>(),
+        leaveCommunityRepository: injected<CommunityRepository>(),
       ),
     ),
   );

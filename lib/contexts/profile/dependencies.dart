@@ -10,7 +10,6 @@ Future<void> profileDependencies() async {
   );
   inject<ProfileController>(
     DefaultProfileController(
-      communityRepository: injected(),
       feedRepository: injected(),
       imageController: injected(),
       storageService: injected(),

@@ -4,7 +4,6 @@ import '../../../../env.dart';
 import '../../../../shared/presentation/controllers/controllers.dart';
 import '../../../../shared/presentation/molecules/error_snack.dart';
 import '../../../../shared/presentation/molecules/success_snack.dart';
-import '../../../community/application/application.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
@@ -35,7 +34,6 @@ class DefaultProfileController
     with BaseState<Exception, Praises>
     implements ProfileController {
   DefaultProfileController({
-    required CommunityRepository communityRepository,
     required FeedRepository feedRepository,
     required StorageService storageService,
     required ImageController imageController,

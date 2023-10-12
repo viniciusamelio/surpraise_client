@@ -17,6 +17,9 @@ bool currentUserCanRemoveThisMember({
   required CommunityOutput community,
   required FindCommunityMemberOutput member,
 }) {
+  if (member.id == injected<SessionController>().currentUser.value!.id) {
+    return false;
+  }
   final canEdit = currentUserCanManageMembers(community: community);
   final owner = currentUserIsOwner(community: community);
   final memberRole = Role.fromString(

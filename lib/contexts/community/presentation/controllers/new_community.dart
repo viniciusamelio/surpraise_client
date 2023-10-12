@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/external_dependencies.dart' hide CommunityRepository;
+import '../../../../core/external_dependencies.dart';
 import '../../../../env.dart';
 import '../../../../shared/presentation/controllers/session.dart';
 import '../../application/application.dart';
@@ -27,23 +27,23 @@ class DefaultNewCommunityController
     with BaseState<Exception, CreateCommunityOutput>
     implements NewCommunityController {
   DefaultNewCommunityController({
-    required CommunityRepository communityRepository,
     required SessionController sessionController,
     required ImageManager imageManager,
     required ImageController imageController,
     required CreateCommunityUsecase createCommunityUsecase,
-  })  : _communityRepository = communityRepository,
-        _imageManager = imageManager,
+    required UpdateCommunityUsecase updateCommunityUsecase,
+  })  : _imageManager = imageManager,
+        _updateCommunityUsecase = updateCommunityUsecase,
         _createCommunityUsecase = createCommunityUsecase,
         _imageController = imageController,
         _sessionController = sessionController {
     setDefaultErrorHandling();
   }
-  final CommunityRepository _communityRepository;
   final SessionController _sessionController;
   final ImageManager _imageManager;
   final ImageController _imageController;
   final CreateCommunityUsecase _createCommunityUsecase;
+  final UpdateCommunityUsecase _updateCommunityUsecase;
 
   @override
   final ValueNotifier<String> description = ValueNotifier("");
@@ -118,13 +118,33 @@ class DefaultNewCommunityController
       );
     }
 
-    return await _communityRepository.updateCommunity(
-      CreateCommunityInput(
+    final updatedCommunityOrError = await _updateCommunityUsecase(
+      UpdateCommunityInput(
         description: description.value,
         ownerId: _sessionController.currentUser.value!.id,
         title: name.value,
         imageUrl: imageUrl!,
         id: id.value,
+      ),
+    );
+    if (updatedCommunityOrError.isLeft()) {
+      return Left(
+        updatedCommunityOrError.fold((left) => left, (right) => null)!,
+      );
+    }
+    final updateCommunityOutput = updatedCommunityOrError.fold(
+      (left) => null,
+      (right) => right,
+    )!;
+    return Right(
+      CreateCommunityOutput(
+        id: updateCommunityOutput.id,
+        description: updateCommunityOutput.description,
+        title: updateCommunityOutput.title,
+        members: [
+          {},
+        ],
+        ownerId: _sessionController.currentUser.value!.id,
       ),
     );
   }

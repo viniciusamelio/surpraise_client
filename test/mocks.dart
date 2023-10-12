@@ -1,7 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/auth/application/application.dart';
-import 'package:surpraise_client/contexts/community/community.dart';
 import 'package:surpraise_client/contexts/feed/feed.dart';
 import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart'
@@ -27,8 +26,6 @@ class MockSessionController extends Mock implements SessionController {
   @override
   AtomNotifier<UserDto?> get currentUser => _userNotifier;
 }
-
-class MockCommunityRepository extends Mock implements CommunityRepository {}
 
 class MockImageManager extends Mock implements ImageManager {}
 
@@ -66,3 +63,6 @@ class MockGetMembersQuery extends Mock implements GetMembersQuery {}
 
 class MockCreateCommunityUsecase extends Mock
     implements CreateCommunityUsecase {}
+
+class MockUpdateCommunityUsecase extends Mock
+    implements UpdateCommunityUsecase {}

@@ -14,7 +14,7 @@ void main() {
   group("Community Details Controller: ", () {
     late CommunityDetailsController sut;
     late SessionController sessionController;
-    late CommunityRepository communityRepository;
+    late UpdateCommunityUsecase updateCommunityUsecase;
     late MockLeaveCommunityUsecase leaveCommunityUsecase;
     late MockGetMembersQuery getMembersQuery;
 
@@ -32,7 +32,7 @@ void main() {
     });
 
     setUp(() {
-      communityRepository = MockCommunityRepository();
+      updateCommunityUsecase = MockUpdateCommunityUsecase();
       sessionController = MockSessionController();
       leaveCommunityUsecase = MockLeaveCommunityUsecase();
       getMembersQuery = MockGetMembersQuery();
@@ -45,7 +45,7 @@ void main() {
     });
 
     tearDown(() {
-      reset(communityRepository);
+      reset(updateCommunityUsecase);
       reset(sessionController);
     });
 

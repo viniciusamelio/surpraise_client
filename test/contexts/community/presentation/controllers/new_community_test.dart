@@ -15,7 +15,7 @@ void main() {
   group(
     "New Community Controller",
     () {
-      late CommunityRepository communityRepository;
+      late UpdateCommunityUsecase updateCommunityUsecase;
       late SessionController sessionController;
       late ImageManager imageManager;
       late ImageController imageController;
@@ -30,13 +30,13 @@ void main() {
       );
 
       setUp(() {
-        communityRepository = MockCommunityRepository();
+        updateCommunityUsecase = MockUpdateCommunityUsecase();
         sessionController = MockSessionController();
         imageManager = MockImageManager();
         imageController = MockImageController();
         createCommunityUsecase = MockCreateCommunityUsecase();
         sut = DefaultNewCommunityController(
-          communityRepository: communityRepository,
+          updateCommunityUsecase: updateCommunityUsecase,
           sessionController: sessionController,
           imageManager: imageManager,
           imageController: imageController,
