@@ -31,8 +31,10 @@ class DefaultNewCommunityController
     required SessionController sessionController,
     required ImageManager imageManager,
     required ImageController imageController,
+    required CreateCommunityUsecase createCommunityUsecase,
   })  : _communityRepository = communityRepository,
         _imageManager = imageManager,
+        _createCommunityUsecase = createCommunityUsecase,
         _imageController = imageController,
         _sessionController = sessionController {
     setDefaultErrorHandling();
@@ -41,6 +43,7 @@ class DefaultNewCommunityController
   final SessionController _sessionController;
   final ImageManager _imageManager;
   final ImageController _imageController;
+  final CreateCommunityUsecase _createCommunityUsecase;
 
   @override
   final ValueNotifier<String> description = ValueNotifier("");
@@ -105,7 +108,7 @@ class DefaultNewCommunityController
     String? imageUrl,
   }) async {
     if (newCommunity) {
-      return await _communityRepository.createCommunity(
+      return await _createCommunityUsecase(
         CreateCommunityInput(
           description: description.value,
           ownerId: _sessionController.currentUser.value!.id,
