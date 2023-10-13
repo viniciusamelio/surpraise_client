@@ -8,13 +8,11 @@ class UserDto extends GetUserOutput {
     required super.name,
     required super.email,
     required super.id,
-    this.password,
     this.avatarUrl,
     this.cachedAvatar,
   });
 
   String? avatarUrl;
-  final String? password;
   File? cachedAvatar;
 
   void removeAvatar() {
@@ -30,7 +28,6 @@ class UserDto extends GetUserOutput {
     return UserDto(
       tag: tag,
       name: name ?? this.name,
-      password: password,
       email: email,
       id: id,
       avatarUrl: avatarUrl ?? this.avatarUrl,

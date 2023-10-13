@@ -63,7 +63,6 @@ class DefaultSignupController
         final user = UserDto(
           tag: right.tag,
           name: right.name,
-          password: formData.password,
           email: right.email,
           id: right.id,
           avatarUrl: uploadedImage.fold(

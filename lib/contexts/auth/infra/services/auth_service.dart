@@ -1,23 +1,19 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../env.dart';
 import '../../auth.dart';
 
 class DefaultAuthService implements AuthService {
   const DefaultAuthService({
     required SupabaseCloudClient supabaseClient,
-    required HttpClient httpClient,
     required CreateUserRepository createUserRepository,
     required GetUserQuery getUserQuery,
   })  : _supabase = supabaseClient,
-        _httpClient = httpClient,
         _userQuery = getUserQuery,
         _createUserRepository = createUserRepository;
 
   final SupabaseCloudClient _supabase;
   final CreateUserRepository _createUserRepository;
   final GetUserQuery _userQuery;
-  final HttpClient _httpClient;
 
   @override
   AsyncAction<GetUserOutput> signin(SignInFormDataDto input) async {
@@ -102,9 +98,9 @@ class DefaultAuthService implements AuthService {
   @override
   AsyncAction<void> deleteAccount(String userId) async {
     try {
-      await _httpClient.post(
-        "${Env.sbUrl}/functions/v1/account-manager",
-        data: {
+      await _supabase.supabase.functions.invoke(
+        "account-manager",
+        body: {
           "userId": userId,
         },
       );
