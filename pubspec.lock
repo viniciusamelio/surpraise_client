@@ -1348,7 +1348,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "845f54457766b9da603c72ed55ae6e7f2a1490b1"
+      resolved-ref: "85ed0ecc14a3c239692caab7bc74667bc25d31c3"
       url: "https://github.com/viniciusamelio/surpraise_core"
     source: git
     version: "1.0.0"
@@ -1357,7 +1357,7 @@ packages:
     description:
       path: "."
       ref: "feat/supabase-migration"
-      resolved-ref: "51f262a9c22db1125c6ede96512c949cb5839f3d"
+      resolved-ref: "810a3be35447cc91da925c65a3b7a680c077d2ab"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
