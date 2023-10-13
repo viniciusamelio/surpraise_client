@@ -18,7 +18,6 @@ Future<void> authDependencies() async {
   inject<AuthService>(
     DefaultAuthService(
       supabaseClient: injected(),
-      httpClient: injected(),
       createUserRepository: injected<UserRepository>(),
       getUserQuery: injected(),
     ),
