@@ -1,6 +1,5 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../env.dart';
 import '../../../../shared/dtos/dtos.dart';
 import '../../application/application.dart';
 import '../../dtos/invite.dart';
@@ -8,12 +7,13 @@ import '../../dtos/invite.dart';
 class DefaultFeedRepository implements FeedRepository {
   const DefaultFeedRepository({
     required DatabaseDatasource databaseDatasource,
-    required HttpClient httpClient,
+    required SupabaseCloudClient supabaseCloudClient,
   })  : _databaseDatasource = databaseDatasource,
-        _httpClient = httpClient;
+        _supabaseClient = supabaseCloudClient;
 
   final DatabaseDatasource _databaseDatasource;
-  final HttpClient _httpClient;
+
+  final SupabaseCloudClient _supabaseClient;
 
   @override
   AsyncAction<List<PraiseDto>> get({
@@ -22,15 +22,15 @@ class DefaultFeedRepository implements FeedRepository {
     int offset = 0,
   }) async {
     try {
-      final feed = await _httpClient.post(
-        "${Env.sbUrl}/functions/v1/feed",
-        data: {
+      final feed = await _supabaseClient.supabase.functions.invoke(
+        "feed",
+        body: {
           "userId": userId,
           "max": max,
           "offset": offset,
         },
       );
-      if (feed.statusCode != 200) {
+      if (feed.status != 200) {
         return Left(Exception("Something went wrong getting your feed"));
       }
 

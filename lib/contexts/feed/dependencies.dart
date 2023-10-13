@@ -5,7 +5,7 @@ Future<void> feedDependencies() async {
   inject<FeedRepository>(
     DefaultFeedRepository(
       databaseDatasource: injected(),
-      httpClient: injected(),
+      supabaseCloudClient: injected(),
     ),
   );
   inject<FeedController>(
