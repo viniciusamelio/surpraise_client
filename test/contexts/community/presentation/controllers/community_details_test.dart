@@ -14,20 +14,38 @@ void main() {
   group("Community Details Controller: ", () {
     late CommunityDetailsController sut;
     late SessionController sessionController;
-    late CommunityRepository communityRepository;
+    late UpdateCommunityUsecase updateCommunityUsecase;
+    late MockLeaveCommunityUsecase leaveCommunityUsecase;
+    late MockGetMembersQuery getMembersQuery;
+
+    setUpAll(() {
+      registerFallbackValue(
+        LeaveCommunityInput(
+          memberId: faker.guid.guid(),
+          communityId: faker.guid.guid(),
+          memberRole: "member",
+        ),
+      );
+      registerFallbackValue(
+        GetMembersInput(communityId: faker.guid.guid()),
+      );
+    });
 
     setUp(() {
-      communityRepository = MockCommunityRepository();
+      updateCommunityUsecase = MockUpdateCommunityUsecase();
       sessionController = MockSessionController();
+      leaveCommunityUsecase = MockLeaveCommunityUsecase();
+      getMembersQuery = MockGetMembersQuery();
       sut = DefaultCommunityDetailsController(
         sessionController: sessionController,
-        communityRepository: communityRepository,
+        getMembersQuery: getMembersQuery,
+        leaveCommunityUsecase: leaveCommunityUsecase,
       );
       WidgetsFlutterBinding.ensureInitialized();
     });
 
     tearDown(() {
-      reset(communityRepository);
+      reset(updateCommunityUsecase);
       reset(sessionController);
     });
 
@@ -35,15 +53,15 @@ void main() {
       "sut.getMembers() should set state as loading when action starts",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Right([]);
+          return Right(const GetMembersOutput(value: []));
         });
 
         sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<LoadingState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 
@@ -51,15 +69,15 @@ void main() {
       "sut.getMembers() should set state as success when repo returns right",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Right([]);
+          return Right(const GetMembersOutput(value: []));
         });
 
         await sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<SuccessState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 
@@ -67,15 +85,15 @@ void main() {
       "sut.getMembers() should set state as error when repo returns left",
       () async {
         when(
-          () => communityRepository.getCommunityMembers(any()),
+          () => getMembersQuery(any()),
         ).thenAnswer((_) async {
-          return Left(Exception());
+          return Left(QueryError("some error"));
         });
 
         await sut.getMembers(id: faker.guid.guid());
 
         expect(sut.state.value, isA<ErrorState>());
-        verify(() => communityRepository.getCommunityMembers(any())).called(1);
+        verify(() => getMembersQuery(any())).called(1);
       },
     );
 
@@ -83,20 +101,24 @@ void main() {
       "sut.leave() should set state as loading when action starts",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
-          return Right(null);
+          return Right(const LeaveCommunityOutput(""));
         });
 
-        sut.leave(communityId: faker.guid.guid());
+        sut.leave(
+          communityId: faker.guid.guid(),
+          role: Role.member,
+        );
 
         expect(sut.leaveState.value, isA<LoadingState>());
-        verify(() => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"))).called(1);
+        verify(
+          () => leaveCommunityUsecase(
+            any(),
+          ),
+        ).called(1);
       },
     );
 
@@ -104,21 +126,22 @@ void main() {
       "sut.leave() should set state as success when repo returns right",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
-          return Right(null);
+          return Right(const LeaveCommunityOutput(""));
         });
 
-        await sut.leave(communityId: faker.guid.guid());
+        await sut.leave(
+          communityId: faker.guid.guid(),
+          role: Role.moderator,
+        );
 
         expect(sut.leaveState.value, isA<SuccessState<Exception, void>>());
         verify(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).called(1);
       },
@@ -128,21 +151,19 @@ void main() {
       "sut.leave() should set state as error when repo returns left",
       () async {
         when(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).thenAnswer((_) async {
           return Left(Exception());
         });
 
-        await sut.leave(communityId: faker.guid.guid());
+        await sut.leave(communityId: faker.guid.guid(), role: Role.member);
 
         expect(sut.leaveState.value, isA<ErrorState>());
         verify(
-          () => communityRepository.leaveCommunity(
-            communityId: any(named: "communityId"),
-            memberId: any(named: "memberId"),
+          () => leaveCommunityUsecase(
+            any(),
           ),
         ).called(1);
       },

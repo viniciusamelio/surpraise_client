@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import '../../../contexts/auth/auth.dart';
+import '../../../contexts/feed/feed.dart';
 import '../../../core/core.dart';
 
 import '../../../core/external_dependencies.dart';
@@ -29,6 +30,7 @@ class DefaultSessionController implements SessionController {
   @override
   Future<void> logout() async {
     await authService.logout();
+    injected<FeedController>().state.set(InitialState());
     await authPersistanceService.deleteAuthenticatedUserData();
     currentUser.set(null);
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(

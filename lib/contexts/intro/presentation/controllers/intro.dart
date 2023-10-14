@@ -33,10 +33,6 @@ class DefaultIntroController
       );
       return;
     }
-    final formData = SignInFormDataDto();
-    formData.password = persistedUser.password!;
-    formData.username = persistedUser.email;
-    await authService.signin(formData);
     final avatar = await storageService.getImage(
       bucketId: Env.avatarBucket,
       fileId: persistedUser.id,

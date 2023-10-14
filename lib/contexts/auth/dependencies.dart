@@ -1,14 +1,25 @@
 import '../../core/core.dart';
+import '../../core/external_dependencies.dart';
 import '../../shared/shared.dart';
 import 'auth.dart';
 import 'presentation/controllers/controllers.dart';
 
 Future<void> authDependencies() async {
+  inject<UserRepository>(
+    UserRepository(
+      databaseDatasource: injected(),
+    ),
+  );
+  inject<GetUserQuery>(
+    GetUserQuery(
+      databaseDatasource: injected(),
+    ),
+  );
   inject<AuthService>(
     DefaultAuthService(
       supabaseClient: injected(),
-      databaseDatasource: injected(),
-      httpClient: injected(),
+      createUserRepository: injected<UserRepository>(),
+      getUserQuery: injected(),
     ),
   );
   inject<AuthPersistanceService>(

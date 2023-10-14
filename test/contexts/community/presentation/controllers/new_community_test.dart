@@ -15,11 +15,12 @@ void main() {
   group(
     "New Community Controller",
     () {
-      late CommunityRepository communityRepository;
+      late UpdateCommunityUsecase updateCommunityUsecase;
       late SessionController sessionController;
       late ImageManager imageManager;
       late ImageController imageController;
       late NewCommunityController sut;
+      late CreateCommunityUsecase createCommunityUsecase;
       bool receivedEvent = false;
       final input = CreateCommunityInput(
         description: faker.lorem.words(4).join(" "),
@@ -29,15 +30,17 @@ void main() {
       );
 
       setUp(() {
-        communityRepository = MockCommunityRepository();
+        updateCommunityUsecase = MockUpdateCommunityUsecase();
         sessionController = MockSessionController();
         imageManager = MockImageManager();
         imageController = MockImageController();
+        createCommunityUsecase = MockCreateCommunityUsecase();
         sut = DefaultNewCommunityController(
-          communityRepository: communityRepository,
+          updateCommunityUsecase: updateCommunityUsecase,
           sessionController: sessionController,
           imageManager: imageManager,
           imageController: imageController,
+          createCommunityUsecase: createCommunityUsecase,
         );
         WidgetsFlutterBinding.ensureInitialized();
         registerFallbackValue(
@@ -94,7 +97,7 @@ void main() {
               faker.internet.httpsUrl(),
             ),
           );
-          when(() => communityRepository.createCommunity(any())).thenAnswer(
+          when(() => createCommunityUsecase(any())).thenAnswer(
             (_) async => Left(Exception()),
           );
           sut.imagePath.value = "somekindofpath";
@@ -113,7 +116,7 @@ void main() {
               faker.internet.httpsUrl(),
             ),
           );
-          when(() => communityRepository.createCommunity(any())).thenAnswer(
+          when(() => createCommunityUsecase(any())).thenAnswer(
             (_) async => Right(
               CreateCommunityOutput(
                 id: faker.guid.guid(),

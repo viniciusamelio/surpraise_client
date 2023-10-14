@@ -8,7 +8,6 @@ abstract class SavedUserMapper {
       "email": user.email,
       "name": user.name,
       "id": user.id,
-      "password": user.password,
       "avatarUrl": user.avatarUrl
     };
   }
@@ -19,7 +18,6 @@ abstract class SavedUserMapper {
       name: json["name"],
       email: json["email"],
       id: json["id"],
-      password: json["password"],
       avatarUrl: json["avatarUrl"],
     );
   }

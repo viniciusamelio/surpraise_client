@@ -1,8 +1,6 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../../../shared/shared.dart';
-import '../../application/application.dart';
-import '../../dtos/dtos.dart';
 
 abstract class CommunityDetailsController
     extends BaseStateController<List<FindCommunityMemberOutput>> {
@@ -12,6 +10,7 @@ abstract class CommunityDetailsController
   AtomNotifier<DefaultState<Exception, void>> get leaveState;
   Future<void> leave({
     required String communityId,
+    required Role role,
   });
 
   AtomNotifier<bool> get showSearchbar;
@@ -23,28 +22,46 @@ class DefaultCommunityDetailsController
     with BaseState<Exception, List<FindCommunityMemberOutput>>
     implements CommunityDetailsController {
   DefaultCommunityDetailsController({
-    required CommunityRepository communityRepository,
     required SessionController sessionController,
-  })  : _communityRepository = communityRepository,
+    required LeaveCommunityUsecase leaveCommunityUsecase,
+    required GetMembersQuery getMembersQuery,
+  })  : _getMembersQuery = getMembersQuery,
+        _leaveCommunityUsecase = leaveCommunityUsecase,
         _sessionController = sessionController {
     setDefaultErrorHandling();
   }
-  final CommunityRepository _communityRepository;
   final SessionController _sessionController;
+  final LeaveCommunityUsecase _leaveCommunityUsecase;
+  final GetMembersQuery _getMembersQuery;
 
   @override
   Future<void> getMembers({required String id}) async {
     state.set(LoadingState());
-    final membersOrError = await _communityRepository.getCommunityMembers(id);
-    stateFromEither(membersOrError);
+    final membersOrError = await _getMembersQuery(
+      GetMembersInput(
+        communityId: id,
+      ),
+    );
+    state.set(membersOrError.fold(
+      (left) => ErrorState(left),
+      (right) => SuccessState(
+        right.value,
+      ),
+    ));
   }
 
   @override
-  Future<void> leave({required String communityId}) async {
+  Future<void> leave({
+    required String communityId,
+    required Role role,
+  }) async {
     leaveState.set(LoadingState());
-    final leaveResponseOrError = await _communityRepository.leaveCommunity(
-      communityId: communityId,
-      memberId: _sessionController.currentUser.value!.id,
+    final leaveResponseOrError = await _leaveCommunityUsecase(
+      LeaveCommunityInput(
+        communityId: communityId,
+        memberId: _sessionController.currentUser.value!.id,
+        memberRole: role.value,
+      ),
     );
     leaveState.set(
       leaveResponseOrError.fold(

@@ -1,5 +1,5 @@
 import '../../../core/core.dart';
-import '../dtos/dtos.dart';
+import '../../../core/external_dependencies.dart';
 
 class CommunitySavedEvent implements ApplicationEvent<CreateCommunityOutput> {
   const CommunitySavedEvent(this.data);

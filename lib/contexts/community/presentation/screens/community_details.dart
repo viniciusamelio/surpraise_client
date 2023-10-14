@@ -13,7 +13,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../community.dart';
-import '../../dtos/dtos.dart';
 
 class CommunityDetailsScreen extends StatefulWidget {
   const CommunityDetailsScreen({
@@ -40,10 +39,18 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
     role = widget.community.role;
     updatedCommunity = StreamController.broadcast();
     eventBus = injected();
-    controller.leaveState.on<SuccessState>((_) {
+    controller.leaveState.listenState(onSuccess: (_) {
       eventBus.add(const LeftCommunityEvent());
       if (mounted) {
         Navigator.pop(context);
+      }
+    }, onError: (error) {
+      if (mounted) {
+        String message = "Deu ruim ao sair da comunidade";
+        if (error is DomainException) {
+          message = injected<TranslationService>().get(error.message);
+        }
+        ErrorSnack(message: message).show(context: context);
       }
     });
     eventBus.on<CommunitySavedEvent>(
@@ -279,6 +286,7 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                     onConfirm: () async {
                       await controller.leave(
                         communityId: widget.community.id,
+                        role: widget.community.role,
                       );
                     },
                   ).show(

@@ -35,7 +35,6 @@ class DefaultSignInController
           tag: right.tag,
           name: right.name,
           email: right.email,
-          password: formData.password,
           id: right.id,
           avatarUrl: avatar.fold(
             (left) => null,

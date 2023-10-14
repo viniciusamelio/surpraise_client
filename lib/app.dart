@@ -11,12 +11,12 @@ import 'package:restart_app/restart_app.dart';
 import 'contexts/auth/auth.dart';
 import 'contexts/auth/presentation/screens/signup.dart';
 import 'contexts/community/community.dart';
-import 'contexts/community/dtos/find_community_dto.dart';
 import 'contexts/feed/presentation/presentation.dart';
 import 'contexts/intro/intro.dart';
 import 'contexts/main/main_screen.dart';
 import 'contexts/profile/presentation/presentation.dart';
 import 'core/core.dart';
+import 'core/external_dependencies.dart';
 import 'shared/dtos/dtos.dart';
 import 'shared/presentation/molecules/error_widget.dart';
 

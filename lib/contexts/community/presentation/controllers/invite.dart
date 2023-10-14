@@ -1,8 +1,9 @@
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart' hide CommunityRepository;
-import '../../application/application.dart';
+import '../../../../shared/presentation/controllers/controllers.dart';
 
-abstract class InviteController extends BaseStateController<void> {
+abstract class InviteController
+    extends BaseStateController<InviteMemberOutput> {
   Future<void> invite({
     required String memberId,
     required Role role,
@@ -18,18 +19,16 @@ abstract class InviteController extends BaseStateController<void> {
 }
 
 class DefaultInviteController
-    with BaseState<Exception, void>
+    with BaseState<Exception, InviteMemberOutput>
     implements InviteController {
   DefaultInviteController({
-    required InviteRepository inviteRepository,
-    required CommunityRepository communityRepository,
-  })  : _inviteRepository = inviteRepository,
-        _communityRepository = communityRepository {
-    setDefaultErrorHandling();
-  }
+    required InviteMemberUsecase inviteMemberUsecase,
+    required GetUserByTagQuery getUserByTagQuery,
+  })  : _inviteMemberUsecase = inviteMemberUsecase,
+        _userByTagQuery = getUserByTagQuery;
 
-  final InviteRepository _inviteRepository;
-  final CommunityRepository _communityRepository;
+  final InviteMemberUsecase _inviteMemberUsecase;
+  final GetUserByTagQuery _userByTagQuery;
 
   @override
   Future<void> invite({
@@ -38,10 +37,13 @@ class DefaultInviteController
     required String communityId,
   }) async {
     state.set(LoadingState());
-    final invitedMemberResultOrError = await _inviteRepository.inviteMember(
-      memberId: memberId,
-      communityId: communityId,
-      role: role,
+    final invitedMemberResultOrError = await _inviteMemberUsecase(
+      InviteMemberInput(
+        communityId: communityId,
+        memberId: memberId,
+        role: role.value,
+        inviterId: injected<SessionController>().currentUser.value!.id,
+      ),
     );
     stateFromEither(invitedMemberResultOrError);
   }
@@ -49,11 +51,20 @@ class DefaultInviteController
   @override
   Future<void> getUserFromTag(String tag) async {
     userSearchState.set(LoadingState());
-    final usersOrError = await _communityRepository.getUserByTag("@$tag");
+    final usersOrError = await _userByTagQuery(
+      GetUserByTagQueryInput(
+        tag: "@$tag",
+      ),
+    );
     userSearchState.set(usersOrError.fold(
       (left) => ErrorState(left),
       (right) => SuccessState(
-        right!,
+        GetUserOutput(
+          tag: tag,
+          name: right.value.name,
+          email: right.value.email,
+          id: right.value.id,
+        ),
       ),
     ));
   }

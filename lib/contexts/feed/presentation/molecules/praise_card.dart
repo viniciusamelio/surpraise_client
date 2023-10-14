@@ -110,7 +110,7 @@ class _CardHeader extends StatelessWidget {
               ),
               Text.rich(
                 TextSpan(
-                    text: mode.isFeed() ? "Recebeu um " : "Enviou um",
+                    text: mode.isFeed() ? "Recebeu um " : "Enviou um ",
                     style: theme.fontScheme.p1,
                     children: [
                       TextSpan(

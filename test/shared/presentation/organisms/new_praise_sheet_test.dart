@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:surpraise_client/contexts/community/community.dart';
-import 'package:surpraise_client/contexts/community/dtos/dtos.dart';
 import 'package:surpraise_client/core/core.dart';
 import 'package:surpraise_client/core/external_dependencies.dart'
     hide CommunityRepository, equals;
@@ -22,19 +21,20 @@ void main() {
     late GetCommunitiesController communitiesController;
     late PraiseUsecase praiseUsecase;
 
-    late CommunityRepository communityRepository;
+    late GetCommunitiesByUserQuery communitiesByUserQuery;
+    late GetUserByTagQuery getUserByTagQuery;
     setUp(() async {
-      communityRepository = MockCommunityRepository();
+      communitiesByUserQuery = MockCommunitiesByUserQuery();
       sessionController = MockSessionController();
-
+      getUserByTagQuery = MockGetUserByTagQuery();
       communitiesController = DefaultGetCommunitiesController(
-        communityRepository: communityRepository,
+        getCommunitiesByUserQuery: communitiesByUserQuery,
       );
 
       praiseUsecase = MockPraiseUsecase();
 
       controller = DefaultPraiseController(
-        communityRepository: communityRepository,
+        getUserByTagQuery: getUserByTagQuery,
         praiseUsecase: praiseUsecase,
       );
 
@@ -50,41 +50,6 @@ void main() {
         ],
       );
       await translationService.load(const Locale("pt"));
-
-      when(() => communityRepository.getCommunities(any())).thenAnswer(
-        (invocation) async => Right(
-          [
-            CommunityOutput(
-              id: faker.guid.guid(),
-              ownerId: faker.guid.guid(),
-              description: faker.lorem.word(),
-              title: "Mocked Community",
-              image: faker.internet.httpsUrl(),
-              role: faker.randomGenerator.element(Role.values),
-            )
-          ],
-        ),
-      );
-      when(
-        () => communityRepository.getUserByTag("@none"),
-      ).thenAnswer(
-        (invocation) async => Left(
-          ApplicationException(message: "User not found"),
-        ),
-      );
-      when(
-        () => communityRepository.getUserByTag("@vini"),
-      ).thenAnswer(
-        (invocation) async => Right(
-          GetUserOutput(
-            tag: "@vini",
-            name: "Vinicius",
-            email: "vini@surpraise.com",
-            id: faker.guid.guid(),
-          ),
-        ),
-      );
-
       registerFallbackValue(
         PraiseInput(
           commmunityId: faker.guid.guid(),
@@ -92,6 +57,58 @@ void main() {
           praisedId: faker.guid.guid(),
           praiserId: faker.guid.guid(),
           topic: "#kindness",
+        ),
+      );
+
+      registerFallbackValue(
+        GetCommunitiesByUserInput(
+          id: faker.guid.guid(),
+        ),
+      );
+
+      when(() => communitiesByUserQuery.call(any())).thenAnswer(
+        (invocation) async => Right(
+          GetCommunitiesByUserOutput(
+            value: [
+              CommunityOutput(
+                id: faker.guid.guid(),
+                ownerId: faker.guid.guid(),
+                description: faker.lorem.word(),
+                title: "Mocked Community",
+                image: faker.internet.httpsUrl(),
+                role: faker.randomGenerator.element(Role.values),
+              )
+            ],
+          ),
+        ),
+      );
+      when(
+        () => getUserByTagQuery(
+          GetUserByTagQueryInput(
+            tag: "@none",
+          ),
+        ),
+      ).thenAnswer(
+        (invocation) async => Left(
+          QueryError("User not found"),
+        ),
+      );
+      when(
+        () => getUserByTagQuery(
+          GetUserByTagQueryInput(
+            tag: "@vini",
+          ),
+        ),
+      ).thenAnswer(
+        (invocation) async => Right(
+          GetUserQueryOutput(
+            value: GetUserDto(
+              tag: "@vini",
+              name: "Vinicius",
+              email: "vini@surpraise.com",
+              id: faker.guid.guid(),
+            ),
+          ),
         ),
       );
 

@@ -28,6 +28,4 @@ export "./mixins/mixins.dart";
 
 export "./events/events.dart";
 
-export "./enums/enums.dart";
-
 export "./realtime/realtime.dart";

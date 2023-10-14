@@ -7,7 +7,6 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../application/application.dart';
-import '../../dtos/dtos.dart';
 import '../controllers/remove_member.dart';
 
 class RemoveMemberSheet extends StatefulWidget {

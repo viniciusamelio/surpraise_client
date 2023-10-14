@@ -1,6 +1,5 @@
 import '../../../../core/core.dart';
 import '../../../../shared/shared.dart';
-import '../../../community/community.dart';
 import '../../application/events/events.dart';
 
 abstract class AnswerInviteController extends BaseStateController<void> {
@@ -14,12 +13,12 @@ class DefaultAnswerInviteController
     with BaseState<Exception, void>
     implements AnswerInviteController {
   DefaultAnswerInviteController({
-    required InviteRepository inviteRepository,
+    required AnswerInviteUsecase answerInviteUsecase,
     required SessionController sessionController,
-  }) : _repository = inviteRepository {
+  }) : _usecase = answerInviteUsecase {
     setDefaultErrorHandling();
   }
-  final InviteRepository _repository;
+  final AnswerInviteUsecase _usecase;
 
   @override
   Future<void> answerInvite({
@@ -27,10 +26,10 @@ class DefaultAnswerInviteController
     required bool accept,
   }) async {
     state.set(LoadingState());
-    final inviteOrError = await _repository.answerInvitation(
-      inviteId: inviteId,
+    final inviteOrError = await _usecase(AnswerInviteInput(
+      id: inviteId,
       accepted: accept,
-    );
+    ));
     state.set(
       inviteOrError.fold(
         (left) => ErrorState(left),

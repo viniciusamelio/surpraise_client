@@ -4,11 +4,9 @@ import '../../../../env.dart';
 import '../../../../shared/presentation/controllers/controllers.dart';
 import '../../../../shared/presentation/molecules/error_snack.dart';
 import '../../../../shared/presentation/molecules/success_snack.dart';
-import '../../../community/application/application.dart';
 
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
-import '../../../community/dtos/dtos.dart';
 import '../../../feed/application/application.dart';
 import '../../profile.dart';
 
@@ -36,19 +34,19 @@ class DefaultProfileController
     with BaseState<Exception, Praises>
     implements ProfileController {
   DefaultProfileController({
-    required CommunityRepository communityRepository,
     required FeedRepository feedRepository,
     required StorageService storageService,
     required ImageController imageController,
+    required GetCommunitiesByUserQuery communitiesByUserQuery,
   })  : _feedRepository = feedRepository,
+        _communitiesByUserQuery = communitiesByUserQuery,
         _imageController = imageController,
-        _storageService = storageService,
-        _communityRepository = communityRepository;
+        _storageService = storageService;
 
   final FeedRepository _feedRepository;
-  final CommunityRepository _communityRepository;
   final ImageController _imageController;
   final StorageService _storageService;
+  final GetCommunitiesByUserQuery _communitiesByUserQuery;
 
   @override
   final ValueNotifier<DefaultState<Exception, Communities>> communitiesState =
@@ -57,11 +55,14 @@ class DefaultProfileController
   @override
   Future<void> getCommunities(String userId) async {
     communitiesState.value = LoadingState();
-    final communitiesOrError =
-        await _communityRepository.getCommunities(userId);
+    final communitiesOrError = await _communitiesByUserQuery(
+      GetCommunitiesByUserInput(
+        id: userId,
+      ),
+    );
     communitiesState.value = communitiesOrError.fold(
       (left) => ErrorState(left),
-      (right) => SuccessState(right),
+      (right) => SuccessState(right.value),
     );
   }
 
