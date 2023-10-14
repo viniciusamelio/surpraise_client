@@ -27,9 +27,7 @@ class DefaultFeedController
     required FeedRepository feedRepository,
     required RealtimeQuery realtimeQueryClient,
   })  : _repository = feedRepository,
-        _queryClient = realtimeQueryClient {
-    setDefaultErrorHandling();
-  }
+        _queryClient = realtimeQueryClient;
   final RealtimeQuery _queryClient;
   final FeedRepository _repository;
   @override
