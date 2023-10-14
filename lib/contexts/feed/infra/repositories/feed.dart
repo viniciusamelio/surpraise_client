@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/dtos/dtos.dart';
@@ -22,20 +24,22 @@ class DefaultFeedRepository implements FeedRepository {
     int offset = 0,
   }) async {
     try {
-      final feed = await _supabaseClient.supabase.functions.invoke(
-        "feed",
-        body: {
-          "userId": userId,
-          "max": max,
-          "offset": offset,
-        },
-      );
+      final feed = await _supabaseClient.supabase.functions.invoke("feed",
+          body: {
+            "userId": userId,
+            "max": max,
+            "offset": offset,
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+          responseType: ResponseType.text);
       if (feed.status != 200) {
         return Left(Exception("Something went wrong getting your feed"));
       }
 
       return Right(
-        (feed.data as List)
+        (jsonDecode(feed.data) as List)
             .map<PraiseDto>(
               (e) => PraiseDto(
                 id: e["praise_id"],
