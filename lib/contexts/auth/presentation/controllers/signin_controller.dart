@@ -12,6 +12,10 @@ abstract class SignInController extends BaseStateController<GetUserOutput> {
   SignInFormDataDto get formData;
   Future<void> signIn();
 
+  Future<void> socialSignIn({
+    required SocialProvider provider,
+  });
+
   void dispose();
 }
 
@@ -71,5 +75,10 @@ class DefaultSignInController
     state.set(LoadingState());
     final result = await _authService.signin(formData);
     stateFromEither(result);
+  }
+
+  @override
+  Future<void> socialSignIn({required SocialProvider provider}) async {
+    await _authService.socialLogin(provider);
   }
 }

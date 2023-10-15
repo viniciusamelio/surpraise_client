@@ -147,7 +147,7 @@ void main() {
 
     testWidgets("sut should runs callback when tapping expected buttons",
         (tester) async {
-      bool removeTapped = false;
+      // bool removeTapped = false;
       bool uploadTapped = false;
 
       await tester.pumpWidget(
@@ -155,7 +155,7 @@ void main() {
           sut: ProfileHeaderOrganism(
             user: sessionController.currentUser.value!,
             onRemoveAvatarConfirmed: () {
-              removeTapped = true;
+              // removeTapped = true;
             },
             uploadAction: () {
               uploadTapped = true;
@@ -169,19 +169,19 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(uploadTapped, isTrue);
+      // Removido pelo fato de inativar a remoção de imagem no momento
+      // await tester.tap(find.byIcon(Icons.close));
+      // await tester.pump(const Duration(milliseconds: 200));
 
-      await tester.tap(find.byIcon(Icons.close));
-      await tester.pump(const Duration(milliseconds: 200));
+      // expect(find.byIcon(HeroiconsMini.camera), findsOneWidget);
 
-      expect(find.byIcon(HeroiconsMini.camera), findsOneWidget);
+      // await tester.tap(
+      //   find.byIcon(HeroiconsMini.checkCircle),
+      //   warnIfMissed: false,
+      // );
+      // await tester.pumpAndSettle();
 
-      await tester.tap(
-        find.byIcon(HeroiconsMini.checkCircle),
-        warnIfMissed: false,
-      );
-      await tester.pumpAndSettle();
-
-      expect(removeTapped, isTrue);
+      // expect(removeTapped, isTrue);
     });
   });
 }

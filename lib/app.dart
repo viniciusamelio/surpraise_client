@@ -50,7 +50,10 @@ class App extends StatelessWidget {
             navigatorKey: navigatorKey,
             routes: {
               LoginScreen.routeName: (context) => const LoginScreen(),
-              SignupScreen.routeName: (context) => const SignupScreen(),
+              SignupScreen.routeName: (context) => SignupScreen(
+                    formData: ModalRoute.of(context)!.settings.arguments
+                        as SignupFormDataDto?,
+                  ),
               PasswordRecoveryScreen.routeName: (context) =>
                   const PasswordRecoveryScreen(),
               FeedScreen.routeName: (context) => FeedScreen(

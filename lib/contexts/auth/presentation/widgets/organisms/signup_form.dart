@@ -21,6 +21,16 @@ class SignupFormOrganism extends StatefulWidget {
 
 class _SignupFormOrganismState extends State<SignupFormOrganism> {
   SignupController get controller => widget.controller;
+  late final TextEditingController nameController, emailController;
+
+  @override
+  void initState() {
+    nameController = TextEditingController(text: controller.formData.name);
+    emailController = TextEditingController(text: controller.formData.email);
+    super.initState();
+  }
+
+  bool get socialLogin => controller.formData.email != null;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +40,8 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
         children: [
           BaseInput(
             label: "Nome",
+            enabled: !socialLogin,
+            controller: nameController,
             onSaved: (value) => controller.formData.name = value!,
             validator: (value) => name(value ?? ""),
             preffixIcon: const Icon(
@@ -41,6 +53,8 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
           ),
           BaseInput(
             label: "E-mail",
+            enabled: !socialLogin,
+            controller: emailController,
             onSaved: (value) => controller.formData.email = value!,
             validator: (value) => email(value ?? ""),
             preffixIcon: const Icon(
@@ -61,18 +75,25 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
           SizedBox(
             height: context.theme.spacingScheme.verticalSpacing,
           ),
-          BaseInput(
-            label: "Password",
-            onSaved: (value) => controller.formData.password = value!,
-            validator: (value) => password(value ?? ""),
-            preffixIcon: const Icon(
-              HeroiconsSolid.lockClosed,
+          Visibility(
+            visible: !socialLogin,
+            child: Column(
+              children: [
+                BaseInput(
+                  label: "Password",
+                  onSaved: (value) => controller.formData.password = value!,
+                  validator: (value) => password(value ?? ""),
+                  preffixIcon: const Icon(
+                    HeroiconsSolid.lockClosed,
+                  ),
+                  obscureText: true,
+                  maxLines: 1,
+                ),
+                SizedBox(
+                  height: context.theme.spacingScheme.verticalSpacing * 2,
+                ),
+              ],
             ),
-            obscureText: true,
-            maxLines: 1,
-          ),
-          SizedBox(
-            height: context.theme.spacingScheme.verticalSpacing * 2,
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,

@@ -22,7 +22,7 @@ class FeedScreen extends StatefulWidget {
     super.key,
     required this.user,
   });
-  static const String routeName = '/feed/';
+  static const String routeName = '/feed';
 
   final UserDto user;
   @override

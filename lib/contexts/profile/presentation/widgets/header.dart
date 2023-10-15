@@ -69,33 +69,39 @@ class ProfileHeaderOrganism extends StatelessWidget {
                                   onPressed: uploadAction,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 6,
+                              const Visibility(
+                                visible: false,
+                                child: SizedBox(
+                                  width: 6,
+                                ),
                               ),
-                              SizedBox.square(
-                                dimension: 36,
-                                child: BorderedIconButton(
-                                  padding: const EdgeInsets.all(2),
-                                  preffixIcon: Icon(
-                                    Icons.close,
-                                    color:
-                                        context.theme.colorScheme.dangerColor,
-                                    size: 24,
+                              Visibility(
+                                visible: false,
+                                child: SizedBox.square(
+                                  dimension: 36,
+                                  child: BorderedIconButton(
+                                    padding: const EdgeInsets.all(2),
+                                    preffixIcon: Icon(
+                                      Icons.close,
+                                      color:
+                                          context.theme.colorScheme.dangerColor,
+                                      size: 24,
+                                    ),
+                                    onPressed: () async {
+                                      ConfirmSnack(
+                                        leadingIcon: Icon(
+                                          HeroiconsMini.camera,
+                                          color: context.theme.colorScheme
+                                              .inputForegroundColor,
+                                        ),
+                                        message:
+                                            "Tem certeza que quer remover o avatar?",
+                                        onConfirm: onRemoveAvatarConfirmed,
+                                      ).show(
+                                        context: context,
+                                      );
+                                    },
                                   ),
-                                  onPressed: () async {
-                                    ConfirmSnack(
-                                      leadingIcon: Icon(
-                                        HeroiconsMini.camera,
-                                        color: context.theme.colorScheme
-                                            .inputForegroundColor,
-                                      ),
-                                      message:
-                                          "Tem certeza que quer remover o avatar?",
-                                      onConfirm: onRemoveAvatarConfirmed,
-                                    ).show(
-                                      context: context,
-                                    );
-                                  },
                                 ),
                               ),
                             ],

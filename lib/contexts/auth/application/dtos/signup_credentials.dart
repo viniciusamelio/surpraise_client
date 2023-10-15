@@ -6,8 +6,10 @@ class SignupCredentialsDto extends CredentialsDto {
     required super.email,
     required super.password,
     required this.name,
+    this.isSocial = false,
   });
 
   final String tag;
   final String name;
+  final bool isSocial;
 }

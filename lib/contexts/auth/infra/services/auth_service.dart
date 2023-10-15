@@ -3,7 +3,7 @@ import '../../../../core/external_dependencies.dart';
 import '../../auth.dart';
 
 class DefaultAuthService implements AuthService {
-  const DefaultAuthService({
+  DefaultAuthService({
     required SupabaseCloudClient supabaseClient,
     required CreateUserRepository createUserRepository,
     required GetUserQuery getUserQuery,
@@ -143,6 +143,24 @@ class DefaultAuthService implements AuthService {
         Exception(
           "Something went wrong request your password reset",
         ),
+      );
+    }
+  }
+
+  @override
+  AsyncAction<void> socialLogin(SocialProvider provider) async {
+    try {
+      final success = await _supabase.supabase.auth.signInWithOAuth(
+        provider == SocialProvider.discord ? Provider.discord : Provider.github,
+        redirectTo: "surpraise://app/auth/callback",
+        authScreenLaunchMode: LaunchMode.inAppWebView,
+        context: navigatorKey.currentContext!,
+      );
+      if (!success) throw Exception("Login Error");
+      return Right(null);
+    } on Exception catch (_) {
+      return Left(
+        InvalidCredentialsException(),
       );
     }
   }
