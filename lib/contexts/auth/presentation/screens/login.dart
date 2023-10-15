@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:blurple/sizes/spacings.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
@@ -94,43 +95,62 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                       },
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Column(
                     children: [
-                      BaseButton.icon(
-                        onPressed: () {
-                          controller.socialSignIn(
-                            provider: SocialProvider.discord,
-                          );
-                        },
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 40,
-                        ),
-                        backgroundColor: const Color(0XFF5865f2),
-                        borderRadius: 6,
-                        icon: SvgPicture.asset(
-                          "assets/images/discord.svg",
-                          width: 24,
+                      Text(
+                        "Ou entre com",
+                        style: context.theme.fontScheme.p2.copyWith(
                           color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      BaseButton.icon(
-                        onPressed: () {
-                          controller.socialSignIn(
-                            provider: SocialProvider.github,
-                          );
-                        },
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 40,
-                        ),
-                        borderRadius: 6,
-                        backgroundColor: Colors.black,
-                        icon: SvgPicture.asset(
-                          "assets/images/github.svg",
-                          width: 24,
-                          color: Colors.white,
+                      SizedBox(
+                        height: Spacings.sm,
+                      ),
+                      SizedBox(
+                        height: 36,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: BaseButton.icon(
+                                onPressed: () {
+                                  controller.socialSignIn(
+                                    provider: SocialProvider.discord,
+                                  );
+                                },
+                                padding: const EdgeInsets.all(4),
+                                backgroundColor: const Color(0XFF5865f2),
+                                borderRadius: 6,
+                                icon: SvgPicture.asset(
+                                  "assets/images/discord.svg",
+                                  width: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: BaseButton.icon(
+                                onPressed: () {
+                                  controller.socialSignIn(
+                                    provider: SocialProvider.github,
+                                  );
+                                },
+                                padding: const EdgeInsets.all(4),
+                                borderRadius: 6,
+                                backgroundColor: Colors.black,
+                                icon: SvgPicture.asset(
+                                  "assets/images/github.svg",
+                                  width: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
