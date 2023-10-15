@@ -4,6 +4,7 @@ import '../../../../core/events/events.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../core/navigator.dart';
 import '../../../../core/state/default_state.dart';
+import '../../../../shared/presentation/molecules/success_snack.dart';
 import '../../auth.dart';
 import '../../presentation/controllers/controllers.dart';
 import '../../presentation/screens/signup.dart';
@@ -14,6 +15,10 @@ void socialAuthConsumer({
   required SignInController signInController,
 }) {
   eventBus.on<SocialSignedInEvent>((event) async {
+    const SuccessSnack(
+      message: "Autenticado! Aguarde um instante...",
+      duration: 1,
+    ).show(context: navigatorKey.currentContext!);
     final userOrError = await getUserQuery(
       GetUserQueryInput(
         id: event.data.id,

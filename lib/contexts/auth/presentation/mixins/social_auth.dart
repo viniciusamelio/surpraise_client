@@ -24,14 +24,18 @@ mixin SocialAuthWidget<T extends StatefulWidget> on State<T> {
         final session = event.session;
         final provider = session?.user.appMetadata["provider"];
 
-        if (session != null && ["discord", "github"].contains(provider)) {
+        if (session != null &&
+            (["discord", "github"].contains(provider) ||
+                session.user.userMetadata?["iss"] ==
+                    "https://api.github.com")) {
           eventBus.add(
             SocialSignedInEvent(
               SocialAuthDetailsDto(
                 id: session.user.id,
                 email: session.user.email!,
-                name: session.user.userMetadata!["custom_claims"]
-                    ["global_name"],
+                name: session.user.userMetadata?["custom_claims"]
+                        ?["global_name"] ??
+                    session.user.userMetadata!["full_name"],
                 provider: provider == "discord"
                     ? SocialProvider.discord
                     : SocialProvider.github,
