@@ -32,6 +32,7 @@ Future<void> authDependencies() async {
       authService: injected(),
       authPersistanceService: injected(),
       storageService: injected(),
+      createUserRepository: injected<UserRepository>(),
     ),
   );
   inject<SignInController>(
@@ -52,5 +53,10 @@ Future<void> authDependencies() async {
     DefaultPasswordController(
       authService: injected(),
     ),
+  );
+  socialAuthConsumer(
+    eventBus: injected(),
+    getUserQuery: injected(),
+    signInController: injected(),
   );
 }

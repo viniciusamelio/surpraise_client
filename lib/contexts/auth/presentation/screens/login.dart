@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:app_links/app_links.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
@@ -8,6 +7,7 @@ import '../../../../core/external_dependencies.dart';
 import '../../application/application.dart';
 import '../controllers/signin_controller.dart';
 
+import '../mixins/social_auth.dart';
 import '../widgets/widgets.dart';
 import 'signup.dart';
 
@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
   late final GlobalKey<FormState> formKey;
   late final SignInController controller;
 
@@ -28,23 +28,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     controller = injected();
     formKey = GlobalKey<FormState>();
-    final appLinks = AppLinks();
-
-    appLinks.allUriLinkStream.listen((uri) {
-      if (uri.path.contains("/auth/callback")) {
-        // TODO: Criar lógica para enviar evento do callback de login social
-        // Conferir se o perfil do usuário já existe, devendo se sub-dividir de acordo com os cenários abaixo
-        // Cadastro:
-        // Preencher préviamente os dados de nome e email, deixando o campo de e-mail inalterável
-        // Criar somente o registro na tabela de perfil, e finalmente, enviar o usuário pro fluxo padrão de login
-        // (Talvez eeja necessário fazer a separação do fluxo de login após cadastrar, visando a reutilização de código, ou também apenas adicionar um argumento para fazer o tratamento)
-        //
-        // Login:
-        // Adicionar um argumento que pule a chamada de auth, caso seja login social, somente fazendo a consulta do perfil
-        // e mandando o usuário para a área logada
-      }
-    });
+    listenToSocialAuth();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    disposeSocialAuth();
+    super.dispose();
   }
 
   @override

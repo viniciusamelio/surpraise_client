@@ -10,7 +10,9 @@ import '../../auth.dart';
 
 abstract class SignupController extends BaseStateController<CreateUserOutput> {
   SignupFormDataDto get formData;
-  Future<void> signup();
+  Future<void> signup({required bool isSocial});
+
+  void setFormData(SignupFormDataDto formData);
 
   ValueNotifier<File?> get profilePicture;
 }
@@ -22,6 +24,7 @@ class DefaultSignupController
     required this.authService,
     required this.authPersistanceService,
     required this.storageService,
+    required this.createUserRepository,
   }) {
     state.listenState(
       onError: (left) {
@@ -34,22 +37,34 @@ class DefaultSignupController
   final AuthService authService;
   final AuthPersistanceService authPersistanceService;
   final StorageService storageService;
+  final CreateUserRepository createUserRepository;
 
   @override
-  final SignupFormDataDto formData = SignupFormDataDto();
+  SignupFormDataDto formData = SignupFormDataDto();
 
   @override
-  Future<void> signup() async {
+  Future<void> signup({
+    required bool isSocial,
+  }) async {
     state.set(LoadingState());
 
-    final result = await authService.signup(
-      SignupCredentialsDto(
-        tag: "@${formData.tag}",
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-      ),
-    );
+    final result = !isSocial
+        ? await authService.signup(
+            SignupCredentialsDto(
+              tag: "@${formData.tag}",
+              email: formData.email!,
+              password: formData.password,
+              name: formData.name!,
+            ),
+          )
+        : await createUserRepository.create(
+            CreateUserInput(
+              tag: "@${formData.tag}",
+              name: formData.name!,
+              email: formData.email!,
+              id: injected<SupabaseCloudClient>().supabase.auth.currentUser!.id,
+            ),
+          );
     result.fold(
       (left) => state.set(ErrorState(left)),
       (right) async {
@@ -84,4 +99,9 @@ class DefaultSignupController
 
   @override
   final ValueNotifier<File?> profilePicture = ValueNotifier(null);
+
+  @override
+  void setFormData(SignupFormDataDto formData) {
+    this.formData = formData;
+  }
 }

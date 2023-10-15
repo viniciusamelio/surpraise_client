@@ -5,12 +5,13 @@ import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 import '../../application/services/services.dart';
+import '../../dtos/dtos.dart';
 import '../controllers/signup_controller.dart';
 import '../widgets/widgets.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
-
+  const SignupScreen({super.key, this.formData});
+  final SignupFormDataDto? formData;
   static const String routeName = '/auth/signup';
 
   @override
@@ -22,11 +23,17 @@ class _SignupScreenState extends State<SignupScreen> {
   late final AuthService authService;
   late final SignupController controller;
 
+  bool socialSignup = false;
+
   @override
   void initState() {
     formKey = GlobalKey<FormState>();
     authService = injected();
     controller = injected();
+    if (widget.formData != null) {
+      controller.setFormData(widget.formData!);
+      socialSignup = true;
+    }
     super.initState();
   }
 
@@ -65,7 +72,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           controller.formData.profilePicture =
                               controller.profilePicture.value!;
                           formKey.currentState!.save();
-                          controller.signup();
+                          controller.signup(isSocial: socialSignup);
                         }
                       },
                       backgroundColor: context.theme.colorScheme.accentColor,
