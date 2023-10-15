@@ -1,3 +1,7 @@
+# 1.2.0
+## Added
+- authentication with github & discord
+
 # 1.1.0
 ## Changed
 - changed supabase edge functions call to sdk itself
