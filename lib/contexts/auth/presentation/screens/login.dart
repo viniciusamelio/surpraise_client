@@ -1,7 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
+import 'package:app_links/app_links.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../application/application.dart';
 import '../controllers/signin_controller.dart';
 
 import '../widgets/widgets.dart';
@@ -24,6 +28,22 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     controller = injected();
     formKey = GlobalKey<FormState>();
+    final appLinks = AppLinks();
+
+    appLinks.allUriLinkStream.listen((uri) {
+      if (uri.path.contains("/auth/callback")) {
+        // TODO: Criar lógica para enviar evento do callback de login social
+        // Conferir se o perfil do usuário já existe, devendo se sub-dividir de acordo com os cenários abaixo
+        // Cadastro:
+        // Preencher préviamente os dados de nome e email, deixando o campo de e-mail inalterável
+        // Criar somente o registro na tabela de perfil, e finalmente, enviar o usuário pro fluxo padrão de login
+        // (Talvez eeja necessário fazer a separação do fluxo de login após cadastrar, visando a reutilização de código, ou também apenas adicionar um argumento para fazer o tratamento)
+        //
+        // Login:
+        // Adicionar um argumento que pule a chamada de auth, caso seja login social, somente fazendo a consulta do perfil
+        // e mandando o usuário para a área logada
+      }
+    });
     super.initState();
   }
 
@@ -82,6 +102,43 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      BaseButton.icon(
+                        onPressed: () {
+                          // TODO: extrair isso para método de controller
+                          injected<AuthService>()
+                              .socialLogin(SocialProvider.discord);
+                        },
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 40,
+                        ),
+                        backgroundColor: const Color(0XFF5865f2),
+                        borderRadius: 6,
+                        icon: SvgPicture.asset(
+                          "assets/images/discord.svg",
+                          width: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                      BaseButton.icon(
+                        onPressed: () {},
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 40,
+                        ),
+                        borderRadius: 6,
+                        backgroundColor: Colors.black,
+                        icon: SvgPicture.asset(
+                          "assets/images/github.svg",
+                          width: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
