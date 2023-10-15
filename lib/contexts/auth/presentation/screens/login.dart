@@ -99,9 +99,9 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                     children: [
                       BaseButton.icon(
                         onPressed: () {
-                          // TODO: extrair isso para método de controller
-                          injected<AuthService>()
-                              .socialLogin(SocialProvider.discord);
+                          controller.socialSignIn(
+                            provider: SocialProvider.discord,
+                          );
                         },
                         padding: const EdgeInsets.symmetric(
                           vertical: 4,
@@ -116,7 +116,11 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                         ),
                       ),
                       BaseButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.socialSignIn(
+                            provider: SocialProvider.github,
+                          );
+                        },
                         padding: const EdgeInsets.symmetric(
                           vertical: 4,
                           horizontal: 40,
