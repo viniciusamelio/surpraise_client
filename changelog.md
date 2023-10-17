@@ -1,3 +1,7 @@
+# 1.2.1
+## Added
+- protection against rooted/jailbroken devices
+
 # 1.2.0
 ## Added
 - authentication with github & discord
