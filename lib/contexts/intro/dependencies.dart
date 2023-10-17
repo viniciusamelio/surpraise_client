@@ -7,6 +7,7 @@ Future<void> introDependencies() async {
       authPersistanceService: injected(),
       storageService: injected(),
       authService: injected(),
+      rootDetector: injected(),
     ),
   );
 }
