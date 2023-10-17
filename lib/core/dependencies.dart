@@ -13,6 +13,7 @@ import '../contexts/settings/settings.dart';
 import '../env.dart';
 import 'core.dart';
 import 'external_dependencies.dart';
+import 'services/root_detector/root_detector.dart';
 
 export "package:surpraise_core/surpraise_core.dart";
 
@@ -54,6 +55,7 @@ Future<void> _coreDependencies() async {
       imageManager: injected(),
     ),
   );
+  inject<RootDetector>(RootDetectorService());
   inject<ApplicationEventBus>(
     DefaultBus(),
     singleton: true,

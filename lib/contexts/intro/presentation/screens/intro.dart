@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../../../shared/presentation/molecules/molecules.dart';
 import '../controllers/intro.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -17,6 +18,15 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   void initState() {
     controller = injected();
+    controller.state.on<ErrorState<Exception, bool>>(
+      (value) {
+        String message = "Deu ruim ao iniciar o app";
+        if (value.exception is ApplicationException) {
+          message = (value.exception as ApplicationException).message;
+        }
+        ErrorSnack(message: message).show(context: context);
+      },
+    );
     controller.handleFirstPage();
     super.initState();
   }
