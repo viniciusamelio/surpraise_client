@@ -1,3 +1,12 @@
+# 1.2.2
+## Added
+- notificator call through SDK instead of http call
+
+## Fixed
+- multiple "first-time" feed loading
+- multiple new praise reaction
+- project name on settings screen
+
 # 1.2.1
 ## Added
 - protection against rooted/jailbroken devices
