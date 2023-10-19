@@ -97,6 +97,7 @@ class DefaultPraiseController
     userState.set(InitialState());
     communitiesState.removeListeners();
     userState.removeListeners();
+    state.removeListeners();
     state.set(InitialState());
     formData.praisedTag = null;
   }
