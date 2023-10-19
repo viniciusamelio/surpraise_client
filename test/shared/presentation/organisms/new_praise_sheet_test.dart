@@ -114,7 +114,7 @@ void main() {
 
       when(
         () => praiseUsecase.call(any()),
-      ).thenAnswer((invocation) async => Right(PraiseOutput()));
+      ).thenAnswer((invocation) async => Right(const PraiseOutput()));
 
       sut = const NewPraiseSheet();
     });

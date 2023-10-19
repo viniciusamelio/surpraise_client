@@ -35,6 +35,13 @@ class _NewPraiseSheetState extends State<NewPraiseSheet> {
     );
     controller.state.listenState(
       onSuccess: (right) {
+        if (right.praiseData != null) {
+          injected<SupabaseCloudClient>()
+              .supabase
+              .functions
+              .invoke("notificator", body: right.praiseData);
+        }
+
         const SuccessSnack(message: "Praise enviado!").show(context: context);
         Navigator.of(context).pop();
       },

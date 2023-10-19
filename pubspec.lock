@@ -541,10 +541,10 @@ packages:
     dependency: "direct main"
     description:
       name: font_awesome_flutter
-      sha256: "5fb789145cae1f4c3245c58b3f8fb287d055c26323879eab57a7bf0cfd1e45f3"
+      sha256: "52671aea66da73b58d42ec6d0912b727a42248dd9a7c76d6c20f275783c48c08"
       url: "https://pub.dev"
     source: hosted
-    version: "10.5.0"
+    version: "10.6.0"
   freezed_annotation:
     dependency: transitive
     description:
@@ -1356,7 +1356,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "85ed0ecc14a3c239692caab7bc74667bc25d31c3"
+      resolved-ref: "9abc8b3d026217761a82454594f9e2343a6fbedf"
       url: "https://github.com/viniciusamelio/surpraise_core"
     source: git
     version: "1.0.0"
@@ -1365,7 +1365,7 @@ packages:
     description:
       path: "."
       ref: "feat/supabase-migration"
-      resolved-ref: "810a3be35447cc91da925c65a3b7a680c077d2ab"
+      resolved-ref: "544aa00dfd531ae1e3c2be32f8c5a0ff2edf28cd"
       url: "https://github.com/viniciusamelio/surpraise_infra"
     source: git
     version: "1.0.0"
