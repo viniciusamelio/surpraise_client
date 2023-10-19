@@ -4,7 +4,7 @@ import '../../../core/external_dependencies.dart' hide CommunityRepository;
 import '../../dtos/user.dart';
 import '../dtos/dtos.dart';
 
-abstract class PraiseController extends BaseStateController<void> {
+abstract class PraiseController extends BaseStateController<PraiseOutput> {
   AtomNotifier<int> get activeStep;
   AtomNotifier<DefaultState<Exception, UserDto>> get userState;
   AtomNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
@@ -18,7 +18,7 @@ abstract class PraiseController extends BaseStateController<void> {
 }
 
 class DefaultPraiseController
-    with BaseState<Exception, void>
+    with BaseState<Exception, PraiseOutput>
     implements PraiseController {
   DefaultPraiseController({
     required PraiseUsecase praiseUsecase,
@@ -97,6 +97,7 @@ class DefaultPraiseController
     userState.set(InitialState());
     communitiesState.removeListeners();
     userState.removeListeners();
+    state.removeListeners();
     state.set(InitialState());
     formData.praisedTag = null;
   }

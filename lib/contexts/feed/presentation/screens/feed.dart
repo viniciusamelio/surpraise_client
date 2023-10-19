@@ -282,6 +282,7 @@ class _FeedScreenState extends State<FeedScreen> {
         bool isTop = scrollController.position.pixels == 0;
         if (!isTop &&
             controller.state.value is SuccessState &&
+            (controller.state.value as SuccessState).data.length > 0 &&
             (controller.state.value as SuccessState).data.length ==
                 controller.max) {
           scrollController.saveCurrentPosition();
