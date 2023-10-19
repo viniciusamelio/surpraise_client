@@ -38,7 +38,7 @@ class ProjectSupportSection extends StatelessWidget {
             text: "Você pode contribuir diretamente com o desenvolvimento do",
             children: [
               TextSpan(
-                text: " Sur#praise",
+                text: " #surpraise",
                 style: theme.fontScheme.p2.copyWith(
                   color: theme.colorScheme.accentColor,
                 ),
