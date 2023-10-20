@@ -249,18 +249,18 @@ class _NewPraiseUserSelectionStepState
               itemBuilder: (context, value) => ListTile(
                 tileColor: context.theme.colorScheme.inputBackgroundColor,
                 title: Text(
-                  value.name,
+                  value.value,
                   style: context.theme.fontScheme.p2.copyWith(
                     color: context.theme.colorScheme.foregroundColor,
                   ),
                 ),
               ),
               onSuggestionSelected: (value) {
-                widget.controller.formData.topic = value.value;
+                widget.controller.formData.topic = value.name;
                 topicController.text = value.value;
               },
               suggestionsCallback: (pattern) => TopicValues.values.where(
-                (element) => element.name.contains(
+                (element) => element.value.contains(
                   pattern,
                 ),
               ),
@@ -353,10 +353,20 @@ class ErrorMessageMolecule extends StatelessWidget {
 }
 
 enum TopicValues {
-  kind("#kindness"),
-  tech("#tech"),
-  finance("#finance");
+  thanks("#agradecimento"),
+  recognition("#reconhecimento"),
+  randomness("#aleatoriedade"),
+  partnership("#parceria"),
+  motivational("#motivational"),
+  surprise("#surpresa");
 
   final String value;
   const TopicValues(this.value);
+
+  static TopicValues fromString(String string) {
+    return TopicValues.values.firstWhere(
+      (element) => element.name == string.replaceFirst("#", ""),
+      orElse: () => TopicValues.values.first,
+    );
+  }
 }
