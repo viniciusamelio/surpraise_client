@@ -1356,7 +1356,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "9abc8b3d026217761a82454594f9e2343a6fbedf"
+      resolved-ref: c34cb4a4b64e0b779b7ac0f724d1619b6b13f005
       url: "https://github.com/viniciusamelio/surpraise_core"
     source: git
     version: "1.0.0"
