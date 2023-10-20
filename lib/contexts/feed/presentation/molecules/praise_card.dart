@@ -2,8 +2,7 @@ import 'package:blurple/tokens/size_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../shared/dtos/dtos.dart';
-import '../../../../shared/presentation/controllers/session.dart';
+import '../../../../shared/shared.dart';
 
 enum PraiseCardMode {
   feed,
@@ -124,7 +123,7 @@ class _CardHeader extends StatelessWidget {
                         style: theme.fontScheme.p1,
                       ),
                       TextSpan(
-                        text: praise.topic,
+                        text: TopicValues.fromString(praise.topic).value,
                         style: theme.fontScheme.p1.copyWith(
                           color: Colors.white,
                         ),

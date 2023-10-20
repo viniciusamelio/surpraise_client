@@ -38,12 +38,11 @@ class DefaultPraiseController
   Future<void> sendPraise(String praiserId) async {
     state.set(LoadingState());
     final input = PraiseInput(
-      commmunityId: formData.communityId,
-      message: formData.message,
-      praisedId: formData.praisedId,
-      praiserId: praiserId,
-      topic: formData.topic!,
-    );
+        commmunityId: formData.communityId,
+        message: formData.message,
+        praisedId: formData.praisedId,
+        praiserId: praiserId,
+        topic: "#${formData.topic!}");
     final result = await _usecase(input);
     stateFromEither(result);
     result.fold(

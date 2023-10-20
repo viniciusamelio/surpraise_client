@@ -197,27 +197,27 @@ void main() {
             BaseSearchableDropdown<TopicValues>,
             skipOffstage: false,
           ),
-          "kind",
+          "agradecimento",
         );
         await tester.pumpAndSettle();
         expect(
           find.text(
-            TopicValues.kind.name,
+            TopicValues.thanks.value,
             skipOffstage: false,
           ),
-          findsNWidgets(2),
+          findsOneWidget,
         );
         await tester.tap(
           find
               .text(
-                TopicValues.kind.name,
+                TopicValues.thanks.value,
                 skipOffstage: false,
               )
               .last,
         );
         await tester.pumpAndSettle();
 
-        expect(controller.formData.topic, equals(TopicValues.kind.value));
+        expect(controller.formData.topic, equals(TopicValues.thanks.name));
 
         await tester.enterText(
           find.byType(BaseInput).last,
