@@ -1,6 +1,9 @@
 # 1.2.3
 ## Changed
 - more meaningful praise reasons
+## Added
+- praises feed refresh 
+
 # 1.2.2
 ## Added
 - notificator call through SDK instead of http call
