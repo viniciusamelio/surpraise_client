@@ -48,7 +48,6 @@ class _FeedScreenState extends State<FeedScreen> {
   void didChangeDependencies() {
     if (controller.state.value is InitialState) {
       final userId = sessionController.currentUser.value!.id;
-      controller.getPraises(userId);
       controller.getInvites(userId);
       controller.listenToInvites(userId);
       controller.listenToPraises(userId);
@@ -73,133 +72,147 @@ class _FeedScreenState extends State<FeedScreen> {
     return SafeArea(
       child: Stack(
         children: [
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            controller: scrollController,
-            padding: EdgeInsets.all(
-              Spacings.lg,
-            ),
-            child: Column(
-              children: [
-                const UserDisplayer(),
-                SizedBox(
-                  height: Spacings.lg,
-                ),
-                Text.rich(
-                  TextSpan(
-                    text: "Aqui você consegue ver os ",
-                    style: context.theme.fontScheme.p2.copyWith(fontSize: 16),
-                    children: [
-                      TextSpan(
-                        text: "#praises ",
-                        style: context.theme.fontScheme.p2.copyWith(
-                          fontSize: 16,
-                          color: context.theme.colorScheme.accentColor,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        children: [
-                          TextSpan(
-                            style: context.theme.fontScheme.p2
-                                .copyWith(fontSize: 16),
-                            text:
-                                "recentes.\nQue tal mandar um pra aquele parça que sempre te ajuda no trampo? ",
-                          )
-                        ],
-                      )
-                    ],
+          RefreshIndicator(
+            onRefresh: () async {
+              await controller
+                  .getLatestPraises(sessionController.currentUser.value!.id);
+            },
+            color: theme.colorScheme.infoColor,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              controller: scrollController,
+              padding: EdgeInsets.all(
+                Spacings.lg,
+              ),
+              child: Column(
+                children: [
+                  const UserDisplayer(),
+                  SizedBox(
+                    height: Spacings.lg,
                   ),
-                ),
-                SizedBox(
-                  height: Spacings.lg,
-                ),
-                AtomObserver(
-                  atom: controller.invitesState,
-                  builder: (context, state) {
-                    if (state is! SuccessState) return const SizedBox.shrink();
-                    final List<InviteDto> data = (state as SuccessState).data;
-                    if (data.isEmpty) return const SizedBox.shrink();
-                    return InvitesSectionOrganism(
-                      data: data,
-                      answerInviteController: answerInviteController,
-                    );
-                  },
-                ),
-                PolymorphicAtomObserver<
-                    DefaultState<Exception, List<PraiseDto>>>(
-                  atom: controller.state,
-                  types: [
-                    TypedAtomHandler(
-                      type: ErrorState<Exception, List<PraiseDto>>,
-                      builder: (context, state) {
-                        return Column(
+                  Text.rich(
+                    TextSpan(
+                      text: "Aqui você consegue ver os ",
+                      style: context.theme.fontScheme.p2.copyWith(fontSize: 16),
+                      children: [
+                        TextSpan(
+                          text: "#praises ",
+                          style: context.theme.fontScheme.p2.copyWith(
+                            fontSize: 16,
+                            color: context.theme.colorScheme.accentColor,
+                            fontWeight: FontWeight.w700,
+                          ),
                           children: [
-                            const ErrorWidgetMolecule(
-                              message: "Deu ruim ao recuperar seu feed",
-                            ),
-                            SizedBox(
-                              height: Spacings.md,
-                            ),
-                            BorderedButton(
-                              onPressed: () {
-                                controller.getPraises(
-                                  sessionController.currentUser.value!.id,
-                                );
-                              },
-                              foregroundColor: theme.colorScheme.dangerColor,
-                              text: "Tentar novamente",
-                            ),
+                            TextSpan(
+                              style: context.theme.fontScheme.p2
+                                  .copyWith(fontSize: 16),
+                              text:
+                                  "recentes.\nQue tal mandar um pra aquele parça que sempre te ajuda no trampo? ",
+                            )
                           ],
-                        );
-                      },
+                        )
+                      ],
                     ),
-                    TypedAtomHandler(
-                      type: SuccessState<Exception, List<PraiseDto>>,
-                      builder: (context, state) {
-                        final List<PraiseDto> data =
-                            controller.loadedPraises.value;
-
-                        if (data.isEmpty) {
+                  ),
+                  SizedBox(
+                    height: Spacings.lg,
+                  ),
+                  AtomObserver(
+                    atom: controller.invitesState,
+                    builder: (context, state) {
+                      if (state is! SuccessState) {
+                        return const SizedBox.shrink();
+                      }
+                      final List<InviteDto> data = (state as SuccessState).data;
+                      if (data.isEmpty) return const SizedBox.shrink();
+                      return InvitesSectionOrganism(
+                        data: data,
+                        answerInviteController: answerInviteController,
+                      );
+                    },
+                  ),
+                  PolymorphicAtomObserver<
+                      DefaultState<Exception, List<PraiseDto>>>(
+                    atom: controller.state,
+                    types: [
+                      TypedAtomHandler(
+                        type: ErrorState<Exception, List<PraiseDto>>,
+                        builder: (context, state) {
                           return Column(
                             children: [
-                              LottieBuilder.asset(
-                                "assets/animations/empty-state.json",
-                                height: 280,
+                              const ErrorWidgetMolecule(
+                                message: "Deu ruim ao recuperar seu feed",
                               ),
-                              Text(
-                                "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
-                                style: context.theme.fontScheme.p2.copyWith(
-                                  fontSize: 18,
-                                  color:
-                                      context.theme.colorScheme.foregroundColor,
-                                ),
-                                textAlign: TextAlign.center,
+                              SizedBox(
+                                height: Spacings.md,
+                              ),
+                              BorderedButton(
+                                onPressed: () {
+                                  controller.getPraises(
+                                    sessionController.currentUser.value!.id,
+                                  );
+                                },
+                                foregroundColor: theme.colorScheme.dangerColor,
+                                text: "Tentar novamente",
                               ),
                             ],
                           );
-                        }
-                        return SizedBox(
-                          height: (160 * data.length).toDouble(),
-                          child: ListView.separated(
-                            itemCount: data.length,
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 20,
-                            ),
-                            itemBuilder: (context, index) => PraiseCardMolecule(
-                              praise: data[index],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                  defaultBuilder: (state) {
-                    return const LoaderMolecule();
-                  },
-                ),
-              ],
+                        },
+                      ),
+                      TypedAtomHandler(
+                        type: SuccessState<Exception, List<PraiseDto>>,
+                        builder: (context, state) {
+                          final List<PraiseDto> data =
+                              controller.loadedPraises.value;
+
+                          if (data.isEmpty) {
+                            return Column(
+                              children: [
+                                LottieBuilder.asset(
+                                  "assets/animations/empty-state.json",
+                                  height: 280,
+                                ),
+                                Text(
+                                  "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
+                                  style: context.theme.fontScheme.p2.copyWith(
+                                    fontSize: 18,
+                                    color: context
+                                        .theme.colorScheme.foregroundColor,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            );
+                          }
+                          return StreamBuilder<void>(
+                              stream: controller.newFeedItems.stream,
+                              builder: (context, snapshot) {
+                                return SizedBox(
+                                  height: (160 * data.length).toDouble(),
+                                  child: ListView.separated(
+                                    itemCount: data.length,
+                                    shrinkWrap: false,
+                                    physics: const BouncingScrollPhysics(),
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(
+                                      height: 20,
+                                    ),
+                                    itemBuilder: (context, index) =>
+                                        PraiseCardMolecule(
+                                      praise: data[index],
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                      ),
+                    ],
+                    defaultBuilder: (state) {
+                      return const LoaderMolecule();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(
@@ -264,8 +277,8 @@ class _FeedScreenState extends State<FeedScreen> {
     );
 
     eventBus.on<PraiseSentEvent>(
-      (event) {
-        controller.getPraises(sessionController.currentUser.value!.id);
+      (event) async {
+        controller.getLatestPraises(sessionController.currentUser.value!.id);
       },
       name: "praiseSentHandler",
     );
