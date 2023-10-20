@@ -49,6 +49,7 @@ class _FeedScreenState extends State<FeedScreen> {
     if (controller.state.value is InitialState) {
       final userId = sessionController.currentUser.value!.id;
       controller.getInvites(userId);
+      controller.getPraises(userId);
       controller.listenToInvites(userId);
       controller.listenToPraises(userId);
     }

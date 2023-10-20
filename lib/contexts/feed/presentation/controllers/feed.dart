@@ -102,6 +102,9 @@ class DefaultFeedController
         value: userId,
       ),
       callback: () {
+        if (loadedPraises.value.isEmpty) {
+          return;
+        }
         loadedPraises.value.clear();
         getPraises(userId);
       },
