@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../../core/external_dependencies.dart';
 import '../../dtos/dtos.dart';
 import '../../feed.dart';
@@ -7,6 +9,7 @@ import '../../../../core/core.dart';
 
 abstract class FeedController extends BaseStateController<List<PraiseDto>> {
   Future<void> getPraises(String userId);
+  Future<void> getLatestPraises(String userId);
 
   AtomNotifier<DefaultState<Exception, List<InviteDto>>> get invitesState;
   Future<void> getInvites(String userId);
@@ -16,6 +19,8 @@ abstract class FeedController extends BaseStateController<List<PraiseDto>> {
 
   AtomNotifier<int> get offset;
   AtomNotifier<List<PraiseDto>> get loadedPraises;
+
+  StreamController<void> get newFeedItems;
 
   int get max;
 }
@@ -97,9 +102,34 @@ class DefaultFeedController
         value: userId,
       ),
       callback: () {
+        if (loadedPraises.value.isEmpty) {
+          return;
+        }
         loadedPraises.value.clear();
         getPraises(userId);
       },
     );
   }
+
+  @override
+  Future<void> getLatestPraises(String userId) async {
+    final invitesOrError = await _repository.get(userId: userId);
+    invitesOrError.fold(
+      (left) => null,
+      (right) {
+        final firstPraise = loadedPraises.value.first;
+        if (right.first.id == loadedPraises.value.first.id) {
+          return;
+        }
+        loadedPraises.value.replaceRange(0, 10, [
+          ...right,
+          firstPraise,
+        ]);
+        newFeedItems.add(null);
+      },
+    );
+  }
+
+  @override
+  final StreamController<void> newFeedItems = StreamController.broadcast();
 }

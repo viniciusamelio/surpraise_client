@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import '../shared.dart';
 
-class PraiseDto {
+class PraiseDto extends Equatable {
   const PraiseDto({
     required this.id,
     required this.message,
@@ -18,4 +20,15 @@ class PraiseDto {
   final String communityId;
   final UserDto praiser;
   final UserDto? praised;
+
+  @override
+  List<Object?> get props => [
+        id,
+        message,
+        topic,
+        communityName,
+        communityId,
+        praiser.id,
+        praised?.id,
+      ];
 }
