@@ -6,6 +6,7 @@ import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 import 'package:pressable/pressable.dart';
 
+import '../../../../contexts/community/presentation/controllers/controllers.dart';
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../shared.dart';
@@ -27,11 +28,16 @@ class _NewPraiseUserSelectionStepState
     extends State<NewPraiseUserSelectionStep> {
   late final TextEditingController userFieldController;
   late final TextEditingController topicController;
+  late final CommunityDetailsController communityDetailsController;
   @override
   void initState() {
     topicController = TextEditingController();
     userFieldController =
         TextEditingController(text: widget.controller.formData.praisedTag);
+    communityDetailsController = injected();
+    communityDetailsController.getMembers(
+      id: widget.controller.formData.communityId,
+    );
     widget.controller.userState.listenState(
       onSuccess: (right) {
         widget.controller.activeStep.set(2);
@@ -59,19 +65,20 @@ class _NewPraiseUserSelectionStepState
         atom: widget.controller.userState,
         types: [
           TypedAtomHandler(
-              type: LoadingState,
-              builder: (context, state) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: CircularProgressIndicator(
-                          color: context.theme.colorScheme.accentColor,
-                        ),
-                      ),
-                    ],
-                  ))
+            type: LoadingState,
+            builder: (context, state) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: CircularProgressIndicator(
+                    color: context.theme.colorScheme.accentColor,
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
         defaultBuilder: (userState) {
           return AtomObserver(
@@ -107,50 +114,106 @@ class _NewPraiseUserSelectionStepState
                           Row(
                             children: [
                               Expanded(
-                                child: UserSearchInput(
-                                  controller: userFieldController,
-                                  hint: "@ de quem vai receber o #praise",
-                                  action: () {
-                                    widget.controller.getUserFromTag(
-                                      "@${userFieldController.text.trim().replaceAll('@', '')}",
-                                    );
-                                  },
-                                  enabled: state == 1,
-                                  borderColor: state == 1
-                                      ? context.theme.colorScheme.accentColor
-                                      : Colors.transparent,
-                                  iconColor: state == 1
-                                      ? context.theme.colorScheme.accentColor
-                                      : context.theme.colorScheme
-                                          .inputForegroundColor,
-                                  errorText: userState is ErrorState
-                                      ? "Não conseguimos encontrar nenhum usuário com o @ especificado"
-                                      : null,
-                                ),
-                              ),
-                              Visibility(
-                                visible: state == 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: SizedBox.square(
-                                    dimension: 48,
-                                    child: BaseButton.icon(
-                                      padding: EdgeInsets.zero,
-                                      backgroundColor: ColorTokens.concrete,
-                                      icon: Icon(
-                                        HeroiconsMini.xMark,
-                                        size: 18,
-                                        color: context.theme.colorScheme
-                                            .inputForegroundColor,
-                                      ),
-                                      onPressed: () {
-                                        userFieldController.clear();
-                                        widget.controller.activeStep.set(1);
-                                        widget.controller.userState.set(
-                                          InitialState(),
+                                child: AtomObserver(
+                                    atom: communityDetailsController.state,
+                                    builder: (context, communityState) {
+                                      if (communityState is LoadingState) {
+                                        return const LoaderMolecule();
+                                      } else if (communityState is ErrorState) {
+                                        return const ErrorWidgetMolecule(
+                                          message:
+                                              "Deu ruim ao achar os membros da comunidade",
                                         );
-                                      },
+                                      }
+
+                                      final data = (communityState
+                                                  as SuccessState)
+                                              .data
+                                          as List<FindCommunityMemberOutput>;
+                                      return BaseSearchableDropdown(
+                                        controller: userFieldController,
+                                        direction: AxisDirection.up,
+                                        suggestionsBoxDecoration:
+                                            const SuggestionsBoxDecoration(
+                                          color: Colors.transparent,
+                                          elevation: 0,
+                                        ),
+                                        itemBuilder: (context, member) =>
+                                            Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 4.0,
+                                            horizontal: 2,
+                                          ),
+                                          child: AbsorbPointer(
+                                            child: ListTile(
+                                              tileColor: Colors.black87,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              title: Text(
+                                                member.tag,
+                                                style: theme.fontScheme.p2
+                                                    .copyWith(
+                                                  color: theme
+                                                      .colorScheme.accentColor,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                member.name,
+                                                style: theme.fontScheme.p1
+                                                    .copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        onSuggestionSelected: (member) {
+                                          widget.controller
+                                              .getUserFromTag(member.tag);
+                                        },
+                                        suggestionsCallback: (search) {
+                                          return data
+                                              .where((element) => (element.tag
+                                                      .toLowerCase()
+                                                      .contains(search
+                                                          .toLowerCase()) ||
+                                                  element.name
+                                                      .toLowerCase()
+                                                      .contains(search
+                                                          .toLowerCase())))
+                                              .where((element) =>
+                                                  element.id !=
+                                                  injected<SessionController>()
+                                                      .currentUser
+                                                      .value!
+                                                      .id)
+                                              .toList();
+                                        },
+                                      );
+                                    }),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: SizedBox.square(
+                                  dimension: 48,
+                                  child: BaseButton.icon(
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: ColorTokens.concrete,
+                                    icon: Icon(
+                                      HeroiconsMini.xMark,
+                                      size: 18,
+                                      color: context.theme.colorScheme
+                                          .inputForegroundColor,
                                     ),
+                                    onPressed: () {
+                                      userFieldController.clear();
+                                      widget.controller.activeStep.set(1);
+                                      widget.controller.userState.set(
+                                        InitialState(),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
@@ -181,47 +244,52 @@ class _NewPraiseUserSelectionStepState
                           const SizedBox(
                             height: 16,
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: BorderedButton(
-                              onPressed: () {
-                                if (state == 2 &&
-                                    formKey.currentState!.validate()) {
-                                  if (widget.controller.formData.topic ==
-                                      null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const ErrorSnack(
-                                        message:
-                                            "Precisamos de um motivo para o praise",
-                                      ).build(context),
+                          Visibility(
+                            visible: state == 2,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: BorderedButton(
+                                onPressed: () {
+                                  if (state == 2 &&
+                                      formKey.currentState!.validate()) {
+                                    if (widget.controller.formData.topic ==
+                                        null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const ErrorSnack(
+                                          message:
+                                              "Precisamos de um motivo para o praise",
+                                        ).build(context),
+                                      );
+                                      return;
+                                    }
+                                    formKey.currentState!.save();
+                                    widget.controller.sendPraise(
+                                      injected<SessionController>()
+                                          .currentUser
+                                          .value!
+                                          .id,
                                     );
-                                    return;
                                   }
-                                  formKey.currentState!.save();
-                                  widget.controller.sendPraise(
-                                    injected<SessionController>()
-                                        .currentUser
-                                        .value!
-                                        .id,
-                                  );
-                                }
-                              },
-                              padding: const EdgeInsets.all(12),
-                              borderSide: BorderSide(
-                                color: state == 2
-                                    ? context.theme.colorScheme.accentColor
-                                    : context
-                                        .theme.colorScheme.inputForegroundColor,
-                              ),
-                              child: Text(
-                                "#praise  >",
-                                style: context.theme.fontScheme.input.copyWith(
+                                },
+                                padding: const EdgeInsets.all(12),
+                                borderSide: BorderSide(
                                   color: state == 2
                                       ? context.theme.colorScheme.accentColor
                                       : context.theme.colorScheme
                                           .inputForegroundColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                ),
+                                child: Text(
+                                  "#praise  >",
+                                  style:
+                                      context.theme.fontScheme.input.copyWith(
+                                    color: state == 2
+                                        ? context.theme.colorScheme.accentColor
+                                        : context.theme.colorScheme
+                                            .inputForegroundColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ),

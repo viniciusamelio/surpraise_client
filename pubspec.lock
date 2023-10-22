@@ -78,7 +78,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "4276208bd42ff4e4b6ff214d72681ef354dca59c"
+      resolved-ref: "3a7a3fcfab2ca9e20950b53d648f3ce00fad716a"
       url: "https://github.com/viniciusamelio/blurple.git"
     source: git
     version: "0.0.1"
@@ -789,10 +789,10 @@ packages:
     dependency: "direct main"
     description:
       name: lottie
-      sha256: b8bdd54b488c54068c57d41ae85d02808da09e2bee8b8dd1f59f441e7efa60cd
+      sha256: a93542cc2d60a7057255405f62252533f8e8956e7e06754955669fd32fb4b216
       url: "https://pub.dev"
     source: hosted
-    version: "2.6.0"
+    version: "2.7.0"
   matcher:
     dependency: transitive
     description:

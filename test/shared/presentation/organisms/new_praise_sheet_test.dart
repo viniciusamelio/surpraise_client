@@ -20,15 +20,23 @@ void main() {
     late SessionController sessionController;
     late GetCommunitiesController communitiesController;
     late PraiseUsecase praiseUsecase;
+    late CommunityDetailsController communityDetailsController;
 
     late GetCommunitiesByUserQuery communitiesByUserQuery;
     late GetUserByTagQuery getUserByTagQuery;
+    late GetMembersQuery getMembersQuery;
     setUp(() async {
       communitiesByUserQuery = MockCommunitiesByUserQuery();
       sessionController = MockSessionController();
       getUserByTagQuery = MockGetUserByTagQuery();
+      getMembersQuery = MockGetMembersQuery();
       communitiesController = DefaultGetCommunitiesController(
         getCommunitiesByUserQuery: communitiesByUserQuery,
+      );
+      communityDetailsController = DefaultCommunityDetailsController(
+        sessionController: MockSessionController(),
+        leaveCommunityUsecase: MockLeaveCommunityUsecase(),
+        getMembersQuery: getMembersQuery,
       );
 
       praiseUsecase = MockPraiseUsecase();
@@ -38,6 +46,7 @@ void main() {
         praiseUsecase: praiseUsecase,
       );
 
+      inject<CommunityDetailsController>(communityDetailsController);
       inject<SessionController>(sessionController);
       inject<GetCommunitiesController>(communitiesController);
       inject<PraiseController>(controller);
@@ -65,8 +74,33 @@ void main() {
           id: faker.guid.guid(),
         ),
       );
+      registerFallbackValue(GetMembersInput(communityId: faker.guid.guid()));
 
-      when(() => communitiesByUserQuery.call(any())).thenAnswer(
+      when(
+        () => getMembersQuery(
+          any(),
+        ),
+      ).thenAnswer(
+        (invocation) async => Right(
+          GetMembersOutput(
+            value: [
+              FindCommunityMemberOutput(
+                tag: "@vini",
+                name: "Vinicius",
+                role: "member",
+                communityId: faker.guid.guid(),
+                id: faker.guid.guid(),
+              )
+            ],
+          ),
+        ),
+      );
+
+      when(
+        () => communitiesByUserQuery.call(
+          any(),
+        ),
+      ).thenAnswer(
         (invocation) async => Right(
           GetCommunitiesByUserOutput(
             value: [
@@ -169,26 +203,28 @@ void main() {
         expect(controller.activeStep.value, equals(1));
 
         await tester.enterText(
-          find.byType(UserSearchInput),
+          find.byType(TextField).last,
           "none",
         );
-        await tester.tap(find.byIcon(Icons.search));
         await tester.pumpAndSettle();
 
-        expect(controller.userState.value, isA<ErrorState>());
-        expect(
-          find.text(
-            "Não conseguimos encontrar nenhum usuário com o @ especificado",
-          ),
-          findsOneWidget,
-        );
+        expect(find.textContaining("none"), findsOneWidget);
 
+        await tester.tap(find.byIcon(HeroiconsMini.xMark).last);
         await tester.enterText(
-          find.byType(UserSearchInput),
-          "vini",
+          find.byType(TextField).last,
+          "vinicius",
         );
-        await tester.tap(find.byIcon(Icons.search));
+        await tester.pump(const Duration(seconds: 1));
+
+        expect(find.textContaining("Vinicius"), findsOneWidget);
+        await tester.ensureVisible(find.text("Vinicius"));
         await tester.pumpAndSettle();
+        await tester.tap(
+          find.textContaining("Vinicius", skipOffstage: false),
+          warnIfMissed: false,
+        );
+        await tester.pump(const Duration(seconds: 2));
 
         expect(controller.activeStep.value, equals(2));
 
