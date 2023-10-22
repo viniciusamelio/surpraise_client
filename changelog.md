@@ -1,3 +1,7 @@
+# 1.2.4
+## Added
+- new member selection on praise flow
+
 # 1.2.3
 ## Changed
 - more meaningful praise reasons
