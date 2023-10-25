@@ -259,8 +259,7 @@ class _NewPraiseUserSelectionStepState
                                     ),
                                   ),
                                   onChanged: (value) {
-                                    widget.controller.privatePraise
-                                        .set(!value!);
+                                    widget.controller.privatePraise.set(value!);
                                   },
                                 ),
                               ),
