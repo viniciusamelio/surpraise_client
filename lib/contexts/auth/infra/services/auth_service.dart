@@ -151,9 +151,9 @@ class DefaultAuthService implements AuthService {
   AsyncAction<void> socialLogin(SocialProvider provider) async {
     try {
       final success = await _supabase.supabase.auth.signInWithOAuth(
-        provider == SocialProvider.discord ? Provider.discord : Provider.github,
+        Provider.values.singleWhere((element) => provider.name == element.name),
         redirectTo: "surpraise://app/auth/callback",
-        authScreenLaunchMode: LaunchMode.inAppWebView,
+        authScreenLaunchMode: LaunchMode.platformDefault,
         context: navigatorKey.currentContext!,
       );
       if (!success) throw Exception("Login Error");

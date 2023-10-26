@@ -25,7 +25,7 @@ mixin SocialAuthWidget<T extends StatefulWidget> on State<T> {
         final provider = session?.user.appMetadata["provider"];
 
         if (session != null &&
-            (["discord", "github"].contains(provider) ||
+            (["discord", "github", "slack"].contains(provider) ||
                 session.user.userMetadata?["iss"] ==
                     "https://api.github.com")) {
           eventBus.add(
@@ -36,9 +36,8 @@ mixin SocialAuthWidget<T extends StatefulWidget> on State<T> {
                 name: session.user.userMetadata?["custom_claims"]
                         ?["global_name"] ??
                     session.user.userMetadata!["full_name"],
-                provider: provider == "discord"
-                    ? SocialProvider.discord
-                    : SocialProvider.github,
+                provider: SocialProvider.values
+                    .singleWhere((element) => element.name == provider),
               ),
             ),
           );

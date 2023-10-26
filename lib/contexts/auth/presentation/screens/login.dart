@@ -154,6 +154,26 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Expanded(
+                                  child: BaseButton.icon(
+                                    onPressed: () {
+                                      controller.socialSignIn(
+                                        provider: SocialProvider.slack,
+                                      );
+                                    },
+                                    padding: const EdgeInsets.all(4),
+                                    borderRadius: 6,
+                                    backgroundColor: const Color(0xff4a154b),
+                                    icon: SvgPicture.asset(
+                                      "assets/images/slack.svg",
+                                      width: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

@@ -4,7 +4,7 @@ import '../../../../core/core.dart';
 import '../../dtos/dtos.dart';
 import '../dtos/signup_credentials.dart';
 
-enum SocialProvider { discord, github }
+enum SocialProvider { discord, github, slack, google }
 
 abstract interface class AuthService {
   AsyncAction<CreateUserOutput> signup(SignupCredentialsDto input);
