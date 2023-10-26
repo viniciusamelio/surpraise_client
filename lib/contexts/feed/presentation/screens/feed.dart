@@ -279,6 +279,9 @@ class _FeedScreenState extends State<FeedScreen> {
 
     eventBus.on<PraiseSentEvent>(
       (event) async {
+        if (event.data) {
+          return;
+        }
         controller.getLatestPraises(sessionController.currentUser.value!.id);
       },
       name: "praiseSentHandler",

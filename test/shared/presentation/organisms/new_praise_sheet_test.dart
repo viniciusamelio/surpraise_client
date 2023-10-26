@@ -255,6 +255,14 @@ void main() {
 
         expect(controller.formData.topic, equals(TopicValues.thanks.name));
 
+        expect(find.byType(Checkbox), findsOneWidget);
+
+        await tester.ensureVisible(find.byType(Checkbox));
+        await tester.tap(find.byType(Checkbox));
+        await tester.pumpAndSettle();
+
+        expect(controller.privatePraise.value, isTrue);
+
         await tester.enterText(
           find.byType(BaseInput).last,
           "asuahsauh asuhasuah asuhauashusauhas",

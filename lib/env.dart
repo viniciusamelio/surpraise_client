@@ -9,4 +9,5 @@ abstract class Env {
   static const String avatarBucket = String.fromEnvironment("AVATAR_BUCKET");
   static const String communitiesBucket =
       String.fromEnvironment("COMMUNITIES_BUCKET");
+  static const String sentryDSN = String.fromEnvironment("SENTRY_DSN");
 }

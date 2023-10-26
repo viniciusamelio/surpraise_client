@@ -2,6 +2,7 @@ import 'package:blurple/tokens/size_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
+import '../../../../core/external_dependencies.dart';
 import '../../../../shared/shared.dart';
 
 enum PraiseCardMode {
@@ -86,7 +87,7 @@ class _CardHeader extends StatelessWidget {
         SizedBox.square(
           dimension: 40,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
+            backgroundImage: CachedNetworkImageProvider(
               getAvatarFromId(
                 mode.isFeed() ? praised.id : praise.praiser.id,
               ),

@@ -40,7 +40,7 @@ class AvatarMolecule extends StatelessWidget {
         child: CircleAvatar(
           backgroundImage: image != null
               ? FileImage(image!) as ImageProvider
-              : NetworkImage(
+              : CachedNetworkImageProvider(
                   imageUrl ?? '',
                 ),
         ),
