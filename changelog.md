@@ -1,3 +1,7 @@
+# 1.2.6
+## Added
+- Slack auth
+
 # 1.2.5
 ## Added
 - Sentry
