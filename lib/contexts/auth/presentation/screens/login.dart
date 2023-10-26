@@ -49,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
               padding: EdgeInsets.all(
                   context.theme.spacingScheme.verticalSpacing * 4),
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height - 120,
                   child: Column(
