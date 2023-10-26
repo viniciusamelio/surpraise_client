@@ -50,7 +50,8 @@ class DefaultPraiseController
     result.fold(
       (left) => null,
       (right) {
-        injected<ApplicationEventBus>().add(const PraiseSentEvent(null));
+        injected<ApplicationEventBus>()
+            .add(PraiseSentEvent(privatePraise.value));
       },
     );
   }
@@ -92,7 +93,7 @@ class DefaultPraiseController
   @override
   void dispose() {
     activeStep.removeListeners();
-
+    privatePraise.set(false);
     activeStep.set(0);
     communitiesState.set(InitialState());
     userState.set(InitialState());

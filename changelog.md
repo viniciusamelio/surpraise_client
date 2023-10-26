@@ -1,6 +1,7 @@
 # 1.2.5
 ## Added
 - Sentry
+- private praise
 
 ## Removed
 - Embrace sdk

@@ -246,22 +246,48 @@ class _NewPraiseUserSelectionStepState
                           ),
                           Visibility(
                             visible: state == 2,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: AtomObserver(
-                                atom: widget.controller.privatePraise,
-                                builder: (context, private) => Checkbox(
-                                  value: private,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
-                                    side: BorderSide(
-                                      color: theme.colorScheme.accentColor,
+                            child: AtomObserver(
+                              atom: widget.controller.privatePraise,
+                              builder: (context, private) => Row(
+                                children: [
+                                  Checkbox(
+                                    value: private,
+                                    visualDensity: VisualDensity.comfortable,
+                                    checkColor:
+                                        theme.colorScheme.backgroundColor,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    fillColor:
+                                        MaterialStateProperty.resolveWith(
+                                      (states) => states
+                                              .contains(MaterialState.selected)
+                                          ? theme.colorScheme.accentColor
+                                          : Colors.transparent,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                      side: BorderSide(
+                                        color: theme.colorScheme.accentColor,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      widget.controller.privatePraise
+                                          .set(value!);
+                                    },
+                                  ),
+                                  Pressable.scale(
+                                    onPressed: () {
+                                      widget.controller.privatePraise
+                                          .set(!private);
+                                    },
+                                    child: Text(
+                                      "Praise privado (Não aparece no feed)",
+                                      style: theme.fontScheme.p2.copyWith(
+                                        color: Colors.white54,
+                                      ),
                                     ),
                                   ),
-                                  onChanged: (value) {
-                                    widget.controller.privatePraise.set(value!);
-                                  },
-                                ),
+                                ],
                               ),
                             ),
                           ),
