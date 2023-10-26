@@ -6,6 +6,7 @@ import '../dtos/dtos.dart';
 
 abstract class PraiseController extends BaseStateController<PraiseOutput> {
   AtomNotifier<int> get activeStep;
+  AtomNotifier<bool> get privatePraise;
   AtomNotifier<DefaultState<Exception, UserDto>> get userState;
   AtomNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
       get communitiesState;
@@ -42,6 +43,7 @@ class DefaultPraiseController
         message: formData.message,
         praisedId: formData.praisedId,
         praiserId: praiserId,
+        private: privatePraise.value,
         topic: "#${formData.topic!}");
     final result = await _usecase(input);
     stateFromEither(result);
@@ -100,4 +102,7 @@ class DefaultPraiseController
     state.set(InitialState());
     formData.praisedTag = null;
   }
+
+  @override
+  final AtomNotifier<bool> privatePraise = AtomNotifier(false);
 }

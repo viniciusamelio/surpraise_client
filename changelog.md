@@ -1,3 +1,10 @@
+# 1.2.5
+## Added
+- Sentry
+
+## Removed
+- Embrace sdk
+
 # 1.2.4
 ## Added
 - new member selection on praise flow

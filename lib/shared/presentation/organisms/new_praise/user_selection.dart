@@ -247,6 +247,30 @@ class _NewPraiseUserSelectionStepState
                           Visibility(
                             visible: state == 2,
                             child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: AtomObserver(
+                                atom: widget.controller.privatePraise,
+                                builder: (context, private) => Checkbox(
+                                  value: private,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                    side: BorderSide(
+                                      color: theme.colorScheme.accentColor,
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    widget.controller.privatePraise.set(value!);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Visibility(
+                            visible: state == 2,
+                            child: Align(
                               alignment: Alignment.centerRight,
                               child: BorderedButton(
                                 onPressed: () {
