@@ -186,25 +186,23 @@ class _FeedScreenState extends State<FeedScreen> {
                             );
                           }
                           return StreamBuilder<void>(
-                              stream: controller.newFeedItems.stream,
-                              builder: (context, snapshot) {
-                                return SizedBox(
-                                  height: (160 * data.length).toDouble(),
-                                  child: ListView.separated(
-                                    itemCount: data.length,
-                                    shrinkWrap: false,
-                                    physics: const BouncingScrollPhysics(),
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      height: 20,
-                                    ),
-                                    itemBuilder: (context, index) =>
-                                        PraiseCardMolecule(
-                                      praise: data[index],
-                                    ),
-                                  ),
-                                );
-                              });
+                            stream: controller.newFeedItems.stream,
+                            builder: (context, snapshot) {
+                              return ListView.separated(
+                                itemCount: data.length,
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                  height: 20,
+                                ),
+                                itemBuilder: (context, index) =>
+                                    PraiseCardMolecule(
+                                  praise: data[index],
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                     ],
