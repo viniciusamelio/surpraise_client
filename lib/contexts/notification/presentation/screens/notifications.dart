@@ -7,8 +7,7 @@ import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
 import '../../../../core/state/state.dart';
-import '../../../../shared/presentation/molecules/error_widget.dart';
-import '../../../../shared/presentation/molecules/loader.dart';
+import '../../../../shared/shared.dart';
 import '../../dtos.dart';
 import '../controllers/notifications.dart';
 
@@ -47,14 +46,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       child: PolymorphicAtomObserver<DefaultState<Exception, Notifications>>(
         atom: controller.state,
         types: [
-          TypedAtomHandler(
-            type: LoadingState<Exception, Notifications>,
+          TypedAtomHandler<LoadingState<Exception, Notifications>>(
             builder: (context, state) {
               return const LoaderMolecule();
             },
           ),
-          TypedAtomHandler(
-            type: ErrorState<Exception, Notifications>,
+          TypedAtomHandler<ErrorState<Exception, Notifications>>(
             builder: (context, state) {
               return const ErrorWidgetMolecule(
                 message: "Deu ruim ao recuperar suas notificações",
@@ -65,21 +62,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         defaultBuilder: (value) {
           final Notifications data = (value as SuccessState).data;
           if (data.isEmpty) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height - 100,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LottieBuilder.asset("assets/animations/empty-state.json"),
-                  Text(
-                    "Ainda não há nada aqui",
-                    style: context.theme.fontScheme.p2.copyWith(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
+            return const EmptyStateOrganism(
+              message:
+                  "Suas notificações serão listadas aqui quando você receber algum #praise",
+              animationSize: 300,
             );
           }
           return SizedBox(

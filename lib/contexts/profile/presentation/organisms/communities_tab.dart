@@ -30,6 +30,15 @@ class CommunitiesTabOrganism extends StatelessWidget {
         }
 
         final List<CommunityOutput> data = (state as SuccessState).data;
+        if (data.isEmpty) {
+          return const EmptyStateOrganism(
+            message:
+                "Suas comunidades aparecerão aqui quando você for membro de alguma",
+            animationSize: 130,
+            fontSize: 15,
+          );
+        }
+
         return SizedBox(
           child: ListView.separated(
             itemCount: data.length,
@@ -40,7 +49,11 @@ class CommunitiesTabOrganism extends StatelessWidget {
               return _CommunityTileMolecule(item: item);
             },
           ),
-        );
+        ).animate().move(
+              begin: Offset(0, 60.h),
+              end: const Offset(0, 0),
+              delay: const Duration(milliseconds: 100),
+            );
       },
     );
   }

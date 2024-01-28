@@ -39,29 +39,49 @@ class DefaultFeedRepository implements FeedRepository {
       }
 
       return Right(
-        (jsonDecode(feed.data) as List)
-            .map<PraiseDto>(
-              (e) => PraiseDto(
-                id: e["praise_id"],
-                message: e["message"],
-                topic: e["topic"],
-                communityName: e["title"],
-                communityId: e["community_id"],
-                praiser: UserDto(
-                  tag: e["praiser_tag"],
-                  name: e["praiser_name"],
-                  email: e["praiser_email"],
-                  id: e["praiser_id"],
-                ),
-                praised: UserDto(
-                  tag: e["praised_tag"],
-                  name: e["praised_name"],
-                  email: e["praised_email"],
-                  id: e["praised_id"],
-                ),
+        (jsonDecode(feed.data) as List).map<PraiseDto>(
+          (e) {
+            final reactions = e["reactions"];
+            return PraiseDto(
+              id: e["praise_id"],
+              message: e["message"],
+              topic: e["topic"],
+              communityName: e["title"],
+              communityId: e["community_id"],
+              reactions: reactions != null
+                  ? reactions
+                      .map<PraiseReactionDto>(
+                        (r) => PraiseReactionDto(
+                          userId: r["user_id"],
+                          praiseId: e["praise_id"],
+                          reaction: r["reaction"],
+                          id: r["id"],
+                        ),
+                      )
+                      .toList()
+                  : <PraiseReactionDto>[],
+              praiser: UserDto(
+                tag: e["praiser_tag"],
+                name: e["praiser_name"],
+                email: e["praiser_email"],
+                id: e["praiser_id"],
               ),
-            )
-            .toList(),
+              praised: UserDto(
+                tag: e["praised_tag"],
+                name: e["praised_name"],
+                email: e["praised_email"],
+                id: e["praised_id"],
+              ),
+              extraPraiseds: e["extra_praiseds"] != null
+                  ? e["extra_praiseds"]
+                      .map((e) => e["praised_id"])
+                      .toSet()
+                      .toList()
+                      .cast<String>()
+                  : <String>[],
+            );
+          },
+        ).toList(),
       );
     } on Exception catch (e) {
       return Left(e);
@@ -73,6 +93,7 @@ class DefaultFeedRepository implements FeedRepository {
     required String userId,
     int offset = 0,
     bool? asPraiser,
+    bool withPrivate = false,
   }) async {
     try {
       final praisesOrError = await _getFeedByUser(
@@ -107,6 +128,7 @@ class DefaultFeedRepository implements FeedRepository {
   Future<QueryResult> _getFeedByUser({
     required String userId,
     required int offset,
+    bool withPrivate = false,
   }) async {
     const String select =
         "*, $communitiesCollection(title), $profilesCollection!praise_praiser_id_fkey(name, tag, id, email)";
@@ -122,6 +144,15 @@ class DefaultFeedRepository implements FeedRepository {
         ),
         offset: offset,
         limit: 10,
+        filters: withPrivate
+            ? [
+                AndFilter(
+                  fieldName: "private",
+                  value: false,
+                  operator: FilterOperator.equalsTo,
+                ),
+              ]
+            : null,
       ),
     );
   }
@@ -156,5 +187,38 @@ class DefaultFeedRepository implements FeedRepository {
     } on Exception catch (e) {
       return Left(e);
     }
+  }
+
+  @override
+  AsyncAction<String> toggleReaction({
+    required String userId,
+    required String praiseId,
+    required String reaction,
+    String? reactionId,
+  }) async {
+    if (reactionId != null) {
+      await _databaseDatasource.delete(
+        GetQuery(
+          sourceName: reactionsCollection,
+          value: reactionId,
+          fieldName: "id",
+        ),
+      );
+      return Right(reactionId);
+    }
+    final savedOrError = await _databaseDatasource.save(
+      SaveQuery(
+        sourceName: reactionsCollection,
+        value: {
+          "user_id": userId,
+          "praise_id": praiseId,
+          "reaction": reaction,
+        },
+      ),
+    );
+    if (savedOrError.failure) {
+      return Left(Exception("Something went wrong saving reaction"));
+    }
+    return Right(savedOrError.data!["id"]);
   }
 }

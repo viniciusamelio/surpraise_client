@@ -17,6 +17,9 @@ abstract class FeedController extends BaseStateController<List<PraiseDto>> {
   Future<void> listenToInvites(String userId);
   Future<void> listenToPraises(String userId);
 
+  void updateReaction(PraiseReactionDto input);
+  void removeReaction(PraiseReactionDto input);
+
   AtomNotifier<int> get offset;
   AtomNotifier<List<PraiseDto>> get loadedPraises;
 
@@ -113,23 +116,55 @@ class DefaultFeedController
 
   @override
   Future<void> getLatestPraises(String userId) async {
-    final invitesOrError = await _repository.get(userId: userId);
-    invitesOrError.fold(
+    final praisesOrError = await _repository.get(userId: userId);
+    praisesOrError.fold(
       (left) => null,
       (right) {
         final firstPraise = loadedPraises.value.first;
         if (right.first.id == loadedPraises.value.first.id) {
           return;
         }
-        loadedPraises.value.replaceRange(0, 10, [
-          ...right,
-          firstPraise,
-        ]);
+        _sortLatestPraises(right, firstPraise);
+        state.set(SuccessState(right));
         newFeedItems.add(null);
       },
     );
   }
 
+  void _sortLatestPraises(List<PraiseDto> right, PraiseDto firstPraise) {
+    if (loadedPraises.value.length >= 10) {
+      final newPraises =
+          right.where((element) => !loadedPraises.value.contains(element));
+      loadedPraises.set([...newPraises, ...loadedPraises.value]);
+      return;
+    }
+    loadedPraises.set(right);
+  }
+
   @override
   final StreamController<void> newFeedItems = StreamController.broadcast();
+
+  @override
+  void updateReaction(PraiseReactionDto input) {
+    final index = loadedPraises.value
+        .indexWhere((element) => element.id == input.praiseId);
+
+    loadedPraises.value[index] = loadedPraises.value[index].copyWith(
+      reactions: [
+        ...loadedPraises.value[index].reactions,
+        input,
+      ],
+    );
+    newFeedItems.add(null);
+  }
+
+  @override
+  void removeReaction(PraiseReactionDto input) {
+    final index = loadedPraises.value
+        .indexWhere((element) => element.id == input.praiseId);
+    loadedPraises.value[index].reactions.removeWhere(
+      (element) => element.id == input.id,
+    );
+    newFeedItems.add(null);
+  }
 }

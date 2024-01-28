@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:blurple/sizes/spacings.dart';
@@ -62,7 +64,8 @@ class _FeedScreenState extends State<FeedScreen> {
     eventBus.removeListener("praiseSentHandler");
     eventBus.removeListener("editedProfileHandler");
     eventBus.removeListener("leftCommunityHandler");
-
+    eventBus.removeListener("reactionAddedHandler");
+    eventBus.removeListener("reactionRemovedHandler");
     super.dispose();
   }
 
@@ -87,7 +90,11 @@ class _FeedScreenState extends State<FeedScreen> {
               ),
               child: Column(
                 children: [
-                  const UserDisplayer(),
+                  const UserDisplayer().animate().move(
+                        begin: const Offset(0, 20),
+                        end: const Offset(0, 0),
+                        delay: const Duration(milliseconds: 300),
+                      ),
                   SizedBox(
                     height: Spacings.lg,
                   ),
@@ -109,12 +116,16 @@ class _FeedScreenState extends State<FeedScreen> {
                                   .copyWith(fontSize: 16),
                               text:
                                   "recentes.\nQue tal mandar um pra aquele parça que sempre te ajuda no trampo? ",
-                            )
+                            ),
                           ],
                         )
                       ],
                     ),
-                  ),
+                  ).animate().move(
+                        begin: Offset(-30.w, 0),
+                        end: const Offset(0, 0),
+                        delay: const Duration(milliseconds: 200),
+                      ),
                   SizedBox(
                     height: Spacings.lg,
                   ),
@@ -136,8 +147,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       DefaultState<Exception, List<PraiseDto>>>(
                     atom: controller.state,
                     types: [
-                      TypedAtomHandler(
-                        type: ErrorState<Exception, List<PraiseDto>>,
+                      TypedAtomHandler<ErrorState<Exception, List<PraiseDto>>>(
                         builder: (context, state) {
                           return Column(
                             children: [
@@ -160,29 +170,16 @@ class _FeedScreenState extends State<FeedScreen> {
                           );
                         },
                       ),
-                      TypedAtomHandler(
-                        type: SuccessState<Exception, List<PraiseDto>>,
+                      TypedAtomHandler<
+                          SuccessState<Exception, List<PraiseDto>>>(
                         builder: (context, state) {
                           final List<PraiseDto> data =
                               controller.loadedPraises.value;
 
                           if (data.isEmpty) {
-                            return Column(
-                              children: [
-                                LottieBuilder.asset(
-                                  "assets/animations/empty-state.json",
-                                  height: 280,
-                                ),
-                                Text(
+                            return const EmptyStateOrganism(
+                              message:
                                   "Parece que você não tem novos #praises por aqui, que tal começar enviando um?! É só apertar o botão abaixo",
-                                  style: context.theme.fontScheme.p2.copyWith(
-                                    fontSize: 18,
-                                    color: context
-                                        .theme.colorScheme.foregroundColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
                             );
                           }
                           return StreamBuilder<void>(
@@ -199,10 +196,15 @@ class _FeedScreenState extends State<FeedScreen> {
                                 itemBuilder: (context, index) =>
                                     PraiseCardMolecule(
                                   praise: data[index],
+                                  reactionsEnabled: true,
                                 ),
                               );
                             },
-                          );
+                          ).animate().move(
+                                begin: Offset(0, 60.h),
+                                end: const Offset(0, 0),
+                                delay: const Duration(milliseconds: 100),
+                              );
                         },
                       ),
                     ],
@@ -250,6 +252,21 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   void setupListeners() {
+    eventBus.on<ReactionAddedEvent>(
+      (event) {
+        final reaction = event.data;
+        controller.updateReaction(reaction);
+      },
+      name: "reactionAddedHandler",
+    );
+    eventBus.on<ReactionRemovedEvent>(
+      (event) {
+        final reaction = event.data;
+        controller.removeReaction(reaction);
+      },
+      name: "reactionRemovedHandler",
+    );
+
     eventBus.on<InviteAnsweredEvent>(
       (event) {
         final List<InviteDto> invites = (controller.invitesState.value

@@ -105,7 +105,9 @@ class App extends StatelessWidget {
                 );
               };
 
-              return child!;
+              return Sizer(builder: (context, orientation, deviceType) {
+                return child!;
+              });
             },
           ),
         );

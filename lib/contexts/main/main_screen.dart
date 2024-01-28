@@ -66,8 +66,7 @@ class _MainScreenState extends State<MainScreen> with SupabaseGuardRoute {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: const FloatingAddButton(),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBuilder(
           animation: pageController,
           builder: (context, _) {

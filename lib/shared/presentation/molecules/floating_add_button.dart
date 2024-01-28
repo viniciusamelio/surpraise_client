@@ -14,6 +14,7 @@ class FloatingAddButton extends StatelessWidget {
       onPressed: () {
         showPopover(
           context: context,
+          direction: PopoverDirection.top,
           backgroundColor: context.theme.colorScheme.elevatedWidgetsColor,
           bodyBuilder: (context) {
             return Container(
@@ -90,11 +91,10 @@ class FloatingAddButton extends StatelessWidget {
 
 class _MenuItemRowMolecule extends StatelessWidget {
   const _MenuItemRowMolecule({
-    Key? key,
     required this.icon,
     required this.label,
     required this.action,
-  }) : super(key: key);
+  });
   final IconData icon;
   final VoidCallback action;
   final String label;

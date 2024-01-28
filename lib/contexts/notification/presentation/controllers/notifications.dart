@@ -37,12 +37,13 @@ class DefaultNotificationsController
   final GetNotificationsRepository _getNotificationsRepository;
   @override
   Future<void> getNotifications({
-    int max = 20,
+    int max = 100,
     int offset = 0,
   }) async {
     state.set(LoadingState());
     final notificationsOrError = await _getNotificationsRepository.get(
       userId: injected<SessionController>().currentUser.value!.id,
+      limit: max,
     );
     notificationsOrError.fold(
       (left) => state.set(ErrorState(left)),

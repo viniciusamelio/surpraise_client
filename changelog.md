@@ -1,3 +1,11 @@
+# 2.0.0
+## Added
+- New praise flow
+- Multi praised praises
+- Praise reactions
+- Praise animations
+- Auto filling community according to last praise sent
+
 # 1.2.6
 ## Added
 - Slack auth

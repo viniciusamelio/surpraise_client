@@ -55,8 +55,7 @@ class ProjectSupportSection extends StatelessWidget {
         SizedBox(
           height: Spacings.xxl,
         ),
-        Wrap(
-          direction: Axis.horizontal,
+        Row(
           children: [
             SettingsButton(
               onPressed: () async {

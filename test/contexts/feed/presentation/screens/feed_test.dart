@@ -13,6 +13,7 @@ import 'package:surpraise_client/env.dart';
 import 'package:surpraise_client/shared/shared.dart';
 
 import '../../../../mocks.dart';
+import '../../../../test_utils.dart';
 
 void main() {
   group("Feed Screen: ", () {
@@ -59,12 +60,14 @@ void main() {
         () => feedRepository.getInvites(userId: any(named: "userId")),
       ).thenAnswer((_) async => Right([]));
 
-      sut = BlurpleThemeData.defaultTheme(
-        child: MaterialApp(
-          navigatorKey: navigatorKey,
-          home: Scaffold(
-            body: FeedScreen(
-              user: sessionController.currentUser.value!,
+      sut = testWidgetTemplate(
+        sut: BlurpleThemeData.defaultTheme(
+          child: MaterialApp(
+            navigatorKey: navigatorKey,
+            home: Scaffold(
+              body: FeedScreen(
+                user: sessionController.currentUser.value!,
+              ),
             ),
           ),
         ),
@@ -80,6 +83,7 @@ void main() {
         when(
           () => feedRepository.get(
             userId: any(named: "userId"),
+            max: any(named: "max"),
             offset: any(named: "offset"),
           ),
         ).thenAnswer(
@@ -91,7 +95,7 @@ void main() {
         await tester.pumpWidget(
           sut,
         );
-        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump(const Duration(seconds: 2));
 
         expect(find.byType(ErrorWidgetMolecule), findsOneWidget);
       },
@@ -106,6 +110,7 @@ void main() {
           () => feedRepository.get(
             userId: any(named: "userId"),
             offset: any(named: "offset"),
+            max: any(named: "max"),
           ),
         ).thenAnswer(
           (_) async => Right([
@@ -134,6 +139,7 @@ void main() {
         await tester.pumpWidget(
           sut,
         );
+        await tester.pump(const Duration(seconds: 2));
         await tester.pumpAndSettle();
 
         expect(find.byType(ErrorWidgetMolecule), findsNothing);
@@ -149,6 +155,7 @@ void main() {
           () => feedRepository.get(
             userId: any(named: "userId"),
             offset: any(named: "offset"),
+            max: any(named: "max"),
           ),
         ).thenAnswer(
           (_) async => Right([]),
@@ -157,7 +164,7 @@ void main() {
         await tester.pumpWidget(
           sut,
         );
-        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump(const Duration(seconds: 2));
 
         expect(find.text("error"), findsNothing);
         expect(

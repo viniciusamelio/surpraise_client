@@ -37,6 +37,8 @@ void main() {
         when(
           () => getNotificationsRepository.get(
             userId: any(named: "userId"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Left(
@@ -56,6 +58,8 @@ void main() {
         when(
           () => getNotificationsRepository.get(
             userId: any(named: "userId"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Left(
@@ -96,6 +100,8 @@ void main() {
         when(
           () => getNotificationsRepository.get(
             userId: any(named: "userId"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
           ),
         ).thenAnswer(
           (_) async => Right(notifications),

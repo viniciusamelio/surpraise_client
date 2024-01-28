@@ -1,4 +1,5 @@
 import '../../core/core.dart';
+import '../../core/external_dependencies.dart' hide Json;
 import '../shared.dart';
 
 abstract class SavedUserMapper {
@@ -8,7 +9,17 @@ abstract class SavedUserMapper {
       "email": user.email,
       "name": user.name,
       "id": user.id,
-      "avatarUrl": user.avatarUrl
+      "avatarUrl": user.avatarUrl,
+      "lastInteractedCommunity": user.lastInteractedCommunity != null
+          ? {
+              "id": user.lastInteractedCommunity!.id,
+              "title": user.lastInteractedCommunity!.title,
+              "description": user.lastInteractedCommunity!.description,
+              "imageUrl": user.lastInteractedCommunity!.image,
+              "owner_id": user.lastInteractedCommunity!.ownerId,
+              "role": user.lastInteractedCommunity!.role.value,
+            }
+          : null,
     };
   }
 
@@ -19,6 +30,11 @@ abstract class SavedUserMapper {
       email: json["email"],
       id: json["id"],
       avatarUrl: json["avatarUrl"],
+      lastInteractedCommunity: json["lastInteractedCommunity"] != null
+          ? communityOutputFromMap(
+              (json["lastInteractedCommunity"] as Map).cast<String, dynamic>(),
+            )
+          : null,
     );
   }
 }

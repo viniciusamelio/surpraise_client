@@ -10,7 +10,7 @@ import '../../../../shared/presentation/molecules/molecules.dart';
 import '../controllers/controllers.dart';
 
 class SaveCommunitySheet extends StatefulWidget {
-  const SaveCommunitySheet({Key? key, this.community}) : super(key: key);
+  const SaveCommunitySheet({super.key, this.community});
   final CommunityOutput? community;
   @override
   State<SaveCommunitySheet> createState() => _SaveCommunitySheetState();
@@ -113,9 +113,10 @@ class _SaveCommunitySheetState extends State<SaveCommunitySheet> {
 
                               return const SizedBox.shrink();
                             },
-                            child: const Icon(
+                            child: Icon(
                               HeroiconsSolid.photo,
                               size: 60,
+                              color: Colors.white.withOpacity(.7),
                             ),
                           ),
                         ),

@@ -126,122 +126,128 @@ class _CommunityDetailsScreenState extends State<CommunityDetailsScreen> {
                 DefaultState<Exception, List<FindCommunityMemberOutput>>>(
               atom: controller.state,
               types: [
-                TypedAtomHandler(
-                  type:
-                      LoadingState<Exception, List<FindCommunityMemberOutput>>,
+                TypedAtomHandler<
+                    LoadingState<Exception, List<FindCommunityMemberOutput>>>(
                   builder: (context, state) => const LoaderMolecule(),
                 ),
-                TypedAtomHandler(
-                  type: ErrorState<Exception, List<FindCommunityMemberOutput>>,
+                TypedAtomHandler<
+                    ErrorState<Exception, List<FindCommunityMemberOutput>>>(
                   builder: (context, state) => const SizedBox.shrink(),
                 ),
-                TypedAtomHandler(
-                    type: SuccessState<Exception,
-                        List<FindCommunityMemberOutput>>,
+                TypedAtomHandler<
+                        SuccessState<Exception,
+                            List<FindCommunityMemberOutput>>>(
                     builder: (context, value) {
-                      final List<FindCommunityMemberOutput> data =
-                          (value as SuccessState).data;
+                  final List<FindCommunityMemberOutput> data =
+                      (value as SuccessState).data;
 
-                      return AtomObserver(
-                          atom: controller.memberFilter,
-                          builder: (context, filter) {
-                            final members = data
-                                .where(
-                                  (element) =>
-                                      element.name.toLowerCase().contains(
-                                            filter.toLowerCase().trim(),
-                                          ) ||
-                                      element.tag.toLowerCase().contains(
-                                            filter.toLowerCase().trim(),
-                                          ),
-                                )
-                                .toList();
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: Spacings.lg,
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: Spacings.xxl * 2,
-                                  ),
-                                  actionsRow(
-                                    members: members,
-                                    context: context,
-                                  ),
-                                  MemberSearchBarOrganism(
-                                    controller: controller,
-                                  ),
-                                  SizedBox(
-                                    height: Spacings.xl,
-                                  ),
-                                  SizedBox(
-                                    height:
-                                        MediaQuery.of(context).size.height * .6,
-                                    child: GridView.builder(
-                                      physics: const BouncingScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
+                  return AtomObserver(
+                      atom: controller.memberFilter,
+                      builder: (context, filter) {
+                        final members = data
+                            .where(
+                              (element) =>
+                                  element.name.toLowerCase().contains(
+                                        filter.toLowerCase().trim(),
+                                      ) ||
+                                  element.tag.toLowerCase().contains(
+                                        filter.toLowerCase().trim(),
                                       ),
-                                      itemCount: members.length,
-                                      semanticChildCount: members.length,
-                                      itemBuilder: (context, index) => SizedBox(
-                                        height: 62,
-                                        width: 62,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Pressable.scale(
-                                              onPressed: () {
-                                                if (currentUserCanRemoveThisMember(
-                                                  community: widget.community,
-                                                  member: members[index],
-                                                )) {
-                                                  showCustomModalBottomSheet(
-                                                    context: context,
-                                                    child: RemoveMemberSheet(
-                                                      member: members[index],
-                                                      community:
-                                                          widget.community,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              child: SizedBox.square(
-                                                dimension: 50,
-                                                child: CircleAvatar(
-                                                  backgroundImage:
-                                                      CachedNetworkImageProvider(
-                                                    getAvatarFromId(
-                                                      members[index].id,
-                                                    ),
-                                                  ),
-                                                ),
+                            )
+                            .toList();
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Spacings.lg,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: Spacings.xxl * 2,
+                              ),
+                              actionsRow(
+                                members: members,
+                                context: context,
+                              ),
+                              MemberSearchBarOrganism(
+                                controller: controller,
+                              ),
+                              SizedBox(
+                                height: Spacings.xl,
+                              ),
+                              GridView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                ),
+                                itemCount: members.length,
+                                semanticChildCount: members.length,
+                                itemBuilder: (context, index) => SizedBox(
+                                  height: 62,
+                                  width: 62,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Pressable.scale(
+                                        onPressed: () {
+                                          if (members[index].id ==
+                                              injected<SessionController>()
+                                                  .currentUser
+                                                  .value!
+                                                  .id) {
+                                            return;
+                                          }
+                                          showCustomModalBottomSheet(
+                                            context: context,
+                                            child: MemberOptionsSheet(
+                                              member: members[index],
+                                              community: widget.community,
+                                              canRemove:
+                                                  currentUserCanRemoveThisMember(
+                                                community: widget.community,
+                                                member: members[index],
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: Spacings.xs,
-                                            ),
-                                            Text(
-                                              members[index].tag,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: theme.colorScheme
-                                                    .inputForegroundColor,
+                                          );
+                                        },
+                                        child: SizedBox.square(
+                                          dimension: 50,
+                                          child: CircleAvatar(
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                              getAvatarFromId(
+                                                members[index].id,
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      SizedBox(
+                                        height: Spacings.xs,
+                                      ),
+                                      Text(
+                                        members[index].tag.toLowerCase(),
+                                        textAlign: TextAlign.center,
+                                        textScaler: const TextScaler.linear(
+                                          1.05,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: theme
+                                              .colorScheme.inputForegroundColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            );
-                          });
-                    })
+                            ],
+                          ),
+                        );
+                      });
+                })
               ],
             ),
           ],
@@ -370,7 +376,7 @@ class _HeaderOrganism extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * .4,
+      // height: MediaQuery.of(context).size.height * .4,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: ColorTokens.concrete,
@@ -469,7 +475,10 @@ class _HeaderOrganism extends StatelessWidget {
               community.description,
               style: theme.fontScheme.p1,
               textAlign: TextAlign.center,
-            )
+            ),
+            SizedBox(
+              height: Spacings.md,
+            ),
           ],
         ),
       ),

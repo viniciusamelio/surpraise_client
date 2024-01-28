@@ -44,9 +44,20 @@ class DefaultCommunityDetailsController
     );
     state.set(membersOrError.fold(
       (left) => ErrorState(left),
-      (right) => SuccessState(
-        right.value,
-      ),
+      (right) {
+        final List<FindCommunityMemberOutput> value = right.value;
+        final Set<String> uniqueMemberTags = value.map((e) => e.tag).toSet();
+
+        return SuccessState(
+          uniqueMemberTags
+              .map(
+                (e) => value.lastWhere(
+                  (element) => element.tag == e,
+                ),
+              )
+              .toList(),
+        );
+      },
     ));
   }
 

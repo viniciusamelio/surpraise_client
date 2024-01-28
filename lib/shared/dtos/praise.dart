@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 
 import '../shared.dart';
 
@@ -11,6 +12,9 @@ class PraiseDto extends Equatable {
     required this.communityId,
     required this.praiser,
     this.praised,
+    this.reactions = const [],
+    this.extraPraiseds = const [],
+    this.private = false,
   });
 
   final String id;
@@ -20,6 +24,9 @@ class PraiseDto extends Equatable {
   final String communityId;
   final UserDto praiser;
   final UserDto? praised;
+  final List<PraiseReactionDto> reactions;
+  final List<String> extraPraiseds;
+  final bool private;
 
   @override
   List<Object?> get props => [
@@ -30,5 +37,30 @@ class PraiseDto extends Equatable {
         communityId,
         praiser.id,
         praised?.id,
+        reactions,
       ];
+
+  PraiseDto copyWith({
+    String? id,
+    String? message,
+    String? topic,
+    String? communityName,
+    String? communityId,
+    UserDto? praiser,
+    ValueGetter<UserDto?>? praised,
+    List<PraiseReactionDto>? reactions,
+    List<String>? extraPraiseds,
+  }) {
+    return PraiseDto(
+      id: id ?? this.id,
+      message: message ?? this.message,
+      topic: topic ?? this.topic,
+      communityName: communityName ?? this.communityName,
+      communityId: communityId ?? this.communityId,
+      praiser: praiser ?? this.praiser,
+      praised: praised != null ? praised() : this.praised,
+      reactions: reactions ?? this.reactions,
+      extraPraiseds: extraPraiseds ?? this.extraPraiseds,
+    );
+  }
 }

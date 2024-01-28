@@ -104,4 +104,16 @@ Future<void> communityDependencies() async {
       ),
     ),
   );
+
+  inject<GetPraisesSentByUserQuery>(
+    GetPraisesSentByUserQuery(
+      databaseDatasource: injected(),
+    ),
+  );
+
+  inject<PraisesSentController>(
+    DefaultPraisesSentController(
+      getPraisesSentByUserQuery: injected(),
+    ),
+  );
 }

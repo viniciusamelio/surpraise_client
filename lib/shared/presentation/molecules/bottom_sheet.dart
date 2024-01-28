@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/core.dart';
 
 class BottomSheetMolecule extends StatelessWidget {
-  const BottomSheetMolecule({Key? key, required this.child}) : super(key: key);
+  const BottomSheetMolecule({super.key, required this.child});
   final Widget child;
   @override
   Widget build(BuildContext context) {

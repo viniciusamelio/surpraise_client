@@ -46,6 +46,19 @@ void main() {
         praiseUsecase: praiseUsecase,
       );
 
+      registerFallbackValue(
+        CommunityOutput(
+          id: faker.guid.guid(),
+          ownerId: faker.guid.guid(),
+          description: faker.lorem.words(4).toString(),
+          title: faker.lorem.word(),
+          image: faker.internet.httpsUrl(),
+          role: faker.randomGenerator.element(Role.values),
+        ),
+      );
+      when(() => sessionController.setLastInteractedCommunity(any()))
+          .thenAnswer(Future.value);
+
       inject<CommunityDetailsController>(communityDetailsController);
       inject<SessionController>(sessionController);
       inject<GetCommunitiesController>(communitiesController);
@@ -111,6 +124,14 @@ void main() {
                 title: "Mocked Community",
                 image: faker.internet.httpsUrl(),
                 role: faker.randomGenerator.element(Role.values),
+              ),
+              CommunityOutput(
+                id: faker.guid.guid(),
+                ownerId: faker.guid.guid(),
+                description: faker.lorem.word(),
+                title: "Mocked Community 2",
+                image: faker.internet.httpsUrl(),
+                role: faker.randomGenerator.element(Role.values),
               )
             ],
           ),
@@ -159,15 +180,18 @@ void main() {
         await tester.pumpWidget(
           BlurpleThemeData.defaultTheme(
             child: MaterialApp(
+              navigatorKey: navigatorKey,
               home: Builder(builder: (context) {
-                return Scaffold(
-                  body: MaterialButton(onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) => sut,
-                    );
-                  }),
-                );
+                return Sizer(builder: (context, __, _) {
+                  return Scaffold(
+                    body: MaterialButton(onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => sut,
+                      );
+                    }),
+                  );
+                });
               }),
             ),
           ),
@@ -215,7 +239,7 @@ void main() {
           find.byType(TextField).last,
           "vinicius",
         );
-        await tester.pump(const Duration(seconds: 1));
+        await tester.pump(const Duration(seconds: 2));
 
         expect(find.textContaining("Vinicius"), findsOneWidget);
         await tester.ensureVisible(find.text("Vinicius"));
@@ -224,15 +248,27 @@ void main() {
           find.textContaining("Vinicius", skipOffstage: false),
           warnIfMissed: false,
         );
+        await tester.tap(find.byIcon(HeroiconsMini.xMark).last);
+        await tester.pump(const Duration(seconds: 2));
+        expect(find.text("@vini"), findsOneWidget);
+
+        await tester
+            .ensureVisible(find.text("continuar  >", skipOffstage: false));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text("continuar  >"));
         await tester.pump(const Duration(seconds: 2));
 
         expect(controller.activeStep.value, equals(2));
 
+        await tester.ensureVisible(
+            find.byType(BaseSearchableDropdown<TopicValues>).last);
         await tester.enterText(
-          find.byType(
-            BaseSearchableDropdown<TopicValues>,
-            skipOffstage: false,
-          ),
+          find
+              .byType(
+                BaseSearchableDropdown<TopicValues>,
+                skipOffstage: false,
+              )
+              .last,
           "agradecimento",
         );
         await tester.pumpAndSettle();

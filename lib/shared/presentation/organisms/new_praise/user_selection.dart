@@ -32,17 +32,16 @@ class _NewPraiseUserSelectionStepState
   @override
   void initState() {
     topicController = TextEditingController();
-    userFieldController =
-        TextEditingController(text: widget.controller.formData.praisedTag);
+    userFieldController = TextEditingController();
     communityDetailsController = injected();
     communityDetailsController.getMembers(
       id: widget.controller.formData.communityId,
     );
     widget.controller.userState.listenState(
       onSuccess: (right) {
-        widget.controller.activeStep.set(2);
         widget.controller.formData.praisedId = right.id;
         widget.controller.formData.praisedTag = right.tag;
+        userFieldController.clear();
       },
     );
     super.initState();
@@ -64,8 +63,7 @@ class _NewPraiseUserSelectionStepState
     return PolymorphicAtomObserver(
         atom: widget.controller.userState,
         types: [
-          TypedAtomHandler(
-            type: LoadingState,
+          TypedAtomHandler<LoadingState>(
             builder: (context, state) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -88,11 +86,33 @@ class _NewPraiseUserSelectionStepState
                   key: formKey,
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 120,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height - 120,
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          AbsorbPointer(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: BaseButton.icon(
+                                onPressed: () {},
+                                padding: const EdgeInsets.all(16),
+                                backgroundColor: Colors.black12,
+                                icon: const Icon(
+                                  HeroiconsSolid.userGroup,
+                                  size: 24,
+                                  color: Colors.white,
+                                ),
+                                label:
+                                    "#${widget.controller.formData.communityName}",
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: context.theme.spacingScheme.verticalSpacing,
+                          ),
                           AtomObserver(
                             atom: widget.controller.state,
                             builder: (context, state) {
@@ -111,113 +131,153 @@ class _NewPraiseUserSelectionStepState
                               );
                             },
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AtomObserver(
-                                    atom: communityDetailsController.state,
-                                    builder: (context, communityState) {
-                                      if (communityState is LoadingState) {
-                                        return const LoaderMolecule();
-                                      } else if (communityState is ErrorState) {
-                                        return const ErrorWidgetMolecule(
-                                          message:
-                                              "Deu ruim ao achar os membros da comunidade",
-                                        );
-                                      }
+                          Visibility(
+                            visible: state == 1,
+                            child: AtomObserver(
+                                atom: communityDetailsController.state,
+                                builder: (context, communityState) {
+                                  if (communityState is LoadingState) {
+                                    return const LoaderMolecule();
+                                  } else if (communityState is ErrorState) {
+                                    return const ErrorWidgetMolecule(
+                                      message:
+                                          "Deu ruim ao achar os membros da comunidade",
+                                    );
+                                  }
 
-                                      final data = (communityState
-                                                  as SuccessState)
-                                              .data
-                                          as List<FindCommunityMemberOutput>;
-                                      return BaseSearchableDropdown(
-                                        controller: userFieldController,
-                                        direction: AxisDirection.up,
-                                        suggestionsBoxDecoration:
-                                            const SuggestionsBoxDecoration(
-                                          color: Colors.transparent,
-                                          elevation: 0,
-                                        ),
-                                        itemBuilder: (context, member) =>
-                                            Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0,
-                                            horizontal: 2,
+                                  final data = (communityState as SuccessState)
+                                      .data as List<FindCommunityMemberOutput>;
+                                  return Row(
+                                    children: [
+                                      Expanded(
+                                        child: BaseSearchableDropdown(
+                                          controller: userFieldController,
+                                          hint:
+                                              "As pessoas que receberão o praise",
+                                          direction: AxisDirection.up,
+                                          suggestionsBoxDecoration:
+                                              const SuggestionsBoxDecoration(
+                                            color: Colors.transparent,
+                                            elevation: 0,
                                           ),
-                                          child: AbsorbPointer(
-                                            child: ListTile(
-                                              tileColor: Colors.black87,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              title: Text(
-                                                member.tag,
-                                                style: theme.fontScheme.p2
-                                                    .copyWith(
-                                                  color: theme
-                                                      .colorScheme.accentColor,
+                                          itemBuilder: (context, member) =>
+                                              Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 4.0,
+                                              horizontal: 2,
+                                            ),
+                                            child: AbsorbPointer(
+                                              child: ListTile(
+                                                tileColor: Colors.black87,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
-                                              ),
-                                              subtitle: Text(
-                                                member.name,
-                                                style: theme.fontScheme.p1
-                                                    .copyWith(
-                                                  color: Colors.white,
+                                                title: Text(
+                                                  member.tag,
+                                                  style: theme.fontScheme.p2
+                                                      .copyWith(
+                                                    color: theme.colorScheme
+                                                        .accentColor,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  member.name,
+                                                  style: theme.fontScheme.p1
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          onSuggestionSelected: (member) {
+                                            widget.controller
+                                                .getUserFromTag(member.tag);
+                                          },
+                                          suggestionsCallback: (search) {
+                                            return data
+                                                .where((element) => (element.tag
+                                                        .toLowerCase()
+                                                        .contains(search
+                                                            .toLowerCase()) ||
+                                                    element.name
+                                                        .toLowerCase()
+                                                        .contains(search
+                                                            .toLowerCase())))
+                                                .where((element) =>
+                                                    element.id !=
+                                                    injected<
+                                                            SessionController>()
+                                                        .currentUser
+                                                        .value!
+                                                        .id)
+                                                .toList();
+                                          },
                                         ),
-                                        onSuggestionSelected: (member) {
-                                          widget.controller
-                                              .getUserFromTag(member.tag);
-                                        },
-                                        suggestionsCallback: (search) {
-                                          return data
-                                              .where((element) => (element.tag
-                                                      .toLowerCase()
-                                                      .contains(search
-                                                          .toLowerCase()) ||
-                                                  element.name
-                                                      .toLowerCase()
-                                                      .contains(search
-                                                          .toLowerCase())))
-                                              .where((element) =>
-                                                  element.id !=
-                                                  injected<SessionController>()
-                                                      .currentUser
-                                                      .value!
-                                                      .id)
-                                              .toList();
-                                        },
-                                      );
-                                    }),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: SizedBox.square(
-                                  dimension: 48,
-                                  child: BaseButton.icon(
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor: ColorTokens.concrete,
-                                    icon: Icon(
-                                      HeroiconsMini.xMark,
-                                      size: 18,
-                                      color: context.theme.colorScheme
-                                          .inputForegroundColor,
-                                    ),
-                                    onPressed: () {
-                                      userFieldController.clear();
-                                      widget.controller.activeStep.set(1);
-                                      widget.controller.userState.set(
-                                        InitialState(),
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                      SizedBox.square(
+                                        dimension: 48,
+                                        child: BaseButton.icon(
+                                          onPressed: () {
+                                            userFieldController.clear();
+                                          },
+                                          padding: const EdgeInsets.all(0),
+                                          icon: const Icon(HeroiconsMini.xMark),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                          ),
+                          AtomObserver(
+                            atom: widget.controller.praiseds,
+                            builder: (context, praiseds) {
+                              return Container(
+                                width: 100.w,
+                                padding: theme.spacingScheme.inputPadding,
+                                child: Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: praiseds
+                                      .map(
+                                        (e) => Pressable.scale(
+                                          onPressed: () {
+                                            widget.controller
+                                                .unselectPraised(e);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black12,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  e.tag,
+                                                  style: theme.fontScheme.p2
+                                                      .copyWith(
+                                                          color: Colors.white),
+                                                ),
+                                                const SizedBox(
+                                                  width: 4,
+                                                ),
+                                                const Icon(
+                                                  Icons.close,
+                                                  size: 16,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                           const SizedBox(
                             height: 12,
@@ -233,10 +293,13 @@ class _NewPraiseUserSelectionStepState
                             visible: state == 2,
                             child: BaseInput.large(
                               hintText: "Solta a matraca e elogie com vontade!",
+                              type: TextInputType.text,
+                              maxLength: 800,
                               validator: (value) => message(value ?? ""),
                               onSaved: (value) =>
                                   widget.controller.formData.message = value!,
                               minLines: 3,
+                              maxLines: 5,
                               hintStyle: context.theme.fontScheme.input,
                               enabled: state == 2,
                             ),
@@ -275,15 +338,18 @@ class _NewPraiseUserSelectionStepState
                                           .set(value!);
                                     },
                                   ),
-                                  Pressable.scale(
-                                    onPressed: () {
-                                      widget.controller.privatePraise
-                                          .set(!private);
-                                    },
-                                    child: Text(
-                                      "Praise privado (Não aparece no feed)",
-                                      style: theme.fontScheme.p2.copyWith(
-                                        color: Colors.white54,
+                                  Expanded(
+                                    child: Pressable.scale(
+                                      onPressed: () {
+                                        widget.controller.privatePraise
+                                            .set(!private);
+                                      },
+                                      child: Text(
+                                        "Praise privado (não aparece no feed)",
+                                        style: theme.fontScheme.p2.copyWith(
+                                          color: Colors.white54,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -294,6 +360,42 @@ class _NewPraiseUserSelectionStepState
                           const SizedBox(
                             height: 16,
                           ),
+                          MultiAtomObserver(
+                              atoms: [
+                                widget.controller.activeStep,
+                                widget.controller.praiseds
+                              ],
+                              builder: (context) {
+                                final step = widget.controller.activeStep.value;
+                                final praiseds =
+                                    widget.controller.praiseds.value;
+                                return Visibility(
+                                  visible: step == 1 && praiseds.isNotEmpty,
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: BorderedButton(
+                                      onPressed: () {
+                                        widget.controller.activeStep.set(2);
+                                      },
+                                      padding: const EdgeInsets.all(12),
+                                      borderSide: BorderSide(
+                                        color: context
+                                            .theme.colorScheme.accentColor,
+                                      ),
+                                      child: Text(
+                                        "continuar  >",
+                                        style: context.theme.fontScheme.input
+                                            .copyWith(
+                                          color: context
+                                              .theme.colorScheme.accentColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                           Visibility(
                             visible: state == 2,
                             child: Align(
@@ -364,12 +466,24 @@ class _NewPraiseUserSelectionStepState
               direction: AxisDirection.up,
               controller: topicController,
               enabled: state == 2,
-              itemBuilder: (context, value) => ListTile(
-                tileColor: context.theme.colorScheme.inputBackgroundColor,
-                title: Text(
-                  value.value,
-                  style: context.theme.fontScheme.p2.copyWith(
-                    color: context.theme.colorScheme.foregroundColor,
+              suggestionsBoxDecoration: const SuggestionsBoxDecoration(
+                color: Colors.transparent,
+              ),
+              itemBuilder: (context, value) => Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: 2,
+                ),
+                child: ListTile(
+                  tileColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusDirectional.circular(8),
+                  ),
+                  title: Text(
+                    value.value,
+                    style: context.theme.fontScheme.p2.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -453,7 +567,8 @@ class ErrorMessageMolecule extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          "${state is ErrorState ? (state as ErrorState).exception is ApplicationException ? injected<TranslationService>().get(((state as ErrorState).exception as ApplicationException).message) : (state as ErrorState).exception : ''}",
+          injected<TranslationService>()
+              .get((state as ErrorState).exception.toString()),
           style: theme.fontScheme.p2.copyWith(
             color: Colors.white,
           ),
@@ -475,7 +590,7 @@ enum TopicValues {
   recognition("#reconhecimento"),
   randomness("#aleatoriedade"),
   partnership("#parceria"),
-  motivational("#motivational"),
+  motivational("#motivacional"),
   surprise("#surpresa");
 
   final String value;

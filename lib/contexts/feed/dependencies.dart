@@ -14,4 +14,10 @@ Future<void> feedDependencies() async {
       realtimeQueryClient: injected(),
     ),
   );
+  inject<ReactionController>(
+    DefaultReactionController(
+      feedRepository: injected(),
+      eventBus: injected(),
+    ),
+  );
 }

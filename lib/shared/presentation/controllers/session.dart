@@ -11,8 +11,8 @@ abstract class SessionController {
   AtomNotifier<UserDto?> get currentUser;
 
   Future<void> logout();
-
   Future<void> updateUser(UserDto input);
+  Future<void> setLastInteractedCommunity(CommunityOutput input);
 }
 
 class DefaultSessionController implements SessionController {
@@ -43,5 +43,16 @@ class DefaultSessionController implements SessionController {
   Future<void> updateUser(UserDto input) async {
     await authPersistanceService.saveAuthenticatedUserData(input);
     currentUser.set(input);
+  }
+
+  @override
+  Future<void> setLastInteractedCommunity(CommunityOutput input) async {
+    if (currentUser.value != null) {
+      await updateUser(
+        currentUser.value!.copyWith(
+          lastInteractedCommunity: input,
+        ),
+      );
+    }
   }
 }

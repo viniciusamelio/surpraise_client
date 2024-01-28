@@ -32,6 +32,15 @@ class ReceivedPraisesTabOrganism extends StatelessWidget {
         }
 
         final List<PraiseDto> data = loadedPraises;
+
+        if (data.isEmpty) {
+          return const EmptyStateOrganism(
+            message: "Seus #praises aparecerão aqui quando você os receber",
+            animationSize: 130,
+            fontSize: 15,
+          );
+        }
+
         return SizedBox(
           child: ListView.separated(
             itemCount: data.length,
@@ -47,7 +56,11 @@ class ReceivedPraisesTabOrganism extends StatelessWidget {
               );
             },
           ),
-        );
+        ).animate().move(
+              begin: Offset(0, 60.h),
+              end: const Offset(0, 0),
+              delay: const Duration(milliseconds: 100),
+            );
       },
     );
   }

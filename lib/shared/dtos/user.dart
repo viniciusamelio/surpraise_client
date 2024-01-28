@@ -3,17 +3,18 @@ import 'dart:io';
 import 'package:surpraise_infra/surpraise_infra.dart';
 
 class UserDto extends GetUserOutput {
-  UserDto({
-    required super.tag,
-    required super.name,
-    required super.email,
-    required super.id,
-    this.avatarUrl,
-    this.cachedAvatar,
-  });
+  UserDto(
+      {required super.tag,
+      required super.name,
+      required super.email,
+      required super.id,
+      this.avatarUrl,
+      this.cachedAvatar,
+      this.lastInteractedCommunity});
 
   String? avatarUrl;
   File? cachedAvatar;
+  CommunityOutput? lastInteractedCommunity;
 
   void removeAvatar() {
     avatarUrl = null;
@@ -24,6 +25,7 @@ class UserDto extends GetUserOutput {
     String? avatarUrl,
     String? name,
     File? cachedAvatar,
+    CommunityOutput? lastInteractedCommunity,
   }) {
     return UserDto(
       tag: tag,
@@ -32,6 +34,8 @@ class UserDto extends GetUserOutput {
       id: id,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       cachedAvatar: cachedAvatar ?? this.cachedAvatar,
+      lastInteractedCommunity:
+          lastInteractedCommunity ?? this.lastInteractedCommunity,
     );
   }
 }

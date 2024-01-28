@@ -73,6 +73,7 @@ class DefaultProfileController
       userId: userId,
       asPraiser: false,
       offset: offset.value,
+      withPrivate: true,
     );
     stateFromEither(feedsOrError);
     feedsOrError.fold(

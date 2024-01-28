@@ -59,8 +59,7 @@ class _RemoveMemberSheetState extends State<RemoveMemberSheet> {
       child: PolymorphicAtomObserver<DefaultState<Exception, void>>(
         atom: controller.state,
         types: [
-          TypedAtomHandler(
-            type: LoadingState<Exception, void>,
+          TypedAtomHandler<LoadingState<Exception, void>>(
             builder: (context, state) => const LoaderMolecule(),
           )
         ],

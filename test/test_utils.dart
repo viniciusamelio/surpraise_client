@@ -2,6 +2,7 @@ import 'package:blurple/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:surpraise_client/core/external_dependencies.dart';
 
 Widget testWidgetTemplate({
   required Widget sut,
@@ -16,7 +17,9 @@ Widget testWidgetTemplate({
         if (contextCallback != null) {
           contextCallback(context);
         }
-        return Scaffold(body: sut);
+        return Sizer(builder: (context, orientation, deviceType) {
+          return Scaffold(body: sut);
+        });
       }),
     ),
   );

@@ -22,14 +22,12 @@ class SettingsSectionOrganism extends StatelessWidget {
     return PolymorphicAtomObserver(
         atom: controller.state,
         types: [
-          TypedAtomHandler(
-            type: LoadingState<Exception, GetSettingsOutput>,
+          TypedAtomHandler<LoadingState<Exception, GetSettingsOutput>>(
             builder: (context, state) {
               return const LoaderMolecule();
             },
           ),
-          TypedAtomHandler(
-            type: ErrorState<Exception, GetSettingsOutput>,
+          TypedAtomHandler<ErrorState<Exception, GetSettingsOutput>>(
             builder: (context, state) {
               return const ErrorWidgetMolecule(
                 message: "Deu ruim ao carregar suas configurações",

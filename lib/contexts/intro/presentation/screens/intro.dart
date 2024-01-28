@@ -34,10 +34,22 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Lottie.asset(
-          "assets/animations/hashtag.json",
-          width: 300,
+      backgroundColor: const Color(0XFF210F4F),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Animate(
+            effects: const [
+              FadeEffect(duration: Duration(milliseconds: 300)),
+              ScaleEffect(
+                delay: Duration(milliseconds: 300),
+                duration: Duration(
+                  milliseconds: 400,
+                ),
+              ),
+            ],
+            child: Image.asset("assets/images/logo_original.png"),
+          ),
         ),
       ),
     );

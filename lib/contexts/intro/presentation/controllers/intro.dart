@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../env.dart';
 import '../../../auth/auth.dart';
@@ -29,7 +30,8 @@ class DefaultIntroController
   Future<void> handleFirstPage() async {
     state.set(LoadingState());
     final rootedDeviceOrError = await rootDetector.check();
-    if (rootedDeviceOrError.isRight() &&
+    if (!kDebugMode &&
+        rootedDeviceOrError.isRight() &&
         rootedDeviceOrError.fold((left) => null, (right) => right)! == true) {
       state.set(
         ErrorState(
@@ -52,6 +54,7 @@ class DefaultIntroController
       bucketId: Env.avatarBucket,
       fileId: persistedUser.id,
     );
+
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(
       MainScreen.routeName,
       arguments: persistedUser.copyWith(

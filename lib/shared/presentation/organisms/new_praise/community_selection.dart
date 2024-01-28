@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
 import '../../../../core/external_dependencies.dart';
+import '../../../shared.dart';
 
 class NewPraiseCommunitySelectionStep extends StatelessWidget {
   const NewPraiseCommunitySelectionStep({
@@ -33,6 +34,10 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
         AtomObserver(
           atom: notifier,
           builder: (context, state) {
+            if (state is! SuccessState) {
+              return const LoaderMolecule();
+            }
+
             return BaseSearchableDropdown<CommunityOutput>(
               suggestionsCallback: (pattern) async {
                 final data =
@@ -45,18 +50,28 @@ class NewPraiseCommunitySelectionStep extends StatelessWidget {
               },
               direction: AxisDirection.up,
               hint: "Comunidade de quem vai receber o praise",
+              suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.transparent,
+              ),
               itemBuilder: (context, item) {
-                return ListTile(
-                  tileColor: context.theme.colorScheme.inputBackgroundColor,
-                  title: Text(
-                    item.title,
-                    style: context.theme.fontScheme.p2.copyWith(
-                      color: context.theme.colorScheme.foregroundColor,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    tileColor: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  subtitle: Text(
-                    item.description,
-                    style: context.theme.fontScheme.p1,
+                    title: Text(
+                      item.title,
+                      style: context.theme.fontScheme.p2.copyWith(
+                        color: context.theme.colorScheme.foregroundColor,
+                      ),
+                    ),
+                    subtitle: Text(
+                      item.description,
+                      style: context.theme.fontScheme.p1,
+                    ),
                   ),
                 );
               },

@@ -8,6 +8,11 @@ abstract class PraiseController extends BaseStateController<PraiseOutput> {
   AtomNotifier<int> get activeStep;
   AtomNotifier<bool> get privatePraise;
   AtomNotifier<DefaultState<Exception, UserDto>> get userState;
+  AtomNotifier<List<UserDto>> get praiseds;
+
+  void selectPraised(UserDto user);
+  void unselectPraised(UserDto user);
+
   AtomNotifier<DefaultState<Exception, List<FindCommunityOutput>>>
       get communitiesState;
   PraiseFormDataDto get formData;
@@ -39,12 +44,17 @@ class DefaultPraiseController
   Future<void> sendPraise(String praiserId) async {
     state.set(LoadingState());
     final input = PraiseInput(
-        commmunityId: formData.communityId,
-        message: formData.message,
-        praisedId: formData.praisedId,
-        praiserId: praiserId,
-        private: privatePraise.value,
-        topic: "#${formData.topic!}");
+      commmunityId: formData.communityId,
+      message: formData.message,
+      praisedId: formData.praisedId,
+      praiserId: praiserId,
+      private: privatePraise.value,
+      topic: "#${formData.topic!}",
+      extraPraisedIds: praiseds.value
+          .where((element) => element.id != formData.praisedId)
+          .map((e) => e.id)
+          .toList(),
+    );
     final result = await _usecase(input);
     stateFromEither(result);
     result.fold(
@@ -68,16 +78,16 @@ class DefaultPraiseController
     result.fold(
       (left) => userState.set(ErrorState(left)),
       (right) {
-        userState.set(
-          SuccessState(
-            UserDto(
-              tag: right.value.tag,
-              name: right.value.name,
-              email: right.value.email,
-              id: right.value.id,
-            ),
-          ),
+        final user = UserDto(
+          tag: right.value.tag,
+          name: right.value.name,
+          email: right.value.email,
+          id: right.value.id,
         );
+        userState.set(
+          SuccessState(user),
+        );
+        selectPraised(user);
       },
     );
   }
@@ -102,8 +112,30 @@ class DefaultPraiseController
     state.removeListeners();
     state.set(InitialState());
     formData.praisedTag = null;
+    praiseds.set([]);
   }
 
   @override
   final AtomNotifier<bool> privatePraise = AtomNotifier(false);
+
+  @override
+  final AtomNotifier<List<UserDto>> praiseds = AtomNotifier([]);
+
+  @override
+  void selectPraised(UserDto user) {
+    if (praiseds.value.any((element) => element.id == user.id)) {
+      return;
+    }
+    praiseds.set([
+      ...praiseds.value,
+      user,
+    ]);
+  }
+
+  @override
+  void unselectPraised(UserDto user) {
+    praiseds.set(
+      praiseds.value.where((element) => element.id != user.id).toList(),
+    );
+  }
 }

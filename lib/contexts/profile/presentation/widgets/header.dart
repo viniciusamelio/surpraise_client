@@ -1,65 +1,77 @@
-import 'package:blurple/tokens/color_tokens.dart';
 import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:palette_generator/palette_generator.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../../../colors.dart';
 import '../../../../core/core.dart';
 import '../../../../shared/dtos/dtos.dart';
-import '../../../../shared/presentation/molecules/confirm_snack.dart';
 import '../../../../shared/presentation/organisms/organisms.dart';
 import '../organisms/organisms.dart';
 
 class ProfileHeaderOrganism extends StatelessWidget {
   const ProfileHeaderOrganism({
-    Key? key,
+    super.key,
     required this.user,
     required this.onRemoveAvatarConfirmed,
     required this.uploadAction,
-  }) : super(key: key);
+  }) : super();
   final UserDto user;
   final VoidCallback uploadAction;
   final VoidCallback onRemoveAvatarConfirmed;
+
+  Future<Color> getImagePalette(ImageProvider imageProvider) async {
+    final PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImageProvider(imageProvider);
+    if (paletteGenerator.dominantColor == null) {
+      return paletteGenerator.vibrantColor?.color ?? purple;
+    }
+    return paletteGenerator.dominantColor!.color;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 285,
-      width: double.maxFinite,
-      child: Stack(
-        children: [
-          Container(
-            height: 125,
-            width: double.maxFinite,
-            color: context.theme.colorScheme.accentColor,
-          ),
-          SizedBox(
-            width: double.maxFinite,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      AvatarMolecule(
-                        size: 180,
-                        iconSize: 66,
-                        image: user.cachedAvatar,
-                        imageUrl: user.avatarUrl,
-                      ),
-                      Positioned(
-                        bottom: -12,
-                        child: SizedBox(
-                          width: 180,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox.square(
+    return FutureBuilder(
+        future: getImagePalette(
+          user.cachedAvatar != null
+              ? FileImage(user.cachedAvatar!)
+              : NetworkImage(user.avatarUrl!) as ImageProvider,
+        ),
+        builder: (context, snapshot) {
+          final backgroundColor = snapshot.data ?? purple;
+          return Stack(
+            children: [
+              Container(
+                height: 13.5.h,
+                color: backgroundColor,
+                width: double.maxFinite,
+              ),
+              SizedBox(
+                width: double.maxFinite,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 5.h, left: 24),
+                  child: SingleChildScrollView(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          fit: StackFit.passthrough,
+                          children: [
+                            AvatarMolecule(
+                              size: 30.w,
+                              iconSize: 66,
+                              image: user.cachedAvatar,
+                              imageUrl: user.avatarUrl,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 10.w,
+                              child: SizedBox.square(
                                 dimension: 36,
                                 child: BorderedIconButton(
-                                  padding: const EdgeInsets.all(2),
+                                  padding: EdgeInsets.all(1.w),
                                   preffixIcon: Icon(
                                     HeroiconsSolid.cloudArrowUp,
                                     color:
@@ -69,101 +81,78 @@ class ProfileHeaderOrganism extends StatelessWidget {
                                   onPressed: uploadAction,
                                 ),
                               ),
-                              const Visibility(
-                                visible: false,
-                                child: SizedBox(
-                                  width: 6,
-                                ),
-                              ),
-                              Visibility(
-                                visible: false,
-                                child: SizedBox.square(
-                                  dimension: 36,
-                                  child: BorderedIconButton(
-                                    padding: const EdgeInsets.all(2),
-                                    preffixIcon: Icon(
-                                      Icons.close,
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 2.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showCustomModalBottomSheet(
+                                  context: context,
+                                  child: const EditNameSheetTabOrganism(),
+                                );
+                              },
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Text(
+                                    user.name,
+                                    style: context.theme.fontScheme.h3.copyWith(
                                       color:
-                                          context.theme.colorScheme.dangerColor,
-                                      size: 24,
+                                          backgroundColor.computeLuminance() <
+                                                  .5
+                                              ? Colors.white
+                                              : Colors.black,
                                     ),
-                                    onPressed: () async {
-                                      ConfirmSnack(
-                                        leadingIcon: Icon(
-                                          HeroiconsMini.camera,
-                                          color: context.theme.colorScheme
-                                              .inputForegroundColor,
-                                        ),
-                                        message:
-                                            "Tem certeza que quer remover o avatar?",
-                                        onConfirm: onRemoveAvatarConfirmed,
-                                      ).show(
-                                        context: context,
-                                      );
-                                    },
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      showCustomModalBottomSheet(
-                        context: context,
-                        child: const EditNameSheetTabOrganism(),
-                      );
-                    },
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Text(
-                          user.name,
-                          style: context.theme.fontScheme.h3.copyWith(
-                            color: ColorTokens.greyLighter,
-                          ),
-                        ),
-                        Positioned(
-                          right: -18,
-                          top: 0,
-                          child: SizedBox.square(
-                            dimension: 14,
-                            child: BorderedIconButton(
-                              onPressed: () {},
-                              borderRadius: 2,
-                              backgroundColor:
-                                  context.theme.colorScheme.accentColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.all(0),
-                              preffixIcon: const Icon(
-                                Icons.edit,
-                                size: 12,
+                                  Positioned(
+                                    right: -26,
+                                    top: 0,
+                                    child: SizedBox.square(
+                                      dimension: 20,
+                                      child: BorderedIconButton(
+                                        onPressed: () {},
+                                        borderRadius: 4,
+                                        backgroundColor: context
+                                            .theme.colorScheme.backgroundColor,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.all(4),
+                                        preffixIcon: const Icon(
+                                          Icons.edit,
+                                          size: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Text(
+                                user.tag,
+                                style: context.theme.fontScheme.h3.copyWith(
+                                  color: context
+                                      .theme.colorScheme.inputForegroundColor,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  Text(
-                    user.tag,
-                    style: context.theme.fontScheme.h3.copyWith(
-                      color: context.theme.colorScheme.inputForegroundColor,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+            ],
+          );
+        });
   }
 }

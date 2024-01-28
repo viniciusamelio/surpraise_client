@@ -13,7 +13,7 @@ import '../../profile.dart';
 import '../organisms/organisms.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
   static const String routeName = "/profile";
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -150,9 +150,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               );
             },
-          ),
-          const SizedBox(
-            height: 20,
           ),
           Padding(
             padding: screenPadding,

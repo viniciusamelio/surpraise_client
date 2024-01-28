@@ -13,9 +13,17 @@ abstract class FeedRepository {
     required String userId,
     bool? asPraiser,
     int offset = 0,
+    bool withPrivate,
   });
 
   AsyncAction<List<InviteDto>> getInvites({
     required String userId,
+  });
+
+  AsyncAction<String> toggleReaction({
+    required String userId,
+    required String praiseId,
+    required String reaction,
+    String? reactionId,
   });
 }
