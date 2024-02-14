@@ -1,3 +1,7 @@
+# 2.0.1
+## Fixed
+- Bug no selecionador de imagens
+
 # 2.0.0
 ## Added
 - New praise flow

@@ -13,3 +13,4 @@ key.properties
 **/*.jks
 
 **/embrace-config.json
+upload_certificate.pem
