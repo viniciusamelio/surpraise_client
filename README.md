@@ -19,6 +19,6 @@ Client mobile, desenvolvido em Flutter, utilizando da técnica de multi-repo par
 
 ## Screenshots
 <img src="assets/screenshots/Feed.png"/>
-<img src="assets/screenshots/Notifications.png"/>
 <img src="assets/screenshots/New praise.png"/>
-<img src="assets/screenshots/Received Praises.png"/>
+<img src="assets/screenshots/Notification.png"/>
+<img src="assets/screenshots/Received praises.png"/>
