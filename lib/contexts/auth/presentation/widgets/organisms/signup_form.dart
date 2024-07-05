@@ -39,7 +39,7 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
       child: Column(
         children: [
           BaseInput(
-            label: "Nome",
+            label: translations.name,
             enabled: !socialLogin,
             controller: nameController,
             onSaved: (value) => controller.formData.name = value!,
@@ -52,7 +52,7 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
             height: context.theme.spacingScheme.verticalSpacing,
           ),
           BaseInput(
-            label: "E-mail",
+            label: translations.email,
             enabled: !socialLogin,
             controller: emailController,
             onSaved: (value) => controller.formData.email = value!,
@@ -65,7 +65,7 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
             height: context.theme.spacingScheme.verticalSpacing,
           ),
           BaseInput(
-            label: "Tag",
+            label: translations.tag,
             onSaved: (value) => controller.formData.tag = value!,
             validator: (value) => tag(value ?? ""),
             preffixIcon: const Icon(
@@ -80,7 +80,7 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
             child: Column(
               children: [
                 BaseInput(
-                  label: "Password",
+                  label: translations.password,
                   onSaved: (value) => controller.formData.password = value!,
                   validator: (value) => password(value ?? ""),
                   preffixIcon: const Icon(
@@ -122,7 +122,7 @@ class _SignupFormOrganismState extends State<SignupFormOrganism> {
                     child: Column(
                       children: [
                         Text(
-                          "Selecione sua foto de perfil",
+                          translations.profilePictureLabel,
                           style: context.theme.fontScheme.p2.copyWith(
                             fontWeight: FontWeight.w700,
                           ),

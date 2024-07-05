@@ -3,7 +3,7 @@ import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 import 'package:pressable/pressable.dart';
 
-import '../../../../../core/extensions/theme.dart';
+import '../../../../../core/core.dart';
 import '../../../../../core/external_dependencies.dart';
 import '../../../auth.dart';
 
@@ -30,7 +30,7 @@ class LoginFormOrganism extends StatelessWidget {
         children: [
           BaseInput(
             onSaved: onSaveEmail,
-            label: "E-mail",
+            label: translations.email,
             type: TextInputType.emailAddress,
             preffixIcon: const Icon(
               HeroiconsSolid.envelope,
@@ -44,7 +44,7 @@ class LoginFormOrganism extends StatelessWidget {
               builder: (context, show) {
                 return BaseInput(
                   onSaved: onSavePassword,
-                  label: "Senha",
+                  label: translations.password,
                   maxLines: 1,
                   preffixIcon: const Icon(
                     HeroiconsSolid.lockClosed,
@@ -72,7 +72,7 @@ class LoginFormOrganism extends StatelessWidget {
                 );
               },
               child: Text(
-                "Esqueci minha senha",
+                translations.forgetPassword,
                 style: TextStyle(
                   color: ColorTokens.grey,
                 ),

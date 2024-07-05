@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../../core/extensions/theme.dart';
+import '../../../../../translations/locale_sync.dart';
 
 class LoginDisplayerOrganism extends StatefulWidget {
   const LoginDisplayerOrganism({super.key});
@@ -45,7 +46,7 @@ class _LoginDisplayerOrganismState extends State<LoginDisplayerOrganism>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Bem vindo ao #surpraise",
+          LocaleSync.of(context).welcome,
           style: context.theme.fontScheme.h1.copyWith(
             color: context.theme.colorScheme.foregroundColor,
           ),

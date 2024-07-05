@@ -4,6 +4,7 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:restart_app/restart_app.dart';
@@ -19,6 +20,7 @@ import 'core/core.dart';
 import 'core/external_dependencies.dart';
 import 'shared/dtos/dtos.dart';
 import 'shared/presentation/molecules/error_widget.dart';
+import 'translations/locale_sync.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -39,11 +41,20 @@ class App extends StatelessWidget {
             title: '#surpraise',
             debugShowCheckedModeBanner: false,
             locale: const Locale('pt', 'BR'),
+            supportedLocales: const [
+              Locale("pt"),
+              Locale("en"),
+            ],
+            localizationsDelegates: [
+              LocaleSync.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
             theme: ThemeData(
               useMaterial3: false,
               scaffoldBackgroundColor: theme.colorScheme.backgroundColor,
               colorScheme: ColorScheme.dark(
-                background: theme.colorScheme.backgroundColor,
+                surface: theme.colorScheme.backgroundColor,
                 primary: theme.colorScheme.accentColor,
               ),
             ),
@@ -78,14 +89,14 @@ class App extends StatelessWidget {
                         child: ErrorWidgetMolecule(
                           message: kDebugMode
                               ? errorDetails.exceptionAsString()
-                              : "Algo estranho aconteceu com o app",
+                              : LocaleSync.of(context).flutterInitErrorMessage,
                         ),
                       ),
                       const SizedBox(
                         height: 32,
                       ),
                       BorderedButton(
-                        text: "Reiniciar o app",
+                        text: LocaleSync.of(context).flutterInitButton,
                         borderSide: BorderSide(
                           width: 2,
                           color: ColorTokens.red,

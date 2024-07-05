@@ -4,6 +4,7 @@ import 'package:blurple/widgets/buttons/buttons.dart';
 import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/core.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
@@ -52,7 +53,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScaffoldTemplate(
-      title: "Reset de senha",
+      title: translations.passwordReset,
       child: Form(
         key: formKey,
         child: MultiAtomObserver(

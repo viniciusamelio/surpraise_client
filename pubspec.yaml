@@ -40,6 +40,8 @@ dependencies:
   ez_either: ^1.0.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_animate: ^4.1.1+1
   flutter_jailbreak_detection: ^1.10.0
   flutter_svg: ^2.0.6
@@ -73,6 +75,7 @@ dependencies:
   animated_emoji: ^3.0.0
   palette_generator: ^0.3.3+3
   image_cropper: ^5.0.1
+  locale_sync: ^1.1.5
 
 dev_dependencies:
   faker: ^2.1.0

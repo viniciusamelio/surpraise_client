@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScaffoldTemplate(
-      title: "Crie sua conta",
+      title: translations.signupTitle,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Builder(builder: (context) {
         return AtomObserver(
@@ -63,9 +63,9 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (formKey.currentState!.validate()) {
                           if (controller.profilePicture.value == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const ErrorSnack(
-                                      message: "Selecione uma imagem de perfil")
-                                  .build(context),
+                              ErrorSnack(
+                                message: translations.profilePictureLabel,
+                              ).build(context),
                             );
                             return;
                           }
@@ -78,7 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       backgroundColor: context.theme.colorScheme.accentColor,
                       foregroundColor:
                           context.theme.colorScheme.foregroundColor,
-                      text: "Enviar",
+                      text: translations.send,
                     ),
             );
           },

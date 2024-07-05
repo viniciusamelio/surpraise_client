@@ -1,0 +1,39 @@
+{
+    "pt" : {
+        "flutterInitErrorMessage" : "Algo estranho aconteceu com o app",
+        "flutterInitButton" : "Reiniciar o app",
+        "welcome" : "Boas vindas ao #surpraise",
+        "password" : "Senha",
+        "email" : "E-mail",
+        "forgetPassword" : "Esqueci minha senha",
+        "name": "Nome",
+        "tag" : "Tag",
+        "profilePictureLabel" : "Seleciona sua foto de perfil",
+        "signInLoading" : "Carregando...",
+        "signIn" : "Entrar",
+        "orSignInWith" : "Ou entre com",
+        "doesNotHaveAnAccount" : "Não possui uma conta?",
+        "signUp" : "Cadastre-se",
+        "passwordReset" : "Reset de senha",
+        "loading": "Carregando",
+        "next" : "Próximo",
+        "code" : "Código",
+        "send" : "Enviar",
+        "newPassword" : "Nova senha",
+        "confirmNewPassword" : "Confirmar nova senha",
+        "passwordsDoesntMatch" : "As senhas não coincidem",
+        "minValidation" : {
+            "plural" : "{name} deve ter no mínimo {count} caracteres",
+            "value" : "{name} deve ter no mínimo 1 caracter"
+        },
+        "maxValidation" : {
+            "plural" : "{name} deve ter no máximo {count} caracteres",
+            "value" : "{name} deve ter no máximo um caracter"
+        },
+        "codeSendingError" : "Deu ruim ao enviar o código",
+        "codeConfirmingError" : "Deu ruim ao confirmar o código",
+        "passwordChangingSuccess" : "Senha alterada",
+        "passwordChangingError": "Deu ruim ao alterar a senha",
+        "signupTitle" : "Crie sua conta"
+    }
+}

@@ -93,8 +93,8 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                                   : const Icon(
                                       HeroiconsSolid.arrowPathRoundedSquare),
                               text: state is! LoadingState
-                                  ? "Entrar"
-                                  : "Carregando...",
+                                  ? translations.signIn
+                                  : translations.signInLoading,
                             );
                           },
                         ),
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                       Column(
                         children: [
                           Text(
-                            "Ou entre com",
+                            translations.orSignInWith,
                             style: context.theme.fontScheme.p2.copyWith(
                               color: Colors.white,
                               fontSize: 16,
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              "Não possui uma conta?",
+                              translations.doesNotHaveAnAccount,
                               style: context.theme.fontScheme.p2.copyWith(
                                 fontSize: 15,
                                 color:
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> with SocialAuthWidget {
                                   context.theme.colorScheme.accentColor,
                               foregroundColor:
                                   context.theme.colorScheme.foregroundColor,
-                              label: "Cadastre-se",
+                              label: translations.signUp,
                             )
                           ],
                         ),

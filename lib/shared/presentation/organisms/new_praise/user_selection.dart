@@ -320,12 +320,11 @@ class _NewPraiseUserSelectionStepState
                                         theme.colorScheme.backgroundColor,
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
-                                    fillColor:
-                                        MaterialStateProperty.resolveWith(
-                                      (states) => states
-                                              .contains(MaterialState.selected)
-                                          ? theme.colorScheme.accentColor
-                                          : Colors.transparent,
+                                    fillColor: WidgetStateProperty.resolveWith(
+                                      (states) =>
+                                          states.contains(WidgetState.selected)
+                                              ? theme.colorScheme.accentColor
+                                              : Colors.transparent,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(4),

@@ -7,6 +7,7 @@ import 'core/core.dart';
 
 import 'app.dart';
 import 'env.dart';
+import 'translations/locale_sync.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,11 @@ void main() async {
   }
   OneSignal.initialize(Env.oneSignalAppId);
   OneSignal.Notifications.requestPermission(true);
+
+  await LocaleSync.setup(
+    apiToken: "dcc993e1-f722-455b-999a-7b9c730c5a74",
+    repositoryId: "repository:3vm1yx9dpjg4xlsh7yna",
+  );
 
   await SentryFlutter.init(
     (options) {

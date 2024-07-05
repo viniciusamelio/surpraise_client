@@ -28,6 +28,7 @@ class _IntroScreenState extends State<IntroScreen> {
       },
     );
     controller.handleFirstPage();
+
     super.initState();
   }
 
