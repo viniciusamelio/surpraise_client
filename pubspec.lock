@@ -706,10 +706,10 @@ packages:
     dependency: "direct main"
     description:
       name: locale_sync
-      sha256: "2eb70c15ff90d062a724ac139059c5b6b3d903637895775568e7ed4493d115d8"
+      sha256: e118c75c9a95ad7af98940e7c0a0e8f3688c789f1a241350e1e93821db557a85
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.7"
   logging:
     dependency: transitive
     description:

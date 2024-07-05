@@ -65,7 +65,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
             if (loading) {
               ConfirmSnack(
                   leadingIcon: const Icon(HeroiconsMini.circleStack),
-                  message: "Carregando",
+                  message: translations.loading,
                   onConfirm: () {});
             }
 
@@ -77,14 +77,14 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                 children: [
                   _RecoveryPageTemplate(
                     loading: loading,
-                    buttonText: "Próximo",
+                    buttonText: translations.next,
                     onValidate: () => controller.sendEmail(
                       email: emailController.text,
                     ),
                     formKey: formKey,
                     children: [
                       BaseInput(
-                        label: "E-mail",
+                        label: translations.email,
                         validator: (value) => email(value ?? ""),
                         controller: emailController,
                         type: TextInputType.emailAddress,
@@ -93,14 +93,14 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                   ),
                   _RecoveryPageTemplate(
                     loading: loading,
-                    buttonText: "Próximo",
+                    buttonText: translations.next,
                     onValidate: () => controller.checkCode(
                       code: code.text,
                     ),
                     formKey: formKey,
                     children: [
                       BaseInput(
-                        label: "Código",
+                        label: translations.code,
                         validator: (value) => minLength(value ?? "", 6),
                         controller: code,
                         type: TextInputType.number,
@@ -109,14 +109,14 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                   ),
                   _RecoveryPageTemplate(
                     loading: loading,
-                    buttonText: "Enviar",
+                    buttonText: translations.send,
                     onValidate: () => controller.changePassword(
                       password: confirmPassword.text,
                     ),
                     formKey: formKey,
                     children: [
                       BaseInput(
-                        label: "Nova Senha",
+                        label: translations.newPassword,
                         controller: password,
                         obscureText: true,
                         maxLines: 1,
@@ -125,18 +125,21 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
                         height: context.theme.spacingScheme.verticalSpacing,
                       ),
                       BaseInput(
-                        label: "Confirmar Nova Senha",
+                        label: translations.confirmNewPassword,
                         controller: confirmPassword,
                         maxLines: 1,
                         obscureText: true,
                         validator: (value) {
                           if (value != password.text) {
-                            return "As senhas não coincidem";
+                            return translations.passwordsDoesntMatch;
                           }
                           return minLength(
                             value ?? "",
                             8,
-                            message: "Senha deve ter no mínimo 8 caracteres",
+                            message: translations.minValidation(
+                              count: 8,
+                              name: translations.password,
+                            ),
                           );
                         },
                       ),
@@ -161,8 +164,8 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
         );
       },
       onError: (left) {
-        const ErrorSnack(
-          message: "Deu ruim ao enviar o código",
+        ErrorSnack(
+          message: t.codeSendingError,
         ).show(context: context);
       },
     );
@@ -176,8 +179,8 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
         );
       },
       onError: (left) {
-        const ErrorSnack(
-          message: "Deu ruim ao confirmar o código",
+        ErrorSnack(
+          message: translations.codeConfirmingError,
         ).show(context: context);
       },
     );
@@ -187,14 +190,14 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
 
         Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         if (mounted) {
-          const SuccessSnack(
-            message: "Senha alterada",
+          SuccessSnack(
+            message: translations.passwordChangingSuccess,
           ).show(context: context);
         }
       },
       onError: (left) {
-        const ErrorSnack(
-          message: "Deu ruim ao alterar sua senha",
+        ErrorSnack(
+          message: translations.passwordChangingError,
         ).show(context: context);
       },
     );
