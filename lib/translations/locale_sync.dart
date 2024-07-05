@@ -62,6 +62,8 @@ class LocaleSyncLocalizationsDelegate
     switch (locale.toString().toLowerCase().replaceFirst('_', '-')) {
       case 'pt':
         return const PTLocaleSyncLocalization();
+      case 'en':
+        return const ENLocaleSyncLocalization();
       default:
         return const PTLocaleSyncLocalization();
     }

@@ -35,5 +35,42 @@
         "passwordChangingSuccess" : "Senha alterada",
         "passwordChangingError": "Deu ruim ao alterar a senha",
         "signupTitle" : "Crie sua conta"
+    },
+    "en" : {
+        "flutterInitErrorMessage" : "Something weird happened to the app",
+        "flutterInitButton" : "Reboot app",
+        "welcome" : "Welcomes to #surpraise",
+        "password" : "Password",
+        "email" : "E-mail",
+        "forgetPassword" : "Forgot my password",
+        "name": "Name",
+        "tag" : "Tag",
+        "profilePictureLabel" : "Select your profile picture",
+        "signInLoading" : "Loading...",
+        "signIn" : "Sign in",
+        "orSignInWith" : "Or sign in with",
+        "doesNotHaveAnAccount" : "Doesn't have an account?",
+        "signUp" : "Sign up",
+        "passwordReset" : "Password reset",
+        "loading": "Loading",
+        "next" : "Next",
+        "code" : "Code",
+        "send" : "Send",
+        "newPassword" : "New password",
+        "confirmNewPassword" : "Confirm new password",
+        "passwordsDoesntMatch" : "Password does not match",
+        "minValidation" : {
+            "plural" : "{name} needs to be at least {count} chars",
+            "value" : "{name} needs to be at least 1 char"
+        },
+        "maxValidation" : {
+            "plural" : "{name} needs to be at most {count} chars",
+            "value" : "{name} needs to be at most 1 char"
+        },
+        "codeSendingError" : "Something went wrong sending code",
+        "codeConfirmingError" : "Something went wrong confirming code",
+        "passwordChangingSuccess" : "Password changed",
+        "passwordChangingError": "Something went wrong changing password",
+        "signupTitle" : "Sign up"
     }
 }
