@@ -5,12 +5,7 @@ import 'package:blurple/widgets/input/base_input.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/core.dart';
-import '../../../../core/di/di.dart';
-import '../../../../core/extensions/theme.dart';
 import '../../../../core/external_dependencies.dart';
-import '../../../../core/services/string/field_validations.dart';
-import '../../../../core/state/state.dart';
-import '../../../../core/types.dart';
 import '../../../../shared/presentation/molecules/molecules.dart';
 import '../../../../shared/presentation/templates/templates.dart';
 import '../../auth.dart';
